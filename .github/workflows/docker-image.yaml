@@ -21,3 +21,6 @@ jobs:
       - name: Publish Docker image
         run: |
           make push-docker TAG="$GITHUB_REF_NAME"
+      - name: Tag latest Docker image
+        run: |
+          make push-docker-latest TAG="$GITHUB_REF_NAME"

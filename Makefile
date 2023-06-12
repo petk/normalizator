@@ -11,7 +11,11 @@ test-docker: ## Run all Docker tests; Usage: make test-docker [t="<test-folder-1
 	./test "$(t)"
 
 build-docker:
-	docker build -t petk/normalizator:$(TAG) -f Dockerfile .
+	@docker build -t petk/normalizator:$(TAG) -f Dockerfile .
 
-push-docker: ## Push Docker image to Docker Hub
+push-docker: ## Push Docker image to Docker Hub; Usage: make push TAG=x.y.z
 	@docker push petk/normalizator:$(TAG)
+
+push-docker-latest: ## Create latest Docker tag and push it to Docker Hub
+	@docker tag petk/normalizator:$(TAG) petk/normalizator:latest
+	@docker push petk/normalizator:latest
