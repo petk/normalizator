@@ -12,7 +12,7 @@ use Normalizator\Observer\NormalizationObserver;
  */
 class Normalizator implements NormalizatorInterface
 {
-    public const VERSION = '0.0.1-dev';
+    public const VERSION = '0.0.2-dev';
 
     /**
      * @var array<string,null|array<mixed>|bool|float|int|string>
