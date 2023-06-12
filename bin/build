@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Normalizator\Console\Application;
+use Normalizator\Console\Command\BuildCommand;
+use Normalizator\Finder\Finder;
+use Normalizator\Normalizator;
+use Normalizator\Util\PharBuilder;
+
+use function Normalizator\exec;
+
+// Instal without development dependencies.
+exec('composer install -q --no-dev', $output, $result);
+
+if (0 !== $result) {
+    echo 'Could not remove development dependencies, make sure exec is allowed and php can be found in your PATH.';
+    exit(1);
+}
+
+$finder = new Finder();
+$pharBuilder = new PharBuilder($finder);
+
+$command = new BuildCommand($pharBuilder);
+
+$application = new Application('Normalizator Builder', Normalizator::VERSION);
+$application->add($command);
+$application->setDefaultCommand($command->getName());
+$application->run();

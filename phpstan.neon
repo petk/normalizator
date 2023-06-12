@@ -1,0 +1,11 @@
+parameters:
+    level: 9
+    excludePaths:
+        - tests/fixtures/*
+    paths:
+        - bin
+        - src
+        - tests
+
+includes:
+    - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon

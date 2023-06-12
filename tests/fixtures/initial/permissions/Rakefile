@@ -1,0 +1,14 @@
+namespace :book do
+
+  def check_contrib
+  end
+
+  desc 'build HTML format'
+  task :build => 'book/contributors.txt' do
+      check_contrib()
+
+      puts 'Converting to HTML...'
+  end
+end
+
+task :default => "book:build"

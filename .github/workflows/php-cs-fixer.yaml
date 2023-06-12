@@ -1,0 +1,27 @@
+name: Run php-cs-fixer check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+    name: PHP CS Fixer Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer, php-cs-fixer
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run php-cs-fixer
+        run: php-cs-fixer --dry-run fix -v --allow-risky=yes

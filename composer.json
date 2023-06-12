@@ -1,0 +1,46 @@
+{
+    "name": "petk/normalizator",
+    "description": "Normalize files in Git repository",
+    "type": "project",
+    "keywords": [
+        "normalizator",
+        "standards",
+        "style"
+    ],
+    "homepage": "https://github.com/petk/normalizator",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Kokot",
+            "email": "peterkokot@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "symfony/console": "^6.3",
+        "thecodingmachine/safe": "^2.5"
+    },
+    "require-dev": {
+        "mikey179/vfsstream": "^1.6",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.1",
+        "thecodingmachine/phpstan-safe-rule": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Normalizator\\": "src/"
+        },
+        "files": ["src/functions.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Normalizator\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "bin": "bin/normalizator"
+}

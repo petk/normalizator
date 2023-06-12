@@ -1,0 +1,98 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Normalizator\Normalization;
+
+use Normalizator\Attribute\Normalization;
+use Normalizator\Finder\File;
+use Normalizator\Util\EolDiscovery;
+
+use function Normalizator\preg_match_all;
+use function Normalizator\preg_replace;
+
+/**
+ * Utility to convert EOL characters to same style.
+ */
+#[Normalization(
+    name: 'eol',
+    filters: [
+        'file',
+        'plain-text',
+        'no-git',
+        'no-node-modules',
+        'no-svn',
+        'no-vendor',
+    ]
+)]
+class EolNormalization extends AbstractNormalization implements ConfigurableNormalizationInterface
+{
+    /**
+     * @var array<string,mixed>
+     */
+    protected array $configuration = [
+        // Some *.phpt test files include also CR characters as part of the test
+        // so those can be skipped.
+        'skip-cr' => false,
+    ];
+
+    public function __construct(
+        private EolDiscovery $eolDiscovery
+    ) {
+    }
+
+    /**
+     * Convert all EOL characters to default EOL.
+     */
+    public function normalize(File $file): File
+    {
+        if (!$this->filter($file)) {
+            return $file;
+        }
+
+        if ($this->configuration['skip-cr']) {
+            $regex = '/(?>\r\n|\n)/m';
+        } else {
+            $regex = '/(*BSR_ANYCRLF)\R/m';
+        }
+
+        $defaultEol = $this->eolDiscovery->getDefaultEol($file);
+        $content = $file->getNewContent();
+        $newContent = preg_replace($regex, $defaultEol, $content);
+
+        if (!is_array($newContent) && $content !== $newContent) {
+            $file->setNewContent($newContent);
+            // Report EOLs from the original content.
+            $this->notify($this->getEols($file->getContent()) . 'line terminators');
+        }
+
+        return $file;
+    }
+
+    /**
+     * Get EOL sequence for the given content.
+     */
+    private function getEols(string $content): string
+    {
+        $eols = ['lf' => 0, 'crlf' => 0, 'cr' => 0];
+
+        // Match all LF, CRLF and CR EOL characters
+        preg_match_all('/(*BSR_ANYCRLF)\R/', $content, $matches);
+
+        foreach ($matches[0] as $match) {
+            if ("\n" === $match) {
+                ++$eols['lf'];
+            } elseif ("\r\n" === $match) {
+                ++$eols['crlf'];
+            } elseif ("\r" === $match) {
+                ++$eols['cr'];
+            }
+        }
+
+        $message = ($eols['lf'] > 0) ? $eols['lf'].' LF ' : '';
+        $message .= ($eols['crlf'] > 0) ? $eols['crlf'].' CRLF ' : '';
+        $message .= ($eols['cr'] > 0) ? $eols['cr'].' CR ' : '';
+
+        return $message;
+    }
+}
