@@ -68,6 +68,15 @@ chmod +x normalizator.phar
 mv normalizator.phar /usr/local/bin/normalizator
 ```
 
+## Docker
+
+There is also a [Docker image](https://hub.docker.com/r/petk/normalizator)
+available to run the tool inside a container:
+
+```sh
+docker run -it -v path/to/your/files/to/check:/opt/app:rw petk/normalizator:latest check .
+```
+
 ## Usage
 
 To check files (dry run) without modyfing any file:
@@ -255,6 +264,21 @@ PHPStan analysis can be executed in development:
 
 ```sh
 ./vendor/bin/phpstan analyse
+```
+
+
+### Building Docker image
+
+To build Docker image run:
+
+```sh
+make build-docker
+```
+
+[Goss](https://github.com/goss-org/goss) is used for testing Docker image:
+
+```sh
+make test-docker
 ```
 
 ## License and contributing

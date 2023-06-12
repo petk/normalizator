@@ -1,0 +1,9 @@
+command:
+  version:
+    exit-status: 0
+    exec: normalizator --version
+    stdout:
+    - "/Normalizator [0-9]+\\.[0-9]+\\.[0-9]+/"
+    stderr: []
+    timeout: 10000 # in milliseconds
+    skip: false

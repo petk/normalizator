@@ -17,12 +17,14 @@
     ],
     "require": {
         "php": ">=8.1",
+        "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
         "symfony/console": "^6.3",
         "thecodingmachine/safe": "^2.5"
     },
     "require-dev": {
+        "ext-dom": "*",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.1",
