@@ -30,6 +30,7 @@ RUN apk add --no-cache \
     && echo "phar.readonly = Off" >> /etc/php82/php.ini \
     # Build normalizator.phar.
     && cd /opt/normalizator \
+    && composer install -q --no-dev \
     && ./bin/build \
     && chmod +x normalizator.phar \
     && mv normalizator.phar /usr/local/bin/normalizator \
