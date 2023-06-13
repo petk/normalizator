@@ -7,6 +7,7 @@ namespace Normalizator\Console\Command;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
+use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -28,6 +29,7 @@ class CheckCommand extends Command
         private ConfigurationResolver $configurationResolver,
         private Finder $finder,
         private Normalizator $normalizator,
+        private Timer $timer,
     ) {
         parent::__construct();
     }
@@ -134,9 +136,21 @@ class CheckCommand extends Command
             }
         }
 
+        // Script execution info.
+        $output->writeln(['', sprintf(
+            'Time: %.3f sec; Memory: %.3f MB.',
+            $this->timer->stop(),
+            round(memory_get_peak_usage() / 1024 / 1024, 3),
+        )]);
+
         if (1 === $exitCode) {
             $formattedBlock = $formatter->formatBlock(
-                ['Files need to be fixed.'],
+                [sprintf(
+                    '%d of %d %s should to be fixed.',
+                    $this->normalizator->getNumOfNormalizedFiles(),
+                    count($this->finder),
+                    (count($this->finder) > 1) ? 'files' : 'file',
+                )],
                 'error',
                 true
             );
@@ -146,7 +160,11 @@ class CheckCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(['', '<info>All files look ok.</info>']);
+        $output->writeln(['', sprintf(
+            '<info>Checked %d %s. Everything looks good.</info>',
+            count($this->finder),
+            (count($this->finder) > 1) ? 'files' : 'file',
+        )]);
 
         return Command::SUCCESS;
     }

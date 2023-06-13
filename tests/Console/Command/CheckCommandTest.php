@@ -17,6 +17,7 @@ use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
 use Normalizator\Util\Slugify;
+use Normalizator\Util\Timer;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -47,8 +48,10 @@ class CheckCommandTest extends NormalizatorTestCase
         $normalizator = new Normalizator($normalizationFactory, $normalizationObserver);
         $configurationResolver = new ConfigurationResolver($eolDiscovery);
 
+        $timer = new Timer();
+
         $application = new Application();
-        $application->add(new CheckCommand($configurationResolver, $finder, $normalizator));
+        $application->add(new CheckCommand($configurationResolver, $finder, $normalizator, $timer));
 
         $command = $application->find('check');
         $commandTester = new CommandTester($command);

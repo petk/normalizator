@@ -7,6 +7,7 @@ namespace Normalizator\Console\Command;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
+use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -28,6 +29,7 @@ class FixCommand extends Command
         private ConfigurationResolver $configurationResolver,
         private Finder $finder,
         private Normalizator $normalizator,
+        private Timer $timer,
     ) {
         parent::__construct();
     }
@@ -115,7 +117,7 @@ class FixCommand extends Command
                 if ([] !== $this->normalizator->getReportsWithManuals()) {
                     $table->setHeaders(['<info>🔧 ' . $file->getSubPathname() . '</info>']);
                 } else {
-                    $table->setHeaders(['<info>✔ ' . $file->getSubPathname()]);
+                    $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
                 }
 
                 foreach ($this->normalizator->getReports() as $report) {
@@ -135,9 +137,28 @@ class FixCommand extends Command
             }
         }
 
+        // Script execution info.
+        $output->writeln(['', sprintf(
+            'Time: %.3f sec; Memory: %.3f MB.',
+            $this->timer->stop(),
+            round(memory_get_peak_usage() / 1024 / 1024, 3),
+        )]);
+
         if (1 === $exitCode) {
+            $output->writeln(['', sprintf(
+                '<info>%d %s have been fixed; Checked %d %s.</info>',
+                $this->normalizator->getNumOfNormalizedFiles(),
+                ($this->normalizator->getNumOfNormalizedFiles() > 1) ? 'files' : 'file',
+                count($this->finder),
+                (count($this->finder) > 1) ? 'files' : 'file',
+            )]);
+
             $formattedBlock = $formatter->formatBlock(
-                ['Some files need to be fixed manually.'],
+                [sprintf(
+                    '%d %s should be fixed manually.',
+                    $this->normalizator->getNumOfFilesThatCannotBeFixed(),
+                    ($this->normalizator->getNumOfFilesThatCannotBeFixed() > 1) ? 'files' : 'file',
+                )],
                 'error',
                 true
             );
@@ -147,7 +168,13 @@ class FixCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(['', '<info>Files have been fixed.</info>']);
+        $output->writeln(['', sprintf(
+            '<info>%d %s have been fixed; Checked %d %s.</info>',
+            $this->normalizator->getNumOfNormalizedFiles(),
+            ($this->normalizator->getNumOfNormalizedFiles() > 1) ? 'files' : 'file',
+            count($this->finder),
+            (count($this->finder) > 1) ? 'files' : 'file',
+        )]);
 
         return Command::SUCCESS;
     }

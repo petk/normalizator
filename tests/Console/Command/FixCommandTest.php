@@ -18,6 +18,7 @@ use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
 use Normalizator\Util\Slugify;
+use Normalizator\Util\Timer;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -49,7 +50,8 @@ class FixCommandTest extends NormalizatorTestCase
         $configurationResolver = new ConfigurationResolver($eolDiscovery);
 
         $application = new Application();
-        $application->add(new FixCommand($configurationResolver, $finder, $normalizator));
+        $timer = new Timer();
+        $application->add(new FixCommand($configurationResolver, $finder, $normalizator, $timer));
 
         return $application;
     }

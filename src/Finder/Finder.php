@@ -7,8 +7,10 @@ namespace Normalizator\Finder;
 /**
  * The Finder utility to get files.
  */
-class Finder
+class Finder implements \Countable
 {
+    private \Iterator $iterator;
+
     public function getTree(string $path, ?callable $filter = null, int $flags = \RecursiveIteratorIterator::CHILD_FIRST): \Iterator
     {
         $path = new File($path);
@@ -36,9 +38,21 @@ class Finder
             return true;
         };
 
-        return new \RecursiveIteratorIterator(
+        return $this->iterator = new \RecursiveIteratorIterator(
             new \RecursiveCallbackFilterIterator($innerIterator, $filter),
             $flags
         );
+    }
+
+    /**
+     * Count the results in the last operation.
+     */
+    public function count(): int
+    {
+        if (!isset($this->iterator)) {
+            return 0;
+        }
+
+        return \iterator_count($this->iterator);
     }
 }

@@ -15,6 +15,16 @@ class Normalizator implements NormalizatorInterface
     public const VERSION = '0.0.2-dev';
 
     /**
+     * Number of normalized files.
+     */
+    private int $numOfNormalizedFiles = 0;
+
+    /**
+     * Number of files that should be fixed manually.
+     */
+    private int $numOfFilesThatCannotBeFixed = 0;
+
+    /**
      * @var array<string,null|array<mixed>|bool|float|int|string>
      */
     private array $options = [];
@@ -42,6 +52,14 @@ class Normalizator implements NormalizatorInterface
         $this->normalizeContent($path);
         $this->normalizePermissions($path);
         $this->normalizePath($path);
+
+        if (count($this->getReports()) > $this->numOfNormalizedFiles) {
+            ++$this->numOfNormalizedFiles;
+        }
+
+        if (count($this->getReportsWithManuals()) > $this->numOfFilesThatCannotBeFixed) {
+            ++$this->numOfFilesThatCannotBeFixed;
+        }
     }
 
     public function save(File $path): void
@@ -76,6 +94,16 @@ class Normalizator implements NormalizatorInterface
     public function isNormalized(): bool
     {
         return [] !== array_merge($this->getReports(), $this->getReportsWithManuals());
+    }
+
+    public function getNumOfFilesThatCannotBeFixed(): int
+    {
+        return $this->numOfFilesThatCannotBeFixed;
+    }
+
+    public function getNumOfNormalizedFiles(): int
+    {
+        return $this->numOfNormalizedFiles;
     }
 
     private function normalizeContent(File $path): File

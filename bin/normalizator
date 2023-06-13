@@ -14,10 +14,13 @@ use Normalizator\Finder\Finder;
 use Normalizator\NormalizationFactory;
 use Normalizator\Normalizator;
 use Normalizator\Observer\NormalizationObserver;
+use Normalizator\Util\Timer;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
 use Normalizator\Util\Slugify;
+
+$timer = new Timer();
 
 $finder = new Finder();
 $gitDiscovery = new GitDiscovery();
@@ -50,12 +53,14 @@ $application->add(new CheckCommand(
     $configurationResolver,
     $finder,
     $normalizator,
+    $timer,
 ));
 
 $application->add(new FixCommand(
     $configurationResolver,
     $finder,
     $normalizator,
+    $timer,
 ));
 
 $application->run();
