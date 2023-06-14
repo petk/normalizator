@@ -66,6 +66,7 @@ class FixCommandTest extends NormalizatorTestCase
         $commandTester->execute([
             // Pass arguments to the helper.
             'path' => 'vfs://' . $this->root->getChild('initial')->path(),
+            '--no-interaction' => true,
         ]);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
@@ -93,6 +94,7 @@ class FixCommandTest extends NormalizatorTestCase
             'path' => 'vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename')->path(),
             // Pass options to the helper.
             '--path-name' => true,
+            '--no-interaction' => true,
         ]);
 
         $this->assertEquals(0, $commandTester->getStatusCode());

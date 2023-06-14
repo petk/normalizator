@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(
     name: 'fix',
@@ -85,9 +86,7 @@ class FixCommand extends Command
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
-        /**
-         * @var \Symfony\Component\Console\Helper\FormatterHelper
-         */
+        /** @var \Symfony\Component\Console\Helper\FormatterHelper */
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
@@ -97,6 +96,12 @@ class FixCommand extends Command
         );
 
         $output->writeln([$formattedBlock, '']);
+
+        if (!$this->askForConfirmation($input, $output)) {
+            return Command::SUCCESS;
+        }
+
+        $output->writeln(['', 'Fixing files in progress.']);
 
         $exitCode = 0;
 
@@ -177,5 +182,25 @@ class FixCommand extends Command
         )]);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Returns true if user confirms to continue, false otherwise.
+     */
+    private function askForConfirmation(InputInterface $input, OutputInterface $output): bool
+    {
+        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
+        $helper = $this->getHelper('question');
+
+        $noInteraction = (true === $input->getOption('no-interaction')) ? true : false;
+        $question = new ConfirmationQuestion('This action will overwrite files in given path. Continue? <comment>[NO (default) | yes]</comment> ', $noInteraction, '/^(y|yes|1)$/i');
+
+        if (!$helper->ask($input, $output, $question)) {
+            $output->writeln(['', 'Exiting without fixing files.']);
+
+            return false;
+        }
+
+        return true;
     }
 }

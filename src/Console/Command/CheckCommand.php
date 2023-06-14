@@ -89,9 +89,7 @@ class CheckCommand extends Command
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
-        /**
-         * @var \Symfony\Component\Console\Helper\FormatterHelper
-         */
+        /** @var \Symfony\Component\Console\Helper\FormatterHelper */
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
