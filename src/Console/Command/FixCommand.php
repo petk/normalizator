@@ -146,9 +146,9 @@ class FixCommand extends Command
 
         if (1 === $exitCode) {
             $output->writeln(['', sprintf(
-                '<info>%d %s have been fixed; Checked %d %s.</info>',
+                '<info>%d %s been fixed; Checked %d %s.</info>',
                 count($this->normalizator->getObserver()->getAllReports()),
-                (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file' : 'files',
+                (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file has' : 'files have',
                 count($this->finder),
                 (1 === count($this->finder)) ? 'file' : 'files',
             )]);
@@ -169,9 +169,9 @@ class FixCommand extends Command
         }
 
         $output->writeln(['', sprintf(
-            '<info>%d %s have been fixed; Checked %d %s.</info>',
+            '<info>%d %s been fixed; Checked %d %s.</info>',
             count($this->normalizator->getObserver()->getAllReports()),
-            (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file' : 'files',
+            (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file has' : 'files have',
             count($this->finder),
             (1 === count($this->finder)) ? 'file' : 'files',
         )]);

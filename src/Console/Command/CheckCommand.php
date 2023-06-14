@@ -147,7 +147,7 @@ class CheckCommand extends Command
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should to be fixed.',
-                    count($this->normalizator->getObserver()->getAllReports()),
+                    count($this->normalizator->getObserver()->getAllReports()) + count($this->normalizator->getObserver()->getAllErrors()),
                     count($this->finder),
                     (1 === count($this->finder)) ? 'file' : 'files',
                 )],
