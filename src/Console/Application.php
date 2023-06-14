@@ -10,6 +10,14 @@ use Symfony\Component\Console\Command\ListCommand;
 
 class Application extends ConsoleApplication
 {
+    public function getLongVersion(): string
+    {
+        return implode('', [
+            parent::getLongVersion(),
+            "\n\nCommand line tool that checks and fixes trailing whitespace, LF or CRLF newline characters, redunant newlines, permissions and similar in given files.",
+        ]);
+    }
+
     protected function getDefaultCommands(): array
     {
         return [new HelpCommand(), new ListCommand()];

@@ -2,9 +2,9 @@
 
 ![Test workflow](https://github.com/petk/normalizator/actions/workflows/tests.yaml/badge.svg)
 
-Command line tool written in PHP that checks and fixes trailing whitespace, end
-of lines LF or CRLF characters, redunant trailing final newlines, file
-permissions and similar.
+Command line tool written in PHP that checks and fixes trailing whitespace, LF
+or CRLF newline characters, redunant trailing final newlines, file permissions
+and similar in given files.
 
 ## Features
 
@@ -20,6 +20,38 @@ permissions and similar.
   characters...)
 * Checks file extensions
 * Checks file encodings
+
+## Installation
+
+Normalizator is a simple Phar executable file that can be downloaded from
+GitHub:
+
+Using curl:
+
+```sh
+curl -OL https://github.com/petk/normalizator/releases/latest/download/normalizator.phar
+```
+
+Using wget:
+
+```sh
+wget https://github.com/petk/normalizator/releases/latest/download/normalizator.phar
+```
+
+By moving it to `/usr/local/bin` it can be accessed accross your system:
+
+```sh
+chmod +x normalizator.phar
+mv normalizator.phar /usr/local/bin/normalizator
+```
+
+## Update
+
+To update normalizator to its latest version:
+
+```sh
+normalizator self-update
+```
 
 ## About
 
@@ -43,30 +75,6 @@ This tool aims to bring an initial solution to this issue and provides a more
 consistent set of source code files across the code repository with a simplistic
 yet still useful and powerful enough approach to tidy all files in a given Git
 repository, directory, or a path using command line.
-
-## Installation
-
-Normalizator is a simple Phar executable file that can be downloaded from
-GitHub:
-
-Using curl:
-
-```sh
-curl -OL https://github.com/petk/normalizator/releases/download/v0.0.1/normalizator.phar
-```
-
-Using wget:
-
-```sh
-wget https://github.com/petk/normalizator/releases/download/v0.0.1/normalizator.phar
-```
-
-By moving it to `/usr/local/bin` it can be accessed accross your system:
-
-```sh
-chmod +x normalizator.phar
-mv normalizator.phar /usr/local/bin/normalizator
-```
 
 ## Docker
 
@@ -265,7 +273,6 @@ PHPStan analysis can be executed in development:
 ```sh
 ./vendor/bin/phpstan analyse
 ```
-
 
 ### Building Docker image
 

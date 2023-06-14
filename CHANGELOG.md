@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Self update command to update normalizator.phar to its latest version from
+  GitHub releases.
 - Footer report with number of processed files, script execution time and memory
   consumption.
 - Docker image.

@@ -394,3 +394,61 @@ function unlink(string $filename, $context = null): bool
 
     return $result;
 }
+
+/**
+ * Overridden \copy() function that throws exception in case of failure instead
+ * of default false.
+ *
+ * @param resource $context
+ *
+ * @throws \RuntimeException
+ */
+function copy(string $from, string $to, $context = null): bool
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \copy($from, $to, $context);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (false === $result) {
+        throw new \RuntimeException($error);
+    }
+
+    return $result;
+}
+
+/**
+ * Overridden \md5_file() function that throws exception in case of failure
+ * instead of default false.
+ *
+ * @throws \RuntimeException
+ */
+function md5_file(string $filename, bool $binary = false): string
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \md5_file($filename, $binary);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (false === $result) {
+        throw new \RuntimeException($error);
+    }
+
+    return $result;
+}
