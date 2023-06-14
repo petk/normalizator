@@ -42,7 +42,7 @@ class PermissionsNormalization extends AbstractNormalization
 
         if ($permissions !== $newPermissions) {
             $file->setNewPermissions($newPermissions);
-            $this->notify('permissions from ' . decoct($permissions) . ' to ' . decoct($newPermissions));
+            $this->notify($file, 'permissions from ' . decoct($permissions) . ' to ' . decoct($newPermissions));
         }
 
         return $file;

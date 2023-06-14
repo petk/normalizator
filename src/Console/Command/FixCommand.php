@@ -111,20 +111,20 @@ class FixCommand extends Command
             $table = new Table($output);
             $table->setStyle($tableStyle);
 
-            if ($this->normalizator->isNormalized()) {
+            if ($this->normalizator->isNormalized($file)) {
                 $this->normalizator->save($file);
 
-                if ([] !== $this->normalizator->getReportsWithManuals()) {
+                if ([] !== $this->normalizator->getObserver()->getErrors($file)) {
                     $table->setHeaders(['<info>🔧 ' . $file->getSubPathname() . '</info>']);
                 } else {
                     $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
                 }
 
-                foreach ($this->normalizator->getReports() as $report) {
+                foreach ($this->normalizator->getObserver()->getReports($file) as $report) {
                     $table->addRow([' <info>✔</info> ' . $report]);
                 }
 
-                foreach ($this->normalizator->getReportsWithManuals() as $report) {
+                foreach ($this->normalizator->getObserver()->getErrors($file) as $report) {
                     $exitCode = 1;
                     $table->addRow([' <error>✘</error> ' . $report]);
                 }
@@ -147,17 +147,17 @@ class FixCommand extends Command
         if (1 === $exitCode) {
             $output->writeln(['', sprintf(
                 '<info>%d %s have been fixed; Checked %d %s.</info>',
-                $this->normalizator->getNumOfNormalizedFiles(),
-                ($this->normalizator->getNumOfNormalizedFiles() > 1) ? 'files' : 'file',
+                count($this->normalizator->getObserver()->getAllReports()),
+                (count($this->normalizator->getObserver()->getAllReports()) === 1) ? 'file' : 'files',
                 count($this->finder),
-                (count($this->finder) > 1) ? 'files' : 'file',
+                (count($this->finder) === 1) ? 'file' : 'files',
             )]);
 
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
-                    $this->normalizator->getNumOfFilesThatCannotBeFixed(),
-                    ($this->normalizator->getNumOfFilesThatCannotBeFixed() > 1) ? 'files' : 'file',
+                    count($this->normalizator->getObserver()->getAllErrors()),
+                    (count($this->normalizator->getObserver()->getAllErrors()) === 1) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -170,10 +170,10 @@ class FixCommand extends Command
 
         $output->writeln(['', sprintf(
             '<info>%d %s have been fixed; Checked %d %s.</info>',
-            $this->normalizator->getNumOfNormalizedFiles(),
-            ($this->normalizator->getNumOfNormalizedFiles() > 1) ? 'files' : 'file',
+            count($this->normalizator->getObserver()->getAllReports()),
+            (count($this->normalizator->getObserver()->getAllReports()) === 1) ? 'file' : 'files',
             count($this->finder),
-            (count($this->finder) > 1) ? 'files' : 'file',
+            (count($this->finder) === 1) ? 'file' : 'files',
         )]);
 
         return Command::SUCCESS;

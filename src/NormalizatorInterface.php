@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator;
 
 use Normalizator\Finder\File;
+use Normalizator\Observer\NormalizationObserver;
 
 /**
  * Interface for normalizators.
@@ -29,14 +30,12 @@ interface NormalizatorInterface
     public function save(File $path): void;
 
     /**
-     * Returns an array of all issues gathered while normalizing given string.
-     *
-     * @return array<int,string>
+     * Get normalization observer.
      */
-    public function getReports(): array;
+    public function getObserver(): NormalizationObserver;
 
     /**
      * Check if normalizator has done some normalizations.
      */
-    public function isNormalized(): bool;
+    public function isNormalized(File $file): bool;
 }

@@ -75,7 +75,7 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify('redundant middle EOL(s)');
+            $this->notify($file, 'redundant middle EOL(s)');
         }
 
         return $file;

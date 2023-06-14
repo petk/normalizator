@@ -80,11 +80,11 @@ abstract class AbstractNormalization implements NormalizationInterface, SubjectI
         $this->observers->detach($observer);
     }
 
-    public function notify(string $message, ?string $type = null): void
+    public function notify(File $file, string $message, ?string $type = null): void
     {
         /** @var ObserverInterface $observer */
         foreach ($this->observers as $observer) {
-            $observer->update($message, $type);
+            $observer->update($file, $message, $type);
         }
     }
 }

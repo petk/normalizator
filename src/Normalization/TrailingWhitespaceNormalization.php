@@ -40,7 +40,7 @@ class TrailingWhitespaceNormalization extends AbstractNormalization
 
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify('trailing whitespace');
+            $this->notify($file, 'trailing whitespace');
         }
 
         return $file;

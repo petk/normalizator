@@ -47,7 +47,7 @@ class EncodingNormalization extends AbstractNormalization
         $encoding = $this->getFileEncoding($file);
 
         if ('' === $encoding) {
-            $this->notify('unknown encoding');
+            $this->notify($file, 'unknown encoding');
 
             return $file;
         }
@@ -61,12 +61,12 @@ class EncodingNormalization extends AbstractNormalization
             // Encoding normalization allows only a limited list of encoding
             // conversions.
             if (!in_array($encoding, $this->supportedEncodings, true)) {
-                $this->notify('encoding ' . $encoding, 'manual');
+                $this->notify($file, 'encoding ' . $encoding, 'error');
 
                 return $file;
             }
 
-            $this->notify('encoding ' . $encoding . ' to UTF-8');
+            $this->notify($file, 'encoding ' . $encoding . ' to UTF-8');
 
             $content = mb_convert_encoding($file->getNewContent(), 'UTF-8', $encoding);
 

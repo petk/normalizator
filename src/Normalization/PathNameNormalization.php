@@ -56,7 +56,7 @@ class PathNameNormalization extends AbstractNormalization
 
         if ($newFilename !== $file->getNewFilename()) {
             $file->setNewFilename($newFilename);
-            $this->notify('path rename ' . $newFilename);
+            $this->notify($file, 'path rename ' . $newFilename);
         }
 
         return $file;

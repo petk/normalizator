@@ -63,7 +63,7 @@ class EolNormalization extends AbstractNormalization implements ConfigurableNorm
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             // Report EOLs from the original content.
-            $this->notify($this->getEols($file->getContent()) . 'line terminators');
+            $this->notify($file, $this->getEols($file->getContent()) . 'line terminators');
         }
 
         return $file;

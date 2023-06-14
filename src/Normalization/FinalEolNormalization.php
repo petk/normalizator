@@ -76,7 +76,7 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
 
         if ($content !== $trimmed) {
             $file->setNewContent($trimmed);
-            $this->notify(count($newlines) . ' final EOL(s)');
+            $this->notify($file, count($newlines) . ' final EOL(s)');
         }
 
         return $file;

@@ -38,7 +38,7 @@ class LeadingEolNormalization extends AbstractNormalization
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify('leading EOL(s)');
+            $this->notify($file, 'leading EOL(s)');
         }
 
         return $file;

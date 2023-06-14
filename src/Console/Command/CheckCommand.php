@@ -115,14 +115,14 @@ class CheckCommand extends Command
             $table = new Table($output);
             $table->setStyle($tableStyle);
 
-            if ($this->normalizator->isNormalized()) {
+            if ($this->normalizator->isNormalized($file)) {
                 $table->setHeaders(['<error>✘</error> <info>' . $file->getSubPathname() . '</info>']);
 
-                foreach ($this->normalizator->getReports() as $report) {
+                foreach ($this->normalizator->getObserver()->getReports($file) as $report) {
                     $table->addRow([' - ' . $report]);
                 }
 
-                foreach ($this->normalizator->getReportsWithManuals() as $report) {
+                foreach ($this->normalizator->getObserver()->getErrors($file) as $report) {
                     $table->addRow([' - ' . $report]);
                 }
 
@@ -147,9 +147,9 @@ class CheckCommand extends Command
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should to be fixed.',
-                    $this->normalizator->getNumOfNormalizedFiles(),
+                    count($this->normalizator->getObserver()->getAllReports()),
                     count($this->finder),
-                    (count($this->finder) > 1) ? 'files' : 'file',
+                    (count($this->finder) === 1) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -163,7 +163,7 @@ class CheckCommand extends Command
         $output->writeln(['', sprintf(
             '<info>Checked %d %s. Everything looks good.</info>',
             count($this->finder),
-            (count($this->finder) > 1) ? 'files' : 'file',
+            (count($this->finder) === 1) ? 'file' : 'files',
         )]);
 
         return Command::SUCCESS;

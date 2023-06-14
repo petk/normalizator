@@ -46,7 +46,7 @@ class SpaceBeforeTabNormalization extends AbstractNormalization
 
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify('space before tab');
+            $this->notify($file, 'space before tab');
         }
 
         return $file;

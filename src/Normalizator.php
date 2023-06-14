@@ -15,16 +15,6 @@ class Normalizator implements NormalizatorInterface
     public const VERSION = '0.0.2-dev';
 
     /**
-     * Number of normalized files.
-     */
-    private int $numOfNormalizedFiles = 0;
-
-    /**
-     * Number of files that should be fixed manually.
-     */
-    private int $numOfFilesThatCannotBeFixed = 0;
-
-    /**
      * @var array<string,null|array<mixed>|bool|float|int|string>
      */
     private array $options = [];
@@ -47,63 +37,31 @@ class Normalizator implements NormalizatorInterface
 
     public function normalize(File $path): void
     {
-        $this->normalizationObserver->clean();
-
         $this->normalizeContent($path);
         $this->normalizePermissions($path);
         $this->normalizePath($path);
-
-        if (count($this->getReports()) > $this->numOfNormalizedFiles) {
-            ++$this->numOfNormalizedFiles;
-        }
-
-        if (count($this->getReportsWithManuals()) > $this->numOfFilesThatCannotBeFixed) {
-            ++$this->numOfFilesThatCannotBeFixed;
-        }
     }
 
     public function save(File $path): void
     {
-        if (!$this->isNormalized()) {
+        if (!$this->isNormalized($path)) {
             $this->normalize($path);
         }
 
         $path->save();
     }
 
-    /**
-     * Get reports that can be fixed automatically.
-     *
-     * @return array<int,string>
-     */
-    public function getReports(): array
+    public function getObserver(): NormalizationObserver
     {
-        return $this->normalizationObserver->getReports();
+        return $this->normalizationObserver;
     }
 
-    /**
-     * Get reports which cannot be fixed automatically.
-     *
-     * @return array<int,string>
-     */
-    public function getReportsWithManuals(): array
+    public function isNormalized(File $file): bool
     {
-        return $this->normalizationObserver->getReportsWithManuals();
-    }
-
-    public function isNormalized(): bool
-    {
-        return [] !== array_merge($this->getReports(), $this->getReportsWithManuals());
-    }
-
-    public function getNumOfFilesThatCannotBeFixed(): int
-    {
-        return $this->numOfFilesThatCannotBeFixed;
-    }
-
-    public function getNumOfNormalizedFiles(): int
-    {
-        return $this->numOfNormalizedFiles;
+        return [] !== array_merge(
+            $this->normalizationObserver->getReports($file),
+            $this->normalizationObserver->getErrors($file)
+        );
     }
 
     private function normalizeContent(File $path): File

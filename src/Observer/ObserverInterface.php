@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Observer;
 
+use Normalizator\Finder\File;
+
 /**
  * Observer in the observer design pattern.
  *
@@ -12,5 +14,5 @@ namespace Normalizator\Observer;
  */
 interface ObserverInterface
 {
-    public function update(string $message, ?string $type = null): void;
+    public function update(File $file, string $message, ?string $type = null): void;
 }

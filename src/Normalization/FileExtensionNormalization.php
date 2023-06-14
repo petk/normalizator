@@ -78,7 +78,7 @@ class FileExtensionNormalization extends AbstractNormalization
 
         if ($basename !== $file->getFilename()) {
             $file->setNewFilename($basename);
-            $this->notify('file extension');
+            $this->notify($file, 'file extension');
         }
 
         return $file;

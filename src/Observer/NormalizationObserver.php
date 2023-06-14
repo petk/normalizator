@@ -4,54 +4,78 @@ declare(strict_types=1);
 
 namespace Normalizator\Observer;
 
+use Normalizator\Finder\File;
+
 class NormalizationObserver implements ObserverInterface
 {
     /**
      * Array with reports that can be normalized.
      *
-     * @var array<int,string>
+     * @var array<string,array<int,string>>
      */
     private array $reports = [];
 
     /**
      * Array with reports for things that cannot be normalized.
      *
-     * @var array<int,string>
+     * @var array<string,array<int,string>>
      */
-    private array $reportsWithManuals = [];
+    private array $errors = [];
 
     /**
      * It is called by the Subject, usually by SplSubject::notify().
      */
-    public function update(string $message, ?string $type = null): void
+    public function update(File $file, string $message, ?string $type = null): void
     {
-        if ('manual' === $type) {
-            $this->reportsWithManuals[] = $message;
+        if ('error' === $type) {
+            $this->errors[$file->getPathname()] ??= [];
+            $this->errors[$file->getPathname()][] = $message;
 
             return;
         }
 
-        $this->reports[] = $message;
+        $this->reports[$file->getPathname()] ??= [];
+        $this->reports[$file->getPathname()][] = $message;
+    }
+
+    /**
+     * Get reports for given file that can be normalized.
+     *
+     * @return array<int,string>
+     */
+    public function getReports(File $file): array
+    {
+        return array_unique($this->reports[$file->getPathname()] ?? []);
     }
 
     /**
      * Get all reports that can be normalized.
      *
-     * @return array<int,string>
+     * @return array<string,array<int,string>>
      */
-    public function getReports(): array
+    public function getAllReports(): array
     {
-        return array_unique($this->reports);
+        return $this->reports;
     }
 
     /**
-     * Get reports of issues that cannot be normalized.
+     * Get reports of issues for given file that cannot be normalized.
      *
      * @return array<int,string>
      */
-    public function getReportsWithManuals(): array
+    public function getErrors(File $file): array
     {
-        return array_unique($this->reportsWithManuals);
+        return array_unique($this->errors[$file->getPathname()] ?? []);
+    }
+
+    /**
+     * Get all reports of issues that cannot be normalized.
+     *
+     * @return array<string,array<int,string>>
+     */
+    public function getAllErrors(): array
+    {
+        return $this->errors;
     }
 
     /**
@@ -60,6 +84,6 @@ class NormalizationObserver implements ObserverInterface
     public function clean(): void
     {
         $this->reports = [];
-        $this->reportsWithManuals = [];
+        $this->errors = [];
     }
 }
