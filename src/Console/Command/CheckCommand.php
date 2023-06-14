@@ -149,7 +149,7 @@ class CheckCommand extends Command
                     '%d of %d %s should to be fixed.',
                     count($this->normalizator->getObserver()->getAllReports()),
                     count($this->finder),
-                    (count($this->finder) === 1) ? 'file' : 'files',
+                    (1 === count($this->finder)) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -163,7 +163,7 @@ class CheckCommand extends Command
         $output->writeln(['', sprintf(
             '<info>Checked %d %s. Everything looks good.</info>',
             count($this->finder),
-            (count($this->finder) === 1) ? 'file' : 'files',
+            (1 === count($this->finder)) ? 'file' : 'files',
         )]);
 
         return Command::SUCCESS;

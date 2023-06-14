@@ -148,16 +148,16 @@ class FixCommand extends Command
             $output->writeln(['', sprintf(
                 '<info>%d %s have been fixed; Checked %d %s.</info>',
                 count($this->normalizator->getObserver()->getAllReports()),
-                (count($this->normalizator->getObserver()->getAllReports()) === 1) ? 'file' : 'files',
+                (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file' : 'files',
                 count($this->finder),
-                (count($this->finder) === 1) ? 'file' : 'files',
+                (1 === count($this->finder)) ? 'file' : 'files',
             )]);
 
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
                     count($this->normalizator->getObserver()->getAllErrors()),
-                    (count($this->normalizator->getObserver()->getAllErrors()) === 1) ? 'file' : 'files',
+                    (1 === count($this->normalizator->getObserver()->getAllErrors())) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -171,9 +171,9 @@ class FixCommand extends Command
         $output->writeln(['', sprintf(
             '<info>%d %s have been fixed; Checked %d %s.</info>',
             count($this->normalizator->getObserver()->getAllReports()),
-            (count($this->normalizator->getObserver()->getAllReports()) === 1) ? 'file' : 'files',
+            (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file' : 'files',
             count($this->finder),
-            (count($this->finder) === 1) ? 'file' : 'files',
+            (1 === count($this->finder)) ? 'file' : 'files',
         )]);
 
         return Command::SUCCESS;
