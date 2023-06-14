@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests;
 
+use Normalizator\Cache\Cache;
 use Normalizator\Enum\Permissions;
 use Normalizator\Filter\NormalizationFilterInterface;
 use Normalizator\FilterFactory;
@@ -58,8 +59,9 @@ class NormalizatorTestCase extends TestCase
     protected function createFilter(string $type): NormalizationFilterInterface
     {
         $finder = new Finder();
+        $cache = new Cache();
         $gitDiscovery = new GitDiscovery();
-        $filterFactory = new FilterFactory($finder, $gitDiscovery);
+        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
 
         return $filterFactory->make($type);
     }
@@ -73,7 +75,8 @@ class NormalizatorTestCase extends TestCase
         $gitDiscovery = new GitDiscovery();
         $slugify = new Slugify();
         $eolDiscovery = new EolDiscovery($gitDiscovery);
-        $filterFactory = new FilterFactory($finder, $gitDiscovery);
+        $cache = new Cache();
+        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
         $normalizationObserver = new NormalizationObserver();
         $filenameResolver = new FilenameResolver();
         $factory = new NormalizationFactory(

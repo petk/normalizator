@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use Normalizator\Cache\Cache;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\CheckCommand;
@@ -15,19 +16,20 @@ use Normalizator\Finder\Finder;
 use Normalizator\NormalizationFactory;
 use Normalizator\Normalizator;
 use Normalizator\Observer\NormalizationObserver;
-use Normalizator\Util\Timer;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
 use Normalizator\Util\Slugify;
+use Normalizator\Util\Timer;
 
 $timer = new Timer();
 
 $finder = new Finder();
 $gitDiscovery = new GitDiscovery();
 $eolDiscovery = new EolDiscovery($gitDiscovery);
+$cache = new Cache();
+$filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
 $slugify = new Slugify();
-$filterFactory = new FilterFactory($finder, $gitDiscovery);
 $normalizationObserver = new NormalizationObserver();
 $filenameResolver = new FilenameResolver();
 

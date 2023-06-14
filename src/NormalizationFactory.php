@@ -63,38 +63,43 @@ class NormalizationFactory
         // Normalizations with dependencies.
         switch ($name) {
             case 'eol':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->eolDiscovery,
-                ];
+                );
 
                 break;
 
             case 'extension':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->filenameResolver,
-                ];
+                );
 
                 break;
 
             case 'final-eol':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->eolDiscovery,
-                ];
+                );
 
                 break;
 
             case 'path-name':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->slugify,
                     $this->filenameResolver,
-                ];
+                );
 
                 break;
 
             case 'permissions':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->gitDiscovery,
-                ];
+                );
 
                 break;
         }

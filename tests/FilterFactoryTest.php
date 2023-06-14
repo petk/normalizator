@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Normalization\Filter\Tests;
 
+use Normalizator\Cache\Cache;
 use Normalizator\Filter\ExecutableFilter;
 use Normalizator\Filter\FileFilter;
 use Normalizator\Filter\NoGitFilter;
@@ -33,9 +34,11 @@ class FilterFactoryTest extends NormalizatorTestCase
     {
         $finder = new Finder();
         $gitDiscover = new GitDiscovery();
+        $cache = new Cache();
 
         $factory = new FilterFactory(
             $finder,
+            $cache,
             $gitDiscover,
         );
 

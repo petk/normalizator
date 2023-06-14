@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests;
 
+use Normalizator\Cache\Cache;
 use Normalizator\FilterFactory;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalization\EncodingNormalization;
@@ -41,7 +42,8 @@ class NormalizationFactoryTest extends NormalizatorTestCase
         $gitDiscovery = new GitDiscovery();
         $slugify = new Slugify();
         $eolDiscovery = new EolDiscovery($gitDiscovery);
-        $filterFactory = new FilterFactory($finder, $gitDiscovery);
+        $cache = new Cache();
+        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
         $normalizationObserver = new NormalizationObserver();
         $filenameResolver = new FilenameResolver();
 

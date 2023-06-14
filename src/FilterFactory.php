@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator;
 
 use Normalizator\Attribute\Filter;
+use Normalizator\Cache\Cache;
 use Normalizator\Filter\NormalizationFilterInterface;
 use Normalizator\Finder\Finder;
 use Normalizator\Util\GitDiscovery;
@@ -30,6 +31,7 @@ class FilterFactory
 
     public function __construct(
         private Finder $finder,
+        private Cache $cache,
         private GitDiscovery $gitDiscovery,
     ) {
         $this->registerFilters();
@@ -45,13 +47,14 @@ class FilterFactory
         }
 
         $class = $this->filterRegistry[$name];
-        $dependencies = [];
+        $dependencies = [$this->cache];
 
         switch ($name) {
             case 'no-git':
-                $dependencies = [
+                array_push(
+                    $dependencies,
                     $this->gitDiscovery,
-                ];
+                );
 
                 break;
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests\Console\Command;
 
+use Normalizator\Cache\Cache;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\FixCommand;
@@ -36,7 +37,8 @@ class FixCommandTest extends NormalizatorTestCase
         $slugify = new Slugify();
         $filenameResolver = new FilenameResolver();
         $normalizationObserver = new NormalizationObserver();
-        $filterFactory = new FilterFactory($finder, $gitDiscovery);
+        $cache = new Cache();
+        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
         $normalizationFactory = new NormalizationFactory(
             $finder,
             $slugify,
