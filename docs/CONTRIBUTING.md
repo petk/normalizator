@@ -54,7 +54,7 @@ released by the following release process:
   Run tests with `phpunit` to make sure they all pass.
 
   ```sh
-  ./vendor/bin/phpunit
+  ./vendor/bin/phpunit --display-warnings
   ```
 
 * **2. Update changelog**

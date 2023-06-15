@@ -10,14 +10,18 @@ jobs:
   test:
     name: Tests
     strategy:
+      fail-fast: false
       matrix:
         include:
           - php: '8.1'
           - php: '8.2'
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Setup PHP with Composer
         uses: shivammathur/setup-php@v2
@@ -29,4 +33,4 @@ jobs:
         run: composer install
 
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        run: ./vendor/bin/phpunit --display-warnings

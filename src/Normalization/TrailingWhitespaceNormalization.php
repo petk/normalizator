@@ -66,7 +66,7 @@ class TrailingWhitespaceNormalization extends AbstractNormalization
         '\xe2\x80\x8a',
         // Narrow no-break space U+202F
         '\xe2\x80\xaf',
-        // Medium mathematical space U+205f
+        // Medium mathematical space U+205F
         '\xe2\x81\x9f',
         // Ideographic space U+3000
         '\xe3\x80\x80',
