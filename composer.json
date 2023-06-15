@@ -21,11 +21,14 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "psr/simple-cache": "^3.0",
-        "symfony/console": "^6.3",
-        "thecodingmachine/safe": "^2.5"
+        "symfony/console": "^6.3"
     },
     "require-dev": {
         "ext-dom": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-xml": "*",
+        "ext-xmlwriter": "*",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.1",

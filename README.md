@@ -9,7 +9,7 @@ and similar in given files.
 ## Features
 
 * Checks file permissions
-* Trims trailing whitespace
+* Trims trailing whitespace characters
 * Trims redundant final newlines
 * Trims redundant leading newlines
 * Inserts missing final newline
@@ -116,13 +116,18 @@ See also:
 
 ### Trailing whitespace
 
-Normalizator can check and fix trailing whitespaces (spaces and tabs) by
-trimming them in text files.
+Normalizator can trim trailing whitespace characters in text files:
 
 ```sh
 normalizator check --trailing-whitespace -- ~/projects/path/to/files/
 # or
 normalizator check -w -- ~/projects/path/to/files/
+```
+
+To fix files:
+
+```sh
+normalizator fix -w -- ~/projects/path/to/files/
 ```
 
 ### Space before tab
@@ -234,59 +239,16 @@ extension is checked in this step.
 To use normalizator, system needs to have PHP 8.1 or greater installed with the
 following core PHP extensions:
 
+* fileinfo
 * intl
 * mbstring
 
-## Development
+## Documentation
 
-### Building `normalizator.phar`
-
-After cloning the Git repository:
-
-```sh
-git clone https://github.com/petk/normalizator
-cd normalizator
-```
-
-Install Composer dependencies:
-
-```sh
-composer install
-```
-
-To build a `normalizator.phar` file:
-
-```sh
-./bin/build
-```
-
-### Tests
-
-Tests can be run in development with `phpunit`:
-
-```sh
-./vendor/bin/phpunit --display-warnings
-```
-
-PHPStan analysis can be executed in development:
-
-```sh
-./vendor/bin/phpstan analyse
-```
-
-### Building Docker image
-
-To build Docker image run:
-
-```sh
-make build-docker
-```
-
-[Goss](https://github.com/goss-org/goss) is used for testing Docker image:
-
-```sh
-make test-docker
-```
+* [Docker](https://github.com/petk/normalizator/blob/main/docs/docker.md)
+* [Normalizator development](https://github.com/petk/normalizator/blob/main/docs/development.md)
+* [Contributing guidelines](https://github.com/petk/normalizator/blob/main/docs/CONTRIBUTING.md)
+* [Code of conduct](https://github.com/petk/normalizator/blob/main/docs/CODE_OF_CONDUCT.md)
 
 ## License and contributing
 

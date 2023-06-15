@@ -44,13 +44,17 @@ class CheckCommand extends Command
         return <<<'EOF'
             The <info>%command.name%</info> command checks files with given normalizations.
 
-            The <comment>--encoding|-c</comment> option converts file encoding to UTF-8. Files for writing code are usually encoded as UTF-8 or ASCII.
+              <info>%command.full_name%</info> ~/path/to/files
 
-            The <comment>--eol[=EOL]|-e [EOL]</comment> option converts the EOL sequence. The default EOL character is determined by Git, otherwise falls back to LF. It can be manually set with the <info>newline</info> value of LF or CRLF.
+            The <comment>--encoding, -c</comment> option converts file encoding to UTF-8. Files for writing code are usually encoded as UTF-8 or ASCII.
 
-            The <comment>--final-eol[=NUM]|-N [NUM]</comment> option trims redundant final newlines. The value presents the maximum allowed trailing final newlines. Default number of final newlines is 1. It also inserts a final newline at the end of the file if one is missing. Default EOL character is LF. If file has multiple different EOL characters (LF, CRLF, or CR), the prevailing EOL is used.
+            The <comment>--eol[=EOL], -e [EOL]</comment> option converts the EOL sequence. The default EOL character is determined by Git, otherwise falls back to LF. It can be manually set with the <info>newline</info> value of LF or CRLF.
 
-            The <comment>--middle-eol[=NUM]|-m [NUM]</comment> option trims redundant newlines in the middle of the content. The value presents the maximum allowed middle final newlines. Default number of middle newlines is 1.
+            The <comment>--final-eol[=NUM], -N [NUM]</comment> option trims redundant final newlines. The value presents the maximum allowed trailing final newlines. Default number of final newlines is 1. It also inserts a final newline at the end of the file if one is missing. Default EOL character is LF. If file has multiple different EOL characters (LF, CRLF, or CR), the prevailing EOL is used.
+
+            The <comment>--middle-eol[=NUM], -m [NUM]</comment> option trims redundant newlines in the middle of the content. The value presents the maximum allowed middle final newlines. Default number of middle newlines is 1.
+
+            The <comment>--trailing-whitespace, -w</comment> option trims all trailing whitespace characters in text files (spaces, tabs, no-break spaces, Mongolian vowel separators, en quads, em quads, en spaces, em spaces, three-per-em spaces, four-per-em spaces, six-per-em spaces, figure spaces, punctuation spaces, thin spaces, hair spaces, narrow no-break spaces, medium mathematical spaces, ideographic spaces, zero width spaces, and zero width no-break spaces).
             EOF;
     }
 
@@ -66,7 +70,7 @@ class CheckCommand extends Command
             new InputOption('path-name', 'p', InputOption::VALUE_NONE, 'Fix file and directory names.'),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
-            new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace (spaces and tabs).'),
+            new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
         ]);
     }
 

@@ -45,9 +45,9 @@ class FixCommand extends Command
         return <<<'EOF'
             The <info>%command.name%</info> command fixes files with given normalizations.
 
-            For the options see help of the <comment>check</comment> command. It accepts the same options as the <comment>check</comment> command.
+            It accepts the same options as the <comment>check</comment> command.
 
-            Prior to running this command, it is good to first check what will be fixed with the <comment>check</comment> command.
+            Prior to running this command, a good idea is to first check what will be fixed with the <comment>check</comment> command.
             EOF;
     }
 
@@ -63,7 +63,7 @@ class FixCommand extends Command
             new InputOption('path-name', 'p', InputOption::VALUE_NONE, 'Fix file and directory names.'),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
-            new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace (spaces and tabs).'),
+            new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
         ]);
     }
 

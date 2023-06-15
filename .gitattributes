@@ -1,12 +1,15 @@
 /.github/                             export-ignore
 /bin/build                            export-ignore
 /bin/dev/                             export-ignore
+/docs/                                export-ignore
 /src/Console/Command/BuildCommand.php export-ignore
 /src/Util/PharBuilder.php             export-ignore
 /tests/                               export-ignore
 /.editorconfig                        export-ignore
 /.gitattributes                       export-ignore
 /.gitignore                           export-ignore
+/.php-cs-fixer.dist.php               export-ignore
 /Dockerfile                           export-ignore
+/Makefile                             export-ignore
 /phpstan.neon                         export-ignore
 /phpunit.xml.dist                     export-ignore

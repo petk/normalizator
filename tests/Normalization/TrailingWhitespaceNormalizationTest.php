@@ -16,23 +16,42 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
-    public function testNormalize(string $initialFile, string $fixedFile): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('trailing-whitespace');
-        $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->root->getChild('initial/trailing-whitespace/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals(__DIR__ . '/../fixtures/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://tests/fixed/trailing-whitespace/' . $filename, $file->getPathname());
     }
 
     /**
-     * @return array<int, array<int, string>>
+     * @return array<int,array<int,string>>
      */
     public static function dataProvider(): array
     {
         return [
-            ['initial/trailing-whitespace/fileWithTrailingSpaces.php', 'fixed/trailing-whitespace/fileWithTrailingSpaces.php'],
+            ['fileWithTrailingSpaces.php'],
+            ['no-break-space.txt'],
+            ['mongolian-vowel-separator.txt'],
+            ['en-quad.txt'],
+            ['em-quad.txt'],
+            ['en-space.txt'],
+            ['em-space.txt'],
+            ['three-per-em-space.txt'],
+            ['four-per-em-space.txt'],
+            ['six-per-em-space.txt'],
+            ['figure-space.txt'],
+            ['punctuation-space.txt'],
+            ['thin-space.txt'],
+            ['hair-space.txt'],
+            ['narrow-no-break-space.txt'],
+            ['medium-mathematical-space.txt'],
+            ['ideographic-space.txt'],
+            ['zero-width-space.txt'],
+            ['zero-width-no-break-space.txt'],
+            ['various.txt'],
         ];
     }
 }

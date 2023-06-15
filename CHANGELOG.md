@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended list of trailing whitespace characters trimmed.
 - Simple cache layer to improve performance.
 - Fix command asks user for confirmation to continue.
 - Self update command to update normalizator.phar to its latest version from

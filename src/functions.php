@@ -153,7 +153,7 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
     }
 
     if (null === $result) {
-        throw new \RuntimeException($error);
+        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -183,7 +183,7 @@ function preg_match(string $pattern, string $subject, array &$matches = null, in
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -213,7 +213,7 @@ function preg_match_all(string $pattern, string $subject, array &$matches = null
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -241,7 +241,7 @@ function preg_split(string $pattern, string $subject, int $limit = -1, int $flag
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
