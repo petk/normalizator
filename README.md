@@ -166,7 +166,7 @@ Newline characters:
 
 * LF (`\n`) (*nix and Mac, default)
 * CRLF (`\r\n`) (Windows)
-- CR (`\r`) (old Mac, obsolete)
+* CR (`\r`) (old Mac, obsolete)
 
 ### Permissions normalization
 
@@ -242,6 +242,7 @@ following core PHP extensions:
 * fileinfo
 * intl
 * mbstring
+* phar
 
 ## Documentation
 
