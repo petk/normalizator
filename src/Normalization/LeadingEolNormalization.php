@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
 /**
@@ -23,6 +25,10 @@ use Normalizator\Finder\File;
 )]
 class LeadingEolNormalization extends AbstractNormalization
 {
+    public function __construct(private EventDispatcher $eventDispatcher)
+    {
+    }
+
     /**
      * Trim all newlines from the beginning of the file.
      */
@@ -38,7 +44,7 @@ class LeadingEolNormalization extends AbstractNormalization
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify($file, 'leading EOL(s)');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'leading EOL(s)'));
         }
 
         return $file;

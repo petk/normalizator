@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
 use function Normalizator\preg_match;
@@ -27,6 +29,10 @@ use function Normalizator\preg_replace;
 )]
 class SpaceBeforeTabNormalization extends AbstractNormalization
 {
+    public function __construct(private EventDispatcher $eventDispatcher)
+    {
+    }
+
     /**
      * Clean all spaces in front of the tabs in the initial indent part of the
      * lines.
@@ -46,7 +52,7 @@ class SpaceBeforeTabNormalization extends AbstractNormalization
 
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify($file, 'space before tab');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'space before tab'));
         }
 
         return $file;

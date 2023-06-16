@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
 use function Normalizator\preg_replace;
@@ -76,6 +78,10 @@ class TrailingWhitespaceNormalization extends AbstractNormalization
         '\xef\xbb\xbf',
     ];
 
+    public function __construct(private EventDispatcher $eventDispatcher)
+    {
+    }
+
     /**
      * Trim trailing whitespace characters from each line.
      */
@@ -91,7 +97,7 @@ class TrailingWhitespaceNormalization extends AbstractNormalization
 
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify($file, 'trailing whitespace');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'trailing whitespace'));
         }
 
         return $file;

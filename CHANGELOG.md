@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - YYYY-MM-DD
 
+### Fixed
+
+- Improved filename resolving in case of existing files before saving.
 ### Added
 
+- Option `--path-name` refactored to `--name` and `--extension`.
+- PSR-14 event dispatcher.
 - Extended list of trailing whitespace characters trimmed.
 - Simple cache layer to improve performance.
 - Fix command asks user for confirmation to continue.

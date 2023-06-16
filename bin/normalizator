@@ -11,14 +11,18 @@ use Normalizator\Console\Application;
 use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\EventDispatcher\Listener\NormalizationListener;
+use Normalizator\EventDispatcher\ListenerProvider;
 use Normalizator\FilterFactory;
 use Normalizator\Finder\Finder;
 use Normalizator\NormalizationFactory;
 use Normalizator\Normalizator;
-use Normalizator\Observer\NormalizationObserver;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
+use Normalizator\Util\Logger;
 use Normalizator\Util\Slugify;
 use Normalizator\Util\Timer;
 
@@ -30,22 +34,28 @@ $eolDiscovery = new EolDiscovery($gitDiscovery);
 $cache = new Cache();
 $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
 $slugify = new Slugify();
-$normalizationObserver = new NormalizationObserver();
 $filenameResolver = new FilenameResolver();
+
+$logger = new Logger();
+$normalizationListener = new NormalizationListener($logger);
+$listenerProvider = new ListenerProvider();
+$listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
+$eventDispatcher = new EventDispatcher($listenerProvider);
 
 $normalizationFactory = new NormalizationFactory(
     $finder,
     $slugify,
     $eolDiscovery,
     $gitDiscovery,
-    $filenameResolver,
     $filterFactory,
-    $normalizationObserver,
+    $eventDispatcher,
 );
 
 $normalizator = new Normalizator(
     $normalizationFactory,
-    $normalizationObserver,
+    $filenameResolver,
+    $eventDispatcher,
+    $logger,
 );
 
 $configurationResolver = new ConfigurationResolver($eolDiscovery);
@@ -57,6 +67,7 @@ $application->add(new CheckCommand(
     $finder,
     $normalizator,
     $timer,
+    $logger,
 ));
 
 $application->add(new FixCommand(
@@ -64,6 +75,7 @@ $application->add(new FixCommand(
     $finder,
     $normalizator,
     $timer,
+    $logger,
 ));
 
 $application->add(new SelfUpdateCommand());

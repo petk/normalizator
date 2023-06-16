@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Normalizator;
 
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
-use Normalizator\Observer\NormalizationObserver;
+use Normalizator\Util\FilenameResolver;
+use Normalizator\Util\Logger;
 
 /**
  * Normalizes content of given file.
@@ -21,7 +24,9 @@ class Normalizator implements NormalizatorInterface
 
     public function __construct(
         private NormalizationFactory $normalizationFactory,
-        private NormalizationObserver $normalizationObserver,
+        private FilenameResolver $filenameResolver,
+        private EventDispatcher $eventDispatcher,
+        private Logger $logger,
     ) {
     }
 
@@ -51,16 +56,11 @@ class Normalizator implements NormalizatorInterface
         $path->save();
     }
 
-    public function getObserver(): NormalizationObserver
-    {
-        return $this->normalizationObserver;
-    }
-
     public function isNormalized(File $file): bool
     {
         return [] !== array_merge(
-            $this->normalizationObserver->getReports($file),
-            $this->normalizationObserver->getErrors($file)
+            $this->logger->getLogs($file),
+            $this->logger->getErrors($file)
         );
     }
 
@@ -110,13 +110,22 @@ class Normalizator implements NormalizatorInterface
 
     private function normalizePath(File $path): File
     {
-        if (!isset($this->options['path-name']) || false === $this->options['path-name']) {
-            return $path;
+        if (false !== $this->options['extension']) {
+            $path = $this->normalizationFactory->make('extension')->normalize($path);
         }
 
-        $path = $this->normalizationFactory->make('extension')->normalize($path);
+        if (false !== $this->options['name']) {
+            $path = $this->normalizationFactory->make('name')->normalize($path);
+        }
 
-        return $this->normalizationFactory->make('path-name')->normalize($path);
+        // Check if file with such new filename already exists and resolve it.
+        $previousFilename = $path->getNewFilename();
+        $path = $this->filenameResolver->resolve($path);
+        if ($previousFilename !== $path->getNewFilename()) {
+            $this->eventDispatcher->dispatch(new NormalizationEvent($path, 'file with the same name already exists; new filename: ' . $path->getNewFilename()));
+        }
+
+        return $path;
     }
 
     private function normalizePermissions(File $path): File

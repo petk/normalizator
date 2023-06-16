@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Normalizator;
 
 use Normalizator\Finder\File;
-use Normalizator\Observer\NormalizationObserver;
 
 /**
  * Interface for normalizators.
@@ -28,11 +27,6 @@ interface NormalizatorInterface
      * Normalize and save path.
      */
     public function save(File $path): void;
-
-    /**
-     * Get normalization observer.
-     */
-    public function getObserver(): NormalizationObserver;
 
     /**
      * Check if normalizator has done some normalizations.

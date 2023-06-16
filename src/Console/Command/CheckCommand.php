@@ -7,6 +7,7 @@ namespace Normalizator\Console\Command;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
+use Normalizator\Util\Logger;
 use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,6 +31,7 @@ class CheckCommand extends Command
         private Finder $finder,
         private Normalizator $normalizator,
         private Timer $timer,
+        private Logger $logger,
     ) {
         parent::__construct();
     }
@@ -55,6 +57,12 @@ class CheckCommand extends Command
             The <comment>--middle-eol[=NUM], -m [NUM]</comment> option trims redundant newlines in the middle of the content. The value presents the maximum allowed middle final newlines. Default number of middle newlines is 1.
 
             The <comment>--trailing-whitespace, -w</comment> option trims all trailing whitespace characters in text files (spaces, tabs, no-break spaces, Mongolian vowel separators, en quads, em quads, en spaces, em spaces, three-per-em spaces, four-per-em spaces, six-per-em spaces, figure spaces, punctuation spaces, thin spaces, hair spaces, narrow no-break spaces, medium mathematical spaces, ideographic spaces, zero width spaces, and zero width no-break spaces).
+
+            The <comment>--extension, -x</comment> option normalizes the file extension.
+            For example, filename.JPEG -> filename.jpg.
+
+            The <comment>--name, -a</comment> option transliterates and slugifies special characters in the directory name or file basename (filename part without extension). For example, foo bar.jpg -> foo-bar.jpg.
+
             EOF;
     }
 
@@ -67,7 +75,8 @@ class CheckCommand extends Command
             new InputOption('final-eol', 'N', InputOption::VALUE_OPTIONAL, 'Trim redundant final EOLs.', false),
             new InputOption('leading-eol', 'l', InputOption::VALUE_NONE, 'Trim redundant leading newlines.'),
             new InputOption('middle-eol', 'm', InputOption::VALUE_OPTIONAL, 'Trim redundant middle empty newlines.', false),
-            new InputOption('path-name', 'p', InputOption::VALUE_NONE, 'Fix file and directory names.'),
+            new InputOption('extension', 'x', InputOption::VALUE_NONE, 'Fix file extensions.'),
+            new InputOption('name', 'a', InputOption::VALUE_NONE, 'Fix file and directory names.'),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
             new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
@@ -120,12 +129,12 @@ class CheckCommand extends Command
             if ($this->normalizator->isNormalized($file)) {
                 $table->setHeaders(['<error>✘</error> <info>' . $file->getSubPathname() . '</info>']);
 
-                foreach ($this->normalizator->getObserver()->getReports($file) as $report) {
-                    $table->addRow([' - ' . $report]);
+                foreach ($this->logger->getLogs($file) as $log) {
+                    $table->addRow([' - ' . $log]);
                 }
 
-                foreach ($this->normalizator->getObserver()->getErrors($file) as $report) {
-                    $table->addRow([' - ' . $report]);
+                foreach ($this->logger->getErrors($file) as $log) {
+                    $table->addRow([' - ' . $log]);
                 }
 
                 $table->render();
@@ -149,7 +158,7 @@ class CheckCommand extends Command
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should to be fixed.',
-                    count($this->normalizator->getObserver()->getAllReports()) + count($this->normalizator->getObserver()->getAllErrors()),
+                    count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
                     count($this->finder),
                     (1 === count($this->finder)) ? 'file' : 'files',
                 )],

@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Normalizator;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalization\NormalizationInterface;
-use Normalizator\Observer\NormalizationObserver;
 use Normalizator\Util\EolDiscovery;
-use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
 use Normalizator\Util\Slugify;
 
@@ -37,9 +36,8 @@ class NormalizationFactory
         private Slugify $slugify,
         private EolDiscovery $eolDiscovery,
         private GitDiscovery $gitDiscovery,
-        private FilenameResolver $filenameResolver,
         private FilterFactory $filterFactory,
-        private NormalizationObserver $normalizationObserver,
+        private EventDispatcher $eventDispatcher,
     ) {
         $this->registerNormalizations();
     }
@@ -58,7 +56,7 @@ class NormalizationFactory
 
         $class = $this->normalizationsRegister[$name][0];
 
-        $dependencies = [];
+        $dependencies = [$this->eventDispatcher];
 
         // Normalizations with dependencies.
         switch ($name) {
@@ -66,14 +64,6 @@ class NormalizationFactory
                 array_push(
                     $dependencies,
                     $this->eolDiscovery,
-                );
-
-                break;
-
-            case 'extension':
-                array_push(
-                    $dependencies,
-                    $this->filenameResolver,
                 );
 
                 break;
@@ -86,11 +76,10 @@ class NormalizationFactory
 
                 break;
 
-            case 'path-name':
+            case 'name':
                 array_push(
                     $dependencies,
-                    $this->slugify,
-                    $this->filenameResolver,
+                    $this->slugify
                 );
 
                 break;
@@ -113,8 +102,6 @@ class NormalizationFactory
             $filters[] = $this->filterFactory->make($filter);
         }
         $normalization->addFilters($filters);
-
-        $normalization->attach($this->normalizationObserver);
 
         return $this->normalizations[$name] = $normalization;
     }

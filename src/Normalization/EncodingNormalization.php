@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
 use function Normalizator\mb_convert_encoding;
@@ -35,6 +37,10 @@ class EncodingNormalization extends AbstractNormalization
         'windows-1252',
     ];
 
+    public function __construct(private EventDispatcher $eventDispatcher)
+    {
+    }
+
     /**
      * Normalizes file encoding.
      */
@@ -47,7 +53,7 @@ class EncodingNormalization extends AbstractNormalization
         $encoding = $this->getFileEncoding($file);
 
         if ('' === $encoding) {
-            $this->notify($file, 'unknown encoding');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'unknown encoding'));
 
             return $file;
         }
@@ -61,12 +67,12 @@ class EncodingNormalization extends AbstractNormalization
             // Encoding normalization allows only a limited list of encoding
             // conversions.
             if (!in_array($encoding, $this->supportedEncodings, true)) {
-                $this->notify($file, 'encoding ' . $encoding, 'error');
+                $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding, 'error'));
 
                 return $file;
             }
 
-            $this->notify($file, 'encoding ' . $encoding . ' to UTF-8');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding . ' -> UTF-8'));
 
             $content = mb_convert_encoding($file->getNewContent(), 'UTF-8', $encoding);
 

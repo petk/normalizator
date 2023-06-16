@@ -20,10 +20,11 @@ class ConfigurationResolver
     private array $options = [
         'encoding',
         'eol',
+        'extension',
         'final-eol',
         'leading-eol',
         'middle-eol',
-        'path-name',
+        'name',
         'permissions',
         'space-before-tab',
         'trailing-whitespace',
@@ -42,6 +43,13 @@ class ConfigurationResolver
      */
     public function resolve(array $configuration): array
     {
+        // Set missing options.
+        foreach ($this->options as $option) {
+            if (!isset($configuration[$option])) {
+                $configuration[$option] = null;
+            }
+        }
+
         // Check if no options are passed, which means to enable all.
         $all = true;
         foreach ($configuration as $key => $option) {

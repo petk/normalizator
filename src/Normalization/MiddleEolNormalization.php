@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
 use function Normalizator\preg_match;
@@ -32,6 +34,10 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
     protected array $configuration = [
         'max' => 1,
     ];
+
+    public function __construct(private EventDispatcher $eventDispatcher)
+    {
+    }
 
     /**
      * Trim all redundant newlines from the middle of the file.
@@ -75,7 +81,7 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->notify($file, 'redundant middle EOL(s)');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'redundant middle EOL(s)'));
         }
 
         return $file;

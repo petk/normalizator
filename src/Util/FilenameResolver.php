@@ -15,19 +15,19 @@ class FilenameResolver
     /**
      * Checks if file can be renamed and returnes resolved new filename.
      */
-    public function resolve(File $file, string $newFilename): string
+    public function resolve(File $file): File
     {
-        $newFile = new File($file->getPath() . '/' . $newFilename);
+        $newFile = new File($file->getPath() . '/' . $file->getNewFilename());
 
         $extension = $newFile->getExtension();
         $extension = ('' !== $extension) ? '.' . $extension : '';
-        $nameWithoutExtension = $newFilename;
+        $nameWithoutExtension = $file->getNewFilename();
 
         if (
             '' !== $extension
-            && false !== $position = strrpos($newFilename, '.')
+            && false !== $position = strrpos($file->getNewFilename(), '.')
         ) {
-            $nameWithoutExtension = substr($newFilename, 0, $position);
+            $nameWithoutExtension = substr($file->getNewFilename(), 0, $position);
         }
 
         $nameSuffixedWithoutExtension = $nameWithoutExtension;
@@ -42,6 +42,8 @@ class FilenameResolver
             ++$suffix;
         }
 
-        return $nameSuffixedWithoutExtension . $extension;
+        $file->setNewFilename($nameSuffixedWithoutExtension . $extension);
+
+        return $file;
     }
 }

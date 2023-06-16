@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Finder\File;
-use Normalizator\Observer\ObserverInterface;
-use Normalizator\Observer\SubjectInterface;
 
 /**
  * Abstract normalization.
  */
-abstract class AbstractNormalization implements NormalizationInterface, SubjectInterface
+abstract class AbstractNormalization implements NormalizationInterface
 {
     /**
      * @var array<string,mixed>
@@ -22,7 +20,6 @@ abstract class AbstractNormalization implements NormalizationInterface, SubjectI
      * @var array<int,\Normalizator\Filter\NormalizationFilterInterface>
      */
     protected array $filters = [];
-    protected \SplObjectStorage $observers;
 
     /**
      * @param array<string,mixed> $configuration
@@ -60,31 +57,5 @@ abstract class AbstractNormalization implements NormalizationInterface, SubjectI
         // Do normalization on the given file.
 
         return $file;
-    }
-
-    public function attach(ObserverInterface $observer): void
-    {
-        if (!isset($this->observers)) {
-            $this->observers = new \SplObjectStorage();
-        }
-
-        $this->observers->attach($observer);
-    }
-
-    public function detach(ObserverInterface $observer): void
-    {
-        if (!isset($this->observers)) {
-            $this->observers = new \SplObjectStorage();
-        }
-
-        $this->observers->detach($observer);
-    }
-
-    public function notify(File $file, string $message, ?string $type = null): void
-    {
-        /** @var ObserverInterface $observer */
-        foreach ($this->observers as $observer) {
-            $observer->update($file, $message, $type);
-        }
     }
 }

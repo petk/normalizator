@@ -7,6 +7,7 @@ namespace Normalizator\Console\Command;
 use Normalizator\ConfigurationResolver;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
+use Normalizator\Util\Logger;
 use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -31,6 +32,7 @@ class FixCommand extends Command
         private Finder $finder,
         private Normalizator $normalizator,
         private Timer $timer,
+        private Logger $logger,
     ) {
         parent::__construct();
     }
@@ -60,7 +62,8 @@ class FixCommand extends Command
             new InputOption('final-eol', 'N', InputOption::VALUE_OPTIONAL, 'Trim redundant final EOLs.', false),
             new InputOption('leading-eol', 'l', InputOption::VALUE_NONE, 'Trim redundant leading newlines.'),
             new InputOption('middle-eol', 'm', InputOption::VALUE_OPTIONAL, 'Trim redundant middle empty newlines.', false),
-            new InputOption('path-name', 'p', InputOption::VALUE_NONE, 'Fix file and directory names.'),
+            new InputOption('extension', 'x', InputOption::VALUE_NONE, 'Fix file extensions.'),
+            new InputOption('name', 'a', InputOption::VALUE_NONE, 'Fix file and directory names.'),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
             new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
@@ -119,19 +122,19 @@ class FixCommand extends Command
             if ($this->normalizator->isNormalized($file)) {
                 $this->normalizator->save($file);
 
-                if ([] !== $this->normalizator->getObserver()->getErrors($file)) {
+                if ([] !== $this->logger->getErrors($file)) {
                     $table->setHeaders(['<info>🔧 ' . $file->getSubPathname() . '</info>']);
                 } else {
                     $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
                 }
 
-                foreach ($this->normalizator->getObserver()->getReports($file) as $report) {
-                    $table->addRow([' <info>✔</info> ' . $report]);
+                foreach ($this->logger->getLogs($file) as $log) {
+                    $table->addRow([' <info>✔</info> ' . $log]);
                 }
 
-                foreach ($this->normalizator->getObserver()->getErrors($file) as $report) {
+                foreach ($this->logger->getErrors($file) as $log) {
                     $exitCode = 1;
-                    $table->addRow([' <error>✘</error> ' . $report]);
+                    $table->addRow([' <error>✘</error> ' . $log]);
                 }
 
                 $table->render();
@@ -152,8 +155,8 @@ class FixCommand extends Command
         if (1 === $exitCode) {
             $output->writeln(['', sprintf(
                 '<info>%d %s been fixed; Checked %d %s.</info>',
-                count($this->normalizator->getObserver()->getAllReports()),
-                (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file has' : 'files have',
+                count($this->logger->getAllLogs()),
+                (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
                 count($this->finder),
                 (1 === count($this->finder)) ? 'file' : 'files',
             )]);
@@ -161,8 +164,8 @@ class FixCommand extends Command
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
-                    count($this->normalizator->getObserver()->getAllErrors()),
-                    (1 === count($this->normalizator->getObserver()->getAllErrors())) ? 'file' : 'files',
+                    count($this->logger->getAllErrors()),
+                    (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -175,8 +178,8 @@ class FixCommand extends Command
 
         $output->writeln(['', sprintf(
             '<info>%d %s been fixed; Checked %d %s.</info>',
-            count($this->normalizator->getObserver()->getAllReports()),
-            (1 === count($this->normalizator->getObserver()->getAllReports())) ? 'file has' : 'files have',
+            count($this->logger->getAllLogs()),
+            (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
             count($this->finder),
             (1 === count($this->finder)) ? 'file' : 'files',
         )]);

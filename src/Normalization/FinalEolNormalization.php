@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 use Normalizator\Util\EolDiscovery;
 
@@ -35,6 +37,7 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
      * Class constructor.
      */
     public function __construct(
+        private EventDispatcher $eventDispatcher,
         private EolDiscovery $eolDiscovery
     ) {
     }
@@ -76,7 +79,7 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
 
         if ($content !== $trimmed) {
             $file->setNewContent($trimmed);
-            $this->notify($file, count($newlines) . ' final EOL(s)');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, count($newlines) . ' final EOL(s)'));
         }
 
         return $file;

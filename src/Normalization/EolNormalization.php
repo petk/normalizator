@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 use Normalizator\Util\EolDiscovery;
 
@@ -37,6 +39,7 @@ class EolNormalization extends AbstractNormalization implements ConfigurableNorm
     ];
 
     public function __construct(
+        private EventDispatcher $eventDispatcher,
         private EolDiscovery $eolDiscovery
     ) {
     }
@@ -63,7 +66,7 @@ class EolNormalization extends AbstractNormalization implements ConfigurableNorm
         if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             // Report EOLs from the original content.
-            $this->notify($file, $this->getEols($file->getContent()) . 'line terminators');
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, $this->getEols($file->getContent()) . 'line terminators'));
         }
 
         return $file;

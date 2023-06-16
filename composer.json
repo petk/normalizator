@@ -21,6 +21,7 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-phar": "*",
+        "psr/event-dispatcher": "^1.0",
         "psr/simple-cache": "^3.0",
         "symfony/console": "^6.3"
     },

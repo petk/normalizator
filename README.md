@@ -16,9 +16,9 @@ and similar in given files.
 * Trims redundant newlines in the middle of the file
 * Converts and syncs EOL (end of line) characters
 * Cleans spaces before tabs in the indentation part of the line
-* Checks path name if it contains any special characters (spaces, non-ascii
-  characters...)
 * Checks file extensions
+* Checks file and directory names if they contain any special characters
+  (spaces, non-ASCII characters, etc.)
 * Checks file encodings
 
 ## Installation
@@ -220,19 +220,30 @@ bit more relaxed and defaults are:
 * Executables 0755
 * Protected files are still 0444
 
-### Path normalization
+### File extension normalization
 
-To normalize filenames and directories:
+To normalize file extensions:
 
 ```sh
-normalizator check --path-name -- ~/projects/path/to/files/
+normalizator check --extension -- ~/projects/path/to/files/
 # or
-normalizator check -p -- ~/projects/path/to/files/
+normalizator check -x -- ~/projects/path/to/files/
+```
+
+This will adjust file extensions, for example from `.JPEG` to `.jpg` and similar.
+
+### Filename normalization
+
+To normalize names of files and directories:
+
+```sh
+normalizator check --name -- ~/projects/path/to/files/
+# or
+normalizator check -a -- ~/projects/path/to/files/
 ```
 
 This fixes names of files and directories so that they don't contain whitespaces
-or special characters that might cause issues in certain occassions. Also file
-extension is checked in this step.
+or special characters that might cause issues in certain occassions.
 
 ## Requirements
 

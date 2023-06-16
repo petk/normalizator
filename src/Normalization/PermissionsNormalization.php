@@ -6,6 +6,8 @@ namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
 use Normalizator\Enum\Permissions;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 use Normalizator\Util\GitDiscovery;
 
@@ -23,6 +25,7 @@ use function Normalizator\preg_match;
 class PermissionsNormalization extends AbstractNormalization
 {
     public function __construct(
+        private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery,
     ) {
     }
@@ -42,7 +45,7 @@ class PermissionsNormalization extends AbstractNormalization
 
         if ($permissions !== $newPermissions) {
             $file->setNewPermissions($newPermissions);
-            $this->notify($file, 'permissions from ' . decoct($permissions) . ' to ' . decoct($newPermissions));
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'permissions from ' . decoct($permissions) . ' to ' . decoct($newPermissions)));
         }
 
         return $file;

@@ -6,15 +6,21 @@ namespace Normalizator\Tests;
 
 use Normalizator\Cache\Cache;
 use Normalizator\Enum\Permissions;
+use Normalizator\EventDispatcher\Event\NormalizationEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\EventDispatcher\Listener\NormalizationListener;
+use Normalizator\EventDispatcher\ListenerProvider;
 use Normalizator\Filter\NormalizationFilterInterface;
 use Normalizator\FilterFactory;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalization\NormalizationInterface;
 use Normalizator\NormalizationFactory;
-use Normalizator\Observer\NormalizationObserver;
+use Normalizator\Normalizator;
+use Normalizator\NormalizatorInterface;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
+use Normalizator\Util\Logger;
 use Normalizator\Util\Slugify;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -38,7 +44,7 @@ class NormalizatorTestCase extends TestCase
         $this->fixturesRoot = __DIR__ . '/fixtures';
 
         $this->root = vfsStream::setup('tests');
-        vfsStream::copyFromFileSystem(__DIR__ . '/fixtures');
+        vfsStream::copyFromFileSystem($this->fixturesRoot);
 
         // Set some permissions on some files.
         $file = $this->root->getChild('initial/permissions/Rakefile');
@@ -79,19 +85,56 @@ class NormalizatorTestCase extends TestCase
         $eolDiscovery = new EolDiscovery($gitDiscovery);
         $cache = new Cache();
         $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
-        $normalizationObserver = new NormalizationObserver();
-        $filenameResolver = new FilenameResolver();
+
+        $logger = new Logger();
+        $normalizationListener = new NormalizationListener($logger);
+        $listenerProvider = new ListenerProvider();
+        $listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
+        $eventDispatcher = new EventDispatcher($listenerProvider);
+
         $factory = new NormalizationFactory(
             $finder,
             $slugify,
             $eolDiscovery,
             $gitDiscovery,
-            $filenameResolver,
             $filterFactory,
-            $normalizationObserver
+            $eventDispatcher,
         );
 
         return $factory->make($type, $configuration);
+    }
+
+    protected function createNormalizator(): NormalizatorInterface
+    {
+        $finder = new Finder();
+        $gitDiscovery = new GitDiscovery();
+        $eolDiscovery = new EolDiscovery($gitDiscovery);
+        $cache = new Cache();
+        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
+        $slugify = new Slugify();
+        $filenameResolver = new FilenameResolver();
+
+        $logger = new Logger();
+        $normalizationListener = new NormalizationListener($logger);
+        $listenerProvider = new ListenerProvider();
+        $listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
+        $eventDispatcher = new EventDispatcher($listenerProvider);
+
+        $normalizationFactory = new NormalizationFactory(
+            $finder,
+            $slugify,
+            $eolDiscovery,
+            $gitDiscovery,
+            $filterFactory,
+            $eventDispatcher,
+        );
+
+        return new Normalizator(
+            $normalizationFactory,
+            $filenameResolver,
+            $eventDispatcher,
+            $logger,
+        );
     }
 
     private function addWhitespaceFiles(): void
