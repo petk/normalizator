@@ -5,79 +5,18 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Normalizator\Cache\Cache;
-use Normalizator\ConfigurationResolver;
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
-use Normalizator\EventDispatcher\Event\NormalizationEvent;
-use Normalizator\EventDispatcher\EventDispatcher;
-use Normalizator\EventDispatcher\Listener\NormalizationListener;
-use Normalizator\EventDispatcher\ListenerProvider;
-use Normalizator\FilterFactory;
-use Normalizator\Finder\Finder;
-use Normalizator\NormalizationFactory;
 use Normalizator\Normalizator;
-use Normalizator\Util\EolDiscovery;
-use Normalizator\Util\FilenameResolver;
-use Normalizator\Util\GitDiscovery;
-use Normalizator\Util\Logger;
-use Normalizator\Util\Slugify;
-use Normalizator\Util\Timer;
 
-$timer = new Timer();
-
-$finder = new Finder();
-$gitDiscovery = new GitDiscovery();
-$eolDiscovery = new EolDiscovery($gitDiscovery);
-$cache = new Cache();
-$filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
-$slugify = new Slugify();
-$filenameResolver = new FilenameResolver();
-
-$logger = new Logger();
-$normalizationListener = new NormalizationListener($logger);
-$listenerProvider = new ListenerProvider();
-$listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
-$eventDispatcher = new EventDispatcher($listenerProvider);
-
-$normalizationFactory = new NormalizationFactory(
-    $finder,
-    $slugify,
-    $eolDiscovery,
-    $gitDiscovery,
-    $filterFactory,
-    $eventDispatcher,
-);
-
-$normalizator = new Normalizator(
-    $normalizationFactory,
-    $filenameResolver,
-    $eventDispatcher,
-    $logger,
-);
-
-$configurationResolver = new ConfigurationResolver($eolDiscovery);
+$container = require_once __DIR__ . '/../config/container.php';
 
 $application = new Application('Normalizator', Normalizator::VERSION);
 
-$application->add(new CheckCommand(
-    $configurationResolver,
-    $finder,
-    $normalizator,
-    $timer,
-    $logger,
-));
-
-$application->add(new FixCommand(
-    $configurationResolver,
-    $finder,
-    $normalizator,
-    $timer,
-    $logger,
-));
-
-$application->add(new SelfUpdateCommand());
+$application->add($container->get(CheckCommand::class));
+$application->add($container->get(FixCommand::class));
+$application->add($container->get(SelfUpdateCommand::class));
 
 $application->run();

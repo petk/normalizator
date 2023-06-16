@@ -4,24 +4,12 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests;
 
-use Normalizator\Cache\Cache;
+use Normalizator\Container;
 use Normalizator\Enum\Permissions;
-use Normalizator\EventDispatcher\Event\NormalizationEvent;
-use Normalizator\EventDispatcher\EventDispatcher;
-use Normalizator\EventDispatcher\Listener\NormalizationListener;
-use Normalizator\EventDispatcher\ListenerProvider;
 use Normalizator\Filter\NormalizationFilterInterface;
 use Normalizator\FilterFactory;
-use Normalizator\Finder\Finder;
 use Normalizator\Normalization\NormalizationInterface;
 use Normalizator\NormalizationFactory;
-use Normalizator\Normalizator;
-use Normalizator\NormalizatorInterface;
-use Normalizator\Util\EolDiscovery;
-use Normalizator\Util\FilenameResolver;
-use Normalizator\Util\GitDiscovery;
-use Normalizator\Util\Logger;
-use Normalizator\Util\Slugify;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class NormalizatorTestCase extends TestCase
 {
+    protected Container $container;
     protected string $fixturesRoot;
     protected vfsStreamDirectory $root;
 
@@ -41,6 +30,8 @@ class NormalizatorTestCase extends TestCase
      */
     public function setUp(): void
     {
+        $this->container = require __DIR__ . '/../config/container.php';
+
         $this->fixturesRoot = __DIR__ . '/fixtures';
 
         $this->root = vfsStream::setup('tests');
@@ -66,12 +57,10 @@ class NormalizatorTestCase extends TestCase
      */
     protected function createFilter(string $type): NormalizationFilterInterface
     {
-        $finder = new Finder();
-        $cache = new Cache();
-        $gitDiscovery = new GitDiscovery();
-        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
+        /** @var FilterFactory */
+        $factory = $this->container->get(FilterFactory::class);
 
-        return $filterFactory->make($type);
+        return $factory->make($type);
     }
 
     /**
@@ -79,62 +68,10 @@ class NormalizatorTestCase extends TestCase
      */
     protected function createNormalization(string $type, array $configuration = []): NormalizationInterface
     {
-        $finder = new Finder();
-        $gitDiscovery = new GitDiscovery();
-        $slugify = new Slugify();
-        $eolDiscovery = new EolDiscovery($gitDiscovery);
-        $cache = new Cache();
-        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
-
-        $logger = new Logger();
-        $normalizationListener = new NormalizationListener($logger);
-        $listenerProvider = new ListenerProvider();
-        $listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
-        $eventDispatcher = new EventDispatcher($listenerProvider);
-
-        $factory = new NormalizationFactory(
-            $finder,
-            $slugify,
-            $eolDiscovery,
-            $gitDiscovery,
-            $filterFactory,
-            $eventDispatcher,
-        );
+        /** @var NormalizationFactory */
+        $factory = $this->container->get(NormalizationFactory::class);
 
         return $factory->make($type, $configuration);
-    }
-
-    protected function createNormalizator(): NormalizatorInterface
-    {
-        $finder = new Finder();
-        $gitDiscovery = new GitDiscovery();
-        $eolDiscovery = new EolDiscovery($gitDiscovery);
-        $cache = new Cache();
-        $filterFactory = new FilterFactory($finder, $cache, $gitDiscovery);
-        $slugify = new Slugify();
-        $filenameResolver = new FilenameResolver();
-
-        $logger = new Logger();
-        $normalizationListener = new NormalizationListener($logger);
-        $listenerProvider = new ListenerProvider();
-        $listenerProvider->addListener(NormalizationEvent::class, $normalizationListener);
-        $eventDispatcher = new EventDispatcher($listenerProvider);
-
-        $normalizationFactory = new NormalizationFactory(
-            $finder,
-            $slugify,
-            $eolDiscovery,
-            $gitDiscovery,
-            $filterFactory,
-            $eventDispatcher,
-        );
-
-        return new Normalizator(
-            $normalizationFactory,
-            $filenameResolver,
-            $eventDispatcher,
-            $logger,
-        );
     }
 
     private function addWhitespaceFiles(): void

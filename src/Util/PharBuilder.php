@@ -38,6 +38,8 @@ class PharBuilder
 
         $this->addNormalizator($phar);
 
+        $this->addContainer($phar);
+
         // CLI Component files.
 
         // Add src files
@@ -88,8 +90,6 @@ class PharBuilder
 
     /**
      * Remove the shebang from the file before add it to the PHAR file.
-     *
-     * @param \Phar $phar PHAR instance
      */
     protected function addNormalizator(\Phar $phar): void
     {
@@ -100,6 +100,17 @@ class PharBuilder
         if (!is_array($content)) {
             $phar->addFromString('normalizator', $content);
         }
+    }
+
+    /**
+     * Add dependency injection container configuration file.
+     */
+    protected function addContainer(\Phar $phar): void
+    {
+        // Add container configuration.
+        $containerFile = new File(__DIR__ . '/../../config/container.php');
+
+        $phar->addFromString('config/container.php', $containerFile->getContent());
     }
 
     protected function getStub(): string

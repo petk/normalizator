@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved filename resolving in case of existing files before saving.
+
 ### Added
 
+- Dependency injection container.
 - Option `--path-name` refactored to `--name` and `--extension`.
 - PSR-14 event dispatcher.
 - Extended list of trailing whitespace characters trimmed.

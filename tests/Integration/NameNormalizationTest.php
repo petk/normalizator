@@ -6,9 +6,9 @@ namespace Normalizator\Tests\Integration;
 
 use Normalizator\ConfigurationResolver;
 use Normalizator\Finder\File;
+use Normalizator\Normalizator;
+use Normalizator\NormalizatorInterface;
 use Normalizator\Tests\NormalizatorTestCase;
-use Normalizator\Util\EolDiscovery;
-use Normalizator\Util\GitDiscovery;
 
 /**
  * @internal
@@ -22,16 +22,16 @@ class NameNormalizationTest extends NormalizatorTestCase
      */
     public function testNormalize(): void
     {
-        $gitDiscovery = new GitDiscovery();
-        $eolDiscovery = new EolDiscovery($gitDiscovery);
-        $configurationResolver = new ConfigurationResolver($eolDiscovery);
+        /** @var ConfigurationResolver */
+        $configurationResolver = $this->container->get(ConfigurationResolver::class);
 
         $options = $configurationResolver->resolve([
             'extension' => true,
             'name' => true,
         ]);
 
-        $normalizator = $this->createNormalizator();
+        /** @var NormalizatorInterface */
+        $normalizator = $this->container->get(Normalizator::class);
         $normalizator->setOptions($options);
 
         // Due to setUp method, we'll loop over files so that we don't loose
