@@ -26,6 +26,13 @@ class Logger
     private array $errors = [];
 
     /**
+     * Miscellaneous debug and error messages throughout the application.
+     *
+     * @var array<int,string>
+     */
+    private array $debug = [];
+
+    /**
      * Add new message in the logs array for given file.
      */
     public function add(File $file, string $message, string $type = 'log'): void
@@ -39,6 +46,14 @@ class Logger
 
         $this->logs[$file->getPathname()] ??= [];
         $this->logs[$file->getPathname()][] = $message;
+    }
+
+    /**
+     * Add debug message.
+     */
+    public function addDebugMessage(string $message): void
+    {
+        $this->debug[] = $message;
     }
 
     /**
@@ -82,11 +97,22 @@ class Logger
     }
 
     /**
+     * Get all debug messages.
+     *
+     * @return array<int,string>
+     */
+    public function getDebugMessages(): array
+    {
+        return $this->debug;
+    }
+
+    /**
      * Clear all logs.
      */
     public function clear(): void
     {
         $this->logs = [];
         $this->errors = [];
+        $this->debug = [];
     }
 }

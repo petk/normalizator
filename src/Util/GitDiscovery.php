@@ -20,7 +20,7 @@ class GitDiscovery
     /**
      * Determine if the given path is Git repository.
      */
-    public function hasGit(?string $path = null): bool
+    public function hasGit(string $path): bool
     {
         if (isset($this->hasGit)) {
             return $this->hasGit;
@@ -32,7 +32,7 @@ class GitDiscovery
             return $this->hasGit = false;
         }
 
-        if (null !== $path && is_dir($path) && file_exists($path . '/.git')) {
+        if (is_dir($path) && file_exists($path . '/.git')) {
             return $this->hasGit = true;
         }
 

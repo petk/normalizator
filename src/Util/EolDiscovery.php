@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Normalizator\Util;
 
+use Normalizator\EventDispatcher\Event\DebugEvent;
+use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
+use function Normalizator\exec;
 use function Normalizator\preg_match;
 use function Normalizator\preg_match_all;
 
@@ -27,12 +30,13 @@ class EolDiscovery
     /**
      * @var array<int,string>
      */
-    private array $crlfFiles = [];
+    private array $crlfFiles;
 
     /**
      * Class constructor.
      */
     public function __construct(
+        private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery
     ) {
     }
@@ -80,7 +84,7 @@ class EolDiscovery
             return $this->eol;
         }
 
-        if (null === $file || !$this->gitDiscovery->hasGit()) {
+        if (null === $file || !$this->gitDiscovery->hasGit($file->getRootPath())) {
             return self::DEFAULT_EOL;
         }
 
@@ -98,12 +102,19 @@ class EolDiscovery
      */
     private function getCrlfFiles(string $path): array
     {
-        if ([] !== $this->crlfFiles) {
+        if (isset($this->crlfFiles)) {
             return $this->crlfFiles;
         }
 
-        $files = shell_exec(sprintf('cd %s && git ls-files -z --eol 2>&1', escapeshellarg($path)));
-        $files = explode("\0", trim($files ?: ''));
+        exec(sprintf('cd %s && git ls-files -z --eol 2>&1', escapeshellarg($path)), $output, $result);
+
+        $output = implode('', $output);
+
+        if (0 !== $result) {
+            $this->eventDispatcher->dispatch(new DebugEvent('Issue with getting CRLF files from Git. Command returned ' . $result . 'Output: ' . $output));
+        }
+
+        $files = explode("\0", trim($output ?: ''));
         $files = array_filter($files, function ($item) {
             return preg_match('/^i\/crlf.*[ ]+w\/.*attr\/.*eol=crlf.*$/', $item);
         });

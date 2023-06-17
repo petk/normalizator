@@ -152,7 +152,7 @@ class FixCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (1 === $exitCode) {
+        if (0 < count($this->logger->getAllLogs())) {
             $output->writeln(['', sprintf(
                 '<info>%d %s been fixed; Checked %d %s.</info>',
                 count($this->logger->getAllLogs()),
@@ -160,7 +160,9 @@ class FixCommand extends Command
                 count($this->finder),
                 (1 === count($this->finder)) ? 'file' : 'files',
             )]);
+        }
 
+        if (0 < count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
@@ -173,18 +175,23 @@ class FixCommand extends Command
 
             $output->writeln(['', $formattedBlock]);
 
-            return Command::FAILURE;
+            $exitCode = 1;
         }
 
-        $output->writeln(['', sprintf(
-            '<info>%d %s been fixed; Checked %d %s.</info>',
-            count($this->logger->getAllLogs()),
-            (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
-            count($this->finder),
-            (1 === count($this->finder)) ? 'file' : 'files',
-        )]);
+        // Print debug messages.
+        if (0 < count($this->logger->getDebugMessages())) {
+            if ($output->isDebug()) {
+                $output->writeln([
+                    '',
+                    '<error>Debug errors and warnings:</error>',
+                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
+                ]);
+            }
 
-        return Command::SUCCESS;
+            $exitCode = 1;
+        }
+
+        return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
     }
 
     /**

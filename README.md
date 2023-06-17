@@ -168,6 +168,56 @@ Newline characters:
 * CRLF (`\r\n`) (Windows)
 * CR (`\r`) (old Mac, obsolete)
 
+It is possible to set EOL character with the
+[`eol` Git attribute](https://git-scm.com/docs/gitattributes#_eol) if some files
+require specific EOL:
+
+```git
+README.md eol=crlf
+```
+
+Normalizator will take the Git attribute setting into account.
+
+To override the EOL characters for all files in the given path:
+
+```sh
+normalizator check --eol LF -- ~/projects/path/to/files
+```
+
+### Redundant leading EOL
+
+```sh
+normalizator check --leading-eol -- ~/projects/path/to/files
+# or
+normalizator check -l -- ~/projects/path/to/files
+```
+
+### Final EOL normalization
+
+```sh
+normalizator check --final-eol -- ~/projects/path/to/files
+# or
+normalizator check -N -- ~/projects/path/to/files
+```
+
+Optionally, you can set the maximum number of allowed final EOLs by passing a
+number. In case of a missing final EOL, one will be appended. This will allow up
+to 2 final EOLs:
+
+```sh
+normalizator check --final-eol 2 -- ~/projects/path/to/files
+```
+
+### Redundant middle EOL
+
+To trim redundant EOLs in the middle of the text or code:
+
+```sh
+normalizator check --middle-eol -- ~/projects/path/to/files
+# or
+normalizator check -m -- ~/projects/path/to/files
+```
+
 ### Permissions normalization
 
 This syncs permissions of given files and directories. Symbolic links are not

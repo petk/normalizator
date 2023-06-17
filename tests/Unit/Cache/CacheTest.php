@@ -19,7 +19,8 @@ class CacheTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testSet(string $key, string $value): void
     {
-        $cache = new Cache();
+        /** @var Cache */
+        $cache = $this->container->get(Cache::class);
 
         $cache->set($key, $value);
 
@@ -40,7 +41,8 @@ class CacheTest extends NormalizatorTestCase
 
     public function testSetWithEmptyKey(): void
     {
-        $cache = new Cache();
+        /** @var Cache */
+        $cache = $this->container->get(Cache::class);
 
         $this->expectException(CacheInvalidArgumentException::class);
 

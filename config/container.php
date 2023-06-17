@@ -8,8 +8,10 @@ use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
 use Normalizator\Container;
+use Normalizator\EventDispatcher\Event\DebugEvent;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\EventDispatcher\Listener\DebugListener;
 use Normalizator\EventDispatcher\Listener\NormalizationListener;
 use Normalizator\EventDispatcher\ListenerProvider;
 use Normalizator\FilterFactory;
@@ -29,8 +31,36 @@ $container->set(Timer::class, function ($c) {
     return new Timer();
 });
 
-$container->set(Finder::class, function ($c) {
-    return new Finder();
+$container->set(Logger::class, function ($c) {
+    return new Logger();
+});
+
+$container->set(NormalizationListener::class, function ($c) {
+    return new NormalizationListener($c->get(Logger::class));
+});
+
+$container->set(DebugListener::class, function ($c) {
+    return new DebugListener($c->get(Logger::class));
+});
+
+$container->set(ListenerProvider::class, function ($c) {
+    $provider = new ListenerProvider();
+
+    $provider->addListener(
+        NormalizationEvent::class,
+        $c->get(NormalizationListener::class),
+    );
+
+    $provider->addListener(
+        DebugEvent::class,
+        $c->get(DebugListener::class),
+    );
+
+    return $provider;
+});
+
+$container->set(EventDispatcher::class, function ($c) {
+    return new EventDispatcher($c->get(ListenerProvider::class));
 });
 
 $container->set(GitDiscovery::class, function ($c) {
@@ -38,11 +68,18 @@ $container->set(GitDiscovery::class, function ($c) {
 });
 
 $container->set(EolDiscovery::class, function ($c) {
-    return new EolDiscovery($c->get(GitDiscovery::class));
+    return new EolDiscovery(
+        $c->get(EventDispatcher::class),
+        $c->get(GitDiscovery::class),
+    );
 });
 
 $container->set(Cache::class, function ($c) {
     return new Cache();
+});
+
+$container->set(Finder::class, function ($c) {
+    return new Finder();
 });
 
 $container->set(FilterFactory::class, function ($c) {
@@ -57,29 +94,6 @@ $container->set(Slugify::class, function ($c) {
     return new Slugify();
 });
 
-$container->set(FilenameResolver::class, function ($c) {
-    return new FilenameResolver();
-});
-
-$container->set(Logger::class, function ($c) {
-    return new Logger();
-});
-
-$container->set(NormalizationListener::class, function ($c) {
-    return new NormalizationListener($c->get(Logger::class));
-});
-
-$container->set(ListenerProvider::class, function ($c) {
-    $provider = new ListenerProvider();
-    $provider->addListener(NormalizationEvent::class, $c->get(NormalizationListener::class));
-
-    return $provider;
-});
-
-$container->set(EventDispatcher::class, function ($c) {
-    return new EventDispatcher($c->get(ListenerProvider::class));
-});
-
 $container->set(NormalizationFactory::class, function ($c) {
     return new NormalizationFactory(
         $c->get(Finder::class),
@@ -89,6 +103,10 @@ $container->set(NormalizationFactory::class, function ($c) {
         $c->get(FilterFactory::class),
         $c->get(EventDispatcher::class),
     );
+});
+
+$container->set(FilenameResolver::class, function ($c) {
+    return new FilenameResolver();
 });
 
 $container->set(Normalizator::class, function ($c) {

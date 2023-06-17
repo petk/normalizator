@@ -154,7 +154,7 @@ class CheckCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (1 === $exitCode) {
+        if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should to be fixed.',
@@ -167,16 +167,27 @@ class CheckCommand extends Command
             );
 
             $output->writeln(['', $formattedBlock]);
-
-            return Command::FAILURE;
+        } else {
+            $output->writeln(['', sprintf(
+                '<info>Checked %d %s. Everything looks good.</info>',
+                count($this->finder),
+                (1 === count($this->finder)) ? 'file' : 'files',
+            )]);
         }
 
-        $output->writeln(['', sprintf(
-            '<info>Checked %d %s. Everything looks good.</info>',
-            count($this->finder),
-            (1 === count($this->finder)) ? 'file' : 'files',
-        )]);
+        // Print debug messages.
+        if (0 < count($this->logger->getDebugMessages())) {
+            if ($output->isDebug()) {
+                $output->writeln([
+                    '',
+                    '<error>Debug errors and warnings:</error>',
+                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
+                ]);
+            }
 
-        return Command::SUCCESS;
+            $exitCode = 1;
+        }
+
+        return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
     }
 }

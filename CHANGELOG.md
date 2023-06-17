@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Reading CRLF files from the Git attributes.
 - Improved filename resolving in case of existing files before saving.
 
 ### Added

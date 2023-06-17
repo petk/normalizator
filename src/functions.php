@@ -452,3 +452,59 @@ function md5_file(string $filename, bool $binary = false): string
 
     return $result;
 }
+
+/**
+ * Overridden \rmdir() function that throws exception in case of failure instead
+ * of default false.
+ *
+ * @param resource $context
+ */
+function rmdir(string $directory, $context = null): bool
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \rmdir($directory, $context);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (false === $result) {
+        throw new \RuntimeException($error);
+    }
+
+    return $result;
+}
+
+/**
+ * Overridden \mkdir() function that throws exception in case of failure instead
+ * of default false.
+ *
+ * @param resource $context
+ */
+function mkdir(string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \mkdir($directory, $permissions, $recursive, $context);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (false === $result) {
+        throw new \RuntimeException($error);
+    }
+
+    return $result;
+}

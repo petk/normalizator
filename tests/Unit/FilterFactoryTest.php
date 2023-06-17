@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests\Unit;
 
-use Normalizator\Cache\Cache;
 use Normalizator\Filter\ExecutableFilter;
 use Normalizator\Filter\FileFilter;
 use Normalizator\Filter\NoGitFilter;
@@ -14,9 +13,7 @@ use Normalizator\Filter\NoSvnFilter;
 use Normalizator\Filter\NoVendorFilter;
 use Normalizator\Filter\PlainTextFilter;
 use Normalizator\FilterFactory;
-use Normalizator\Finder\Finder;
 use Normalizator\Tests\NormalizatorTestCase;
-use Normalizator\Util\GitDiscovery;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -32,15 +29,8 @@ class FilterFactoryTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testMake(string $key, string $valid): void
     {
-        $finder = new Finder();
-        $gitDiscover = new GitDiscovery();
-        $cache = new Cache();
-
-        $factory = new FilterFactory(
-            $finder,
-            $cache,
-            $gitDiscover,
-        );
+        /** @var FilterFactory */
+        $factory = $this->container->get(FilterFactory::class);
 
         $this->assertInstanceOf($valid, $factory->make($key));
     }

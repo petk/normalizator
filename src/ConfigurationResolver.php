@@ -94,7 +94,7 @@ class ConfigurationResolver
 
         // The --eol option has been set without value. Set it to default.
         if (null === $eol) {
-            $eol = 'lf';
+            return 'lf';
         }
 
         if (!is_string($eol) || !in_array(strtolower($eol), ['lf', 'crlf'], true)) {

@@ -7,3 +7,6 @@
 /vendor/
 /.php-cs-fixer.cache
 /normalizator.phar
+!/tests/fixtures/generated/
+/tests/fixtures/generated/*
+!/tests/fixtures/generated/.gitkeep

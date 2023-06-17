@@ -6,12 +6,22 @@ namespace Normalizator\Util;
 
 /**
  * Utility that tracks script execution time.
+ *
+ * Timer is automatically started when initializing the Timer object. Otherwise
+ * it can be started manually with the Timer::start() method for cases where
+ * you need to measure script execution before initializing the timer as
+ * injected dependency in the container.
  */
 class Timer
 {
     private float $time;
 
     public function __construct()
+    {
+        $this->time = microtime(true);
+    }
+
+    public function start(): void
     {
         $this->time = microtime(true);
     }
