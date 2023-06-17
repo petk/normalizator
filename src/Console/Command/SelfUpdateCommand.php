@@ -30,6 +30,12 @@ class SelfUpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if ('' === \Phar::running()) {
+            $output->writeln('<error>The self-update command can be only executed when running normalizator.phar.</error>');
+
+            return Command::FAILURE;
+        }
+
         $remoteFilename = 'https://github.com/petk/normalizator/releases/latest/download/normalizator.phar';
         $localFilename = $_SERVER['argv'][0];
         $tempFilename = basename($localFilename, '.phar').'-temp.phar';
