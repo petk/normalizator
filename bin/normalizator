@@ -3,7 +3,51 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
+set_error_handler(static function ($severity, $message, $file, $line) {
+    if ($severity & error_reporting()) {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    }
+});
+
+// Check PHP version.
+if (\PHP_VERSION_ID < 80100) {
+    fwrite(STDERR, "Error: Normalizator requires PHP 8.1 or greater. Please update your PHP version to run Normalizator.\n");
+
+    exit(1);
+}
+
+// Check required PHP extensions.
+foreach (['fileinfo', 'intl', 'mbstring', 'phar'] as $extension) {
+    if (!extension_loaded($extension)) {
+        fwrite(STDERR, sprintf("Error: PHP extension ext-%s is required to run Normalizator.\n", $extension));
+
+        exit(1);
+    }
+}
+
+// Find autoloader file.
+$files = [
+    // When in a standalone Git repository.
+    __DIR__ . '/../vendor/autoload.php',
+    // When in vendor/petk/normalizator.
+    __DIR__ . '/../../../autoload.php',
+];
+
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        $autoloader = $file;
+
+        break;
+    }
+}
+
+if (!isset($autoloader)) {
+    throw new \RuntimeException('Autoloader autoload.php not found.');
+}
+
+require $autoloader;
 
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\CheckCommand;
