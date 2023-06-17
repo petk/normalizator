@@ -4,6 +4,7 @@ parameters:
         - tests/fixtures/*
     paths:
         - bin
+        - config
         - src
         - tests
 

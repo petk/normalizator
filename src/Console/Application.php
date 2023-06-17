@@ -8,6 +8,9 @@ use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 
+/**
+ * Overridden console application for normalizator.
+ */
 class Application extends ConsoleApplication
 {
     public function getLongVersion(): string

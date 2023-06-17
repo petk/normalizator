@@ -3,6 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('tests/fixtures')
     ->in(__DIR__)
+    ->name(['*.php', 'normalizator', 'build'])
 ;
 
 $config = new PhpCsFixer\Config();

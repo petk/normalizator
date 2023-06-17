@@ -172,7 +172,7 @@ It is possible to set EOL character with the
 [`eol` Git attribute](https://git-scm.com/docs/gitattributes#_eol) if some files
 require specific EOL:
 
-```git
+```gitattributes
 README.md eol=crlf
 ```
 
