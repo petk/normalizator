@@ -196,7 +196,7 @@ class FixCommand extends Command
         $helper = $this->getHelper('question');
 
         $noInteraction = (true === $input->getOption('no-interaction')) ? true : false;
-        $question = new ConfirmationQuestion('This action will overwrite files in given path. Continue? <comment>[NO (default) | yes]</comment> ', $noInteraction, '/^(y|yes|1)$/i');
+        $question = new ConfirmationQuestion('Files in given path will be overwriten. Do you want to continue? <comment>[N/y]</comment> ', $noInteraction, '/^(y|yes|1)$/i');
 
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln(['', 'Exiting without fixing files.']);
