@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Script execution from the vendor directory (locating autoload.php file).
 - Reading CRLF files from the Git attributes.
 - Improved filename resolving in case of existing files before saving.
 
 ### Added
 
+- Normalizator requirements are now checked before running the script.
 - Dependency injection container.
 - Option `--path-name` refactored to `--name` and `--extension`.
 - PSR-14 event dispatcher.
