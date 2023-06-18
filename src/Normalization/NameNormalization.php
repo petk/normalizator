@@ -7,6 +7,7 @@ namespace Normalizator\Normalization;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\Slugify;
 
@@ -24,9 +25,10 @@ use Normalizator\Util\Slugify;
         'no-vendor',
     ]
 )]
-class NameNormalization extends AbstractNormalization
+class NameNormalization implements NormalizationInterface
 {
     public function __construct(
+        private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private Slugify $slugify,
     ) {
@@ -37,6 +39,10 @@ class NameNormalization extends AbstractNormalization
      */
     public function normalize(File $file): File
     {
+        if (!$this->filterManager->filter($this, $file)) {
+            return $file;
+        }
+
         $extension = $file->getExtension();
         $extension = ('' !== $extension) ? '.' . $extension : '';
         $nameWithoutExtension = $file->getNewFilename();

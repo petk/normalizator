@@ -8,6 +8,7 @@ use Normalizator\Attribute\Normalization;
 use Normalizator\Enum\Permissions;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\GitDiscovery;
 
@@ -22,9 +23,10 @@ use function Normalizator\preg_match;
         'no-links',
     ]
 )]
-class PermissionsNormalization extends AbstractNormalization
+class PermissionsNormalization implements NormalizationInterface
 {
     public function __construct(
+        private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery,
     ) {
@@ -35,7 +37,7 @@ class PermissionsNormalization extends AbstractNormalization
      */
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
+        if (!$this->filterManager->filter($this, $file)) {
             return $file;
         }
 

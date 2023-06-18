@@ -7,6 +7,7 @@ namespace Normalizator\Normalization;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
 /**
@@ -22,7 +23,7 @@ use Normalizator\Finder\File;
         'no-vendor',
     ]
 )]
-class ExtensionNormalization extends AbstractNormalization
+class ExtensionNormalization implements NormalizationInterface
 {
     /**
      * These filenames are known and shouldn't be normalized.
@@ -42,13 +43,14 @@ class ExtensionNormalization extends AbstractNormalization
     ];
 
     public function __construct(
+        private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher
     ) {
     }
 
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
+        if (!$this->filterManager->filter($this, $file)) {
             return $file;
         }
 

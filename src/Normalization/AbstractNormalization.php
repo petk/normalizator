@@ -17,11 +17,6 @@ abstract class AbstractNormalization implements NormalizationInterface
     protected array $configuration = [];
 
     /**
-     * @var array<int,\Normalizator\Filter\NormalizationFilterInterface>
-     */
-    protected array $filters = [];
-
-    /**
      * @param array<string,mixed> $configuration
      */
     public function configure(array $configuration): void
@@ -29,31 +24,8 @@ abstract class AbstractNormalization implements NormalizationInterface
         $this->configuration = array_merge($this->configuration, $configuration);
     }
 
-    /**
-     * @param array<int,\Normalizator\Filter\NormalizationFilterInterface> $filters
-     */
-    public function addFilters(array $filters): void
-    {
-        $this->filters = array_merge($this->filters, $filters);
-    }
-
-    public function filter(File $file): bool
-    {
-        foreach ($this->filters as $filter) {
-            if (!$filter->filter($file)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
-            return $file;
-        }
-
         // Do normalization on the given file.
 
         return $file;

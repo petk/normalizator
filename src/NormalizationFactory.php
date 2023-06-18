@@ -6,7 +6,9 @@ namespace Normalizator;
 
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\Finder;
+use Normalizator\Normalization\ConfigurableNormalizationInterface;
 use Normalizator\Normalization\NormalizationInterface;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\GitDiscovery;
@@ -36,7 +38,7 @@ class NormalizationFactory
         private Slugify $slugify,
         private EolDiscovery $eolDiscovery,
         private GitDiscovery $gitDiscovery,
-        private FilterFactory $filterFactory,
+        private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
     ) {
         $this->registerNormalizations();
@@ -49,14 +51,17 @@ class NormalizationFactory
     {
         if (isset($this->normalizations[$name])) {
             $normalization = $this->normalizations[$name];
-            $normalization->configure($configuration);
+
+            if ($normalization instanceof ConfigurableNormalizationInterface) {
+                $normalization->configure($configuration);
+            }
 
             return $normalization;
         }
 
-        $class = $this->normalizationsRegister[$name][0];
+        $class = $this->normalizationsRegister[$name];
 
-        $dependencies = [$this->eventDispatcher];
+        $dependencies = [$this->filterManager, $this->eventDispatcher];
 
         // Normalizations with dependencies.
         switch ($name) {
@@ -94,14 +99,10 @@ class NormalizationFactory
         }
 
         $normalization = new $class(...$dependencies);
-        $normalization->configure($configuration);
 
-        // Add filters.
-        $filters = [];
-        foreach ($this->normalizationsRegister[$name][1] as $filter) {
-            $filters[] = $this->filterFactory->make($filter);
+        if ($normalization instanceof ConfigurableNormalizationInterface) {
+            $normalization->configure($configuration);
         }
-        $normalization->addFilters($filters);
 
         return $this->normalizations[$name] = $normalization;
     }
@@ -130,9 +131,8 @@ class NormalizationFactory
                     }
 
                     $name = $arguments['name'];
-                    $filters = $arguments['filters'] ?? [];
 
-                    $this->normalizationsRegister[$name] = [$class, $filters];
+                    $this->normalizationsRegister[$name] = $class;
 
                     break;
                 }

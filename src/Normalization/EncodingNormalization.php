@@ -7,6 +7,7 @@ namespace Normalizator\Normalization;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
 use function Normalizator\mb_convert_encoding;
@@ -25,7 +26,7 @@ use function Normalizator\mb_convert_encoding;
         'no-vendor',
     ]
 )]
-class EncodingNormalization extends AbstractNormalization
+class EncodingNormalization implements NormalizationInterface
 {
     /**
      * List of encodings that can be converted to UTF-8 confidently.
@@ -37,8 +38,10 @@ class EncodingNormalization extends AbstractNormalization
         'windows-1252',
     ];
 
-    public function __construct(private EventDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        private FilterManager $filterManager,
+        private EventDispatcher $eventDispatcher
+    ) {
     }
 
     /**
@@ -46,7 +49,7 @@ class EncodingNormalization extends AbstractNormalization
      */
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
+        if (!$this->filterManager->filter($this, $file)) {
             return $file;
         }
 

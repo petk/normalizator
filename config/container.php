@@ -14,6 +14,7 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\EventDispatcher\Listener\DebugListener;
 use Normalizator\EventDispatcher\Listener\NormalizationListener;
 use Normalizator\EventDispatcher\ListenerProvider;
+use Normalizator\Filter\FilterManager;
 use Normalizator\FilterFactory;
 use Normalizator\Finder\Finder;
 use Normalizator\NormalizationFactory;
@@ -94,13 +95,17 @@ $container->set(Slugify::class, function ($c) {
     return new Slugify();
 });
 
+$container->set(FilterManager::class, function ($c) {
+    return new FilterManager($c->get(FilterFactory::class));
+});
+
 $container->set(NormalizationFactory::class, function ($c) {
     return new NormalizationFactory(
         $c->get(Finder::class),
         $c->get(Slugify::class),
         $c->get(EolDiscovery::class),
         $c->get(GitDiscovery::class),
-        $c->get(FilterFactory::class),
+        $c->get(FilterManager::class),
         $c->get(EventDispatcher::class),
     );
 });

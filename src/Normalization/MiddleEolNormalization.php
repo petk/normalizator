@@ -7,6 +7,7 @@ namespace Normalizator\Normalization;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
 use function Normalizator\preg_match;
@@ -35,8 +36,10 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
         'max' => 1,
     ];
 
-    public function __construct(private EventDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        private FilterManager $filterManager,
+        private EventDispatcher $eventDispatcher
+    ) {
     }
 
     /**
@@ -44,7 +47,7 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
      */
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
+        if (!$this->filterManager->filter($this, $file)) {
             return $file;
         }
 

@@ -12,11 +12,6 @@ use Normalizator\Finder\File;
 interface NormalizationInterface
 {
     /**
-     * Check if given file should be normalized or not.
-     */
-    public function filter(File $file): bool;
-
-    /**
      * Normalizes given file.
      */
     public function normalize(File $file): File;

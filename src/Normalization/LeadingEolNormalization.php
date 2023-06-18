@@ -7,6 +7,7 @@ namespace Normalizator\Normalization;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
+use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
 /**
@@ -23,10 +24,12 @@ use Normalizator\Finder\File;
         'no-vendor',
     ]
 )]
-class LeadingEolNormalization extends AbstractNormalization
+class LeadingEolNormalization implements NormalizationInterface
 {
-    public function __construct(private EventDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        private FilterManager $filterManager,
+        private EventDispatcher $eventDispatcher
+    ) {
     }
 
     /**
@@ -34,7 +37,7 @@ class LeadingEolNormalization extends AbstractNormalization
      */
     public function normalize(File $file): File
     {
-        if (!$this->filter($file)) {
+        if (!$this->filterManager->filter($this, $file)) {
             return $file;
         }
 
