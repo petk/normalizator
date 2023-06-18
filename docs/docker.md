@@ -4,7 +4,7 @@
 
 Docker image with [Normalizator](https://github.com/petk/normalizator) - command
 line tool that checks and fixes trailing whitespace, end of lines LF or CRLF
-characters, redunant trailing final newlines, file permissions and similar.
+characters, redundant trailing final newlines, file permissions and similar.
 
 ## Usage
 

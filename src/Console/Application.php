@@ -17,7 +17,7 @@ class Application extends ConsoleApplication
     {
         return implode('', [
             parent::getLongVersion(),
-            "\n\nCommand line tool that checks and fixes trailing whitespace, LF or CRLF newline characters, redunant newlines, permissions and similar in given files.",
+            "\n\nCommand line tool that checks and fixes trailing whitespace, LF or CRLF newline characters, redundant newlines, permissions and similar in given files.",
         ]);
     }
 

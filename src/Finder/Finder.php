@@ -23,7 +23,7 @@ class Finder implements \Countable
         if (is_file($path)) {
             $info = new File($path);
 
-            return new \ArrayIterator([$info->getPathname() => $info]);
+            return $this->iterator = new \ArrayIterator([$info->getPathname() => $info]);
         }
 
         $innerIterator = new RecursiveDirectoryIterator(

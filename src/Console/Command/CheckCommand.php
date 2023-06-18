@@ -157,7 +157,7 @@ class CheckCommand extends Command
         if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
-                    '%d of %d %s should to be fixed.',
+                    '%d of %d %s should be fixed.',
                     count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
                     count($this->finder),
                     (1 === count($this->finder)) ? 'file' : 'files',

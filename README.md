@@ -3,7 +3,7 @@
 ![Test workflow](https://github.com/petk/normalizator/actions/workflows/tests.yaml/badge.svg)
 
 Command line tool written in PHP that checks and fixes trailing whitespace, LF
-or CRLF newline characters, redunant trailing final newlines, file permissions
+or CRLF newline characters, redundant trailing final newlines, file permissions
 and similar in given files.
 
 ## Features

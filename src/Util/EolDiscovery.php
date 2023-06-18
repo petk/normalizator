@@ -55,11 +55,6 @@ class EolDiscovery
      */
     public function getPrevailingEol(string $content): string
     {
-        // Empty files don't need a newline attached
-        if ('' === $content) {
-            return '';
-        }
-
         // Match all LF, CRLF and CR EOL characters
         preg_match_all('/(*BSR_ANYCRLF)\R/', $content, $matches);
 

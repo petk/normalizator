@@ -40,6 +40,7 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
             ['initial/final-eol/file-6.txt', 'fixed/final-eol/file-6.txt'],
             ['initial/final-eol/file-7.txt', 'fixed/final-eol/file-7.txt'],
             ['initial/final-eol/file-8.txt', 'fixed/final-eol/file-8.txt'],
+            ['initial/final-eol/file-9.txt', 'fixed/final-eol/file-9.txt'],
         ];
     }
 }

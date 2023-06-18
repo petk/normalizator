@@ -75,7 +75,7 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
         }
 
         // Then insert one missing final EOL if not present yet.
-        if (!in_array(substr($trimmed, -1), ["\n", "\r"], true)) {
+        if ('' !== $trimmed && !in_array(substr($trimmed, -1), ["\n", "\r"], true)) {
             $trimmed .= $this->eolDiscovery->getPrevailingEol($content);
         }
 

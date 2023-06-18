@@ -86,15 +86,8 @@ class Normalizator implements NormalizatorInterface
             $path = $this->normalizationFactory->make('eol')->normalize($path);
         }
 
-        // Trim redundant leading newlines.
         if (false !== $this->options['leading-eol']) {
-            // Empty files depend on previous trimming of the final newlines.
-            if (
-                '' !== trim($path->getNewContent(), "\r\n")
-                || ('' === trim($path->getNewContent(), "\r\n") && !$this->options['final-eol'])
-            ) {
-                $path = $this->normalizationFactory->make('leading-eol')->normalize($path);
-            }
+            $path = $this->normalizationFactory->make('leading-eol')->normalize($path);
         }
 
         if (false !== $this->options['middle-eol']) {

@@ -37,6 +37,7 @@ class LeadingEolNormalizationTest extends NormalizatorTestCase
             ['initial/leading-eol/file-3.txt', 'fixed/leading-eol/file-3.txt'],
             ['initial/leading-eol/file-4.txt', 'fixed/leading-eol/file-4.txt'],
             ['initial/leading-eol/file-5.txt', 'fixed/leading-eol/file-5.txt'],
+            ['initial/leading-eol/file-6.txt', 'fixed/leading-eol/file-6.txt'],
         ];
     }
 }
