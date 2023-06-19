@@ -12,7 +12,7 @@ interface ConfigurableNormalizationInterface extends NormalizationInterface
     /**
      * Set configuration for the normalization.
      *
-     * @param array<string,null|array<mixed>|bool|float|int|string> $configuration
+     * @param array<string,mixed> $configuration
      */
     public function configure(array $configuration): void;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
-use Normalizator\ConfigurationResolver;
+use Normalizator\Configuration\ConfigurationResolver;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
 use Normalizator\Util\Logger;
@@ -86,13 +86,7 @@ class CheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $options = $this->configurationResolver->resolve($input->getOptions());
-
-            foreach ($options as $key => $option) {
-                $input->setOption($key, $option);
-            }
-
-            $this->normalizator->setOptions($input->getOptions());
+            $this->configurationResolver->resolve($input->getOptions());
         } catch (InvalidOptionException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
 

@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use Normalizator\Cache\Cache;
-use Normalizator\ConfigurationResolver;
+use Normalizator\Configuration\Configuration;
+use Normalizator\Configuration\ConfigurationResolver;
 use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
@@ -95,6 +96,10 @@ $container->set(Slugify::class, function ($c) {
     return new Slugify();
 });
 
+$container->set(Configuration::class, function ($c) {
+    return new Configuration();
+});
+
 $container->set(FilterManager::class, function ($c) {
     return new FilterManager($c->get(FilterFactory::class));
 });
@@ -102,11 +107,7 @@ $container->set(FilterManager::class, function ($c) {
 $container->set(NormalizationFactory::class, function ($c) {
     return new NormalizationFactory(
         $c->get(Finder::class),
-        $c->get(Slugify::class),
-        $c->get(EolDiscovery::class),
-        $c->get(GitDiscovery::class),
-        $c->get(FilterManager::class),
-        $c->get(EventDispatcher::class),
+        $c,
     );
 });
 
@@ -116,6 +117,7 @@ $container->set(FilenameResolver::class, function ($c) {
 
 $container->set(Normalizator::class, function ($c) {
     return new Normalizator(
+        $c->get(Configuration::class),
         $c->get(NormalizationFactory::class),
         $c->get(FilenameResolver::class),
         $c->get(EventDispatcher::class),
@@ -124,7 +126,10 @@ $container->set(Normalizator::class, function ($c) {
 });
 
 $container->set(ConfigurationResolver::class, function ($c) {
-    return new ConfigurationResolver($c->get(EolDiscovery::class));
+    return new ConfigurationResolver(
+        $c->get(Configuration::class),
+        $c->get(EolDiscovery::class),
+    );
 });
 
 $container->set(CheckCommand::class, function ($c) {

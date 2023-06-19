@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -27,19 +28,30 @@ use function Normalizator\preg_split;
         'no-vendor',
     ]
 )]
-class MiddleEolNormalization extends AbstractNormalization implements ConfigurableNormalizationInterface
+class MiddleEolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
     /**
+     * Number of allowed redundant middle EOLs.
+     */
+    public const MAX_EXTRA_MIDDLE_EOLS = 1;
+
+    /**
+     * Overridden configuration values.
+     *
      * @var array<string,mixed>
      */
-    protected array $configuration = [
-        'max' => 1,
-    ];
+    private array $overrides;
 
     public function __construct(
+        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher
     ) {
+    }
+
+    public function configure(array $values): void
+    {
+        $this->overrides = $values;
     }
 
     /**
@@ -73,7 +85,7 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
                 $redundantCount = 0;
             }
 
-            if ($redundantCount > $this->configuration['max'] + 1) {
+            if ($redundantCount > $this->getConfig('max_extra_middle_eols', self::MAX_EXTRA_MIDDLE_EOLS) + 1) {
                 $line = '';
             }
 
@@ -88,5 +100,14 @@ class MiddleEolNormalization extends AbstractNormalization implements Configurab
         }
 
         return $file;
+    }
+
+    private function getConfig(string $key, mixed $default): mixed
+    {
+        if (isset($this->overrides[$key])) {
+            return $this->overrides[$key];
+        }
+
+        return $this->configuration->get($key, $default);
     }
 }

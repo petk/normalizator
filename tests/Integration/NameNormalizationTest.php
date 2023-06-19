@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests\Integration;
 
-use Normalizator\ConfigurationResolver;
+use Normalizator\Configuration\Configuration;
+use Normalizator\Configuration\ConfigurationResolver;
 use Normalizator\Finder\File;
 use Normalizator\Normalizator;
 use Normalizator\NormalizatorInterface;
@@ -30,9 +31,12 @@ class NameNormalizationTest extends NormalizatorTestCase
             'name' => true,
         ]);
 
+        /** @var Configuration */
+        $configuration = $this->container->get(Configuration::class);
+        $configuration->setMultiple($options);
+
         /** @var NormalizatorInterface */
         $normalizator = $this->container->get(Normalizator::class);
-        $normalizator->setOptions($options);
 
         // Due to setUp method, we'll loop over files so that we don't loose
         // renamed files between loops.

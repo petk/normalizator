@@ -50,6 +50,8 @@ class NormalizatorTestCase extends TestCase
         $file->chmod(Permissions::EXECUTABLE->get());
 
         $this->addWhitespaceFiles();
+
+        $this->addEolFiles();
     }
 
     /**
@@ -224,6 +226,72 @@ class NormalizatorTestCase extends TestCase
         $this->root->addChild($file);
         $file = vfsStream::newFile('fixed/trailing-whitespace/various.txt');
         $file->setContent("README\n\nLorem ipsum\ndolor sit amet\n\n\n\nfoobar\n\u{0080}\n");
+        $this->root->addChild($file);
+    }
+
+    private function addEolFiles(): void
+    {
+        $file = vfsStream::newFile('initial/final-eol-2/file-1.txt');
+        $file->setContent("\r\r\rlorem ipsum");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-1.txt');
+        $file->setContent("\r\r\rlorem ipsum\r");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-2.txt');
+        $file->setContent("\n\n\nlorem ipsum");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-2.txt');
+        $file->setContent("\n\n\nlorem ipsum\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-3.txt');
+        $file->setContent("\r\n\r\nlorem ipsum");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-3.txt');
+        $file->setContent("\r\n\r\nlorem ipsum\r\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-4.txt');
+        $file->setContent("\n\nlorem ipsum\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-4.txt');
+        $file->setContent("\n\nlorem ipsum\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-5.txt');
+        $file->setContent("\n\nlorem ipsum\n\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-5.txt');
+        $file->setContent("\n\nlorem ipsum\n\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-6.txt');
+        $file->setContent("\n\nlorem ipsum\n\n\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-6.txt');
+        $file->setContent("\n\nlorem ipsum\n\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-7.txt');
+        $file->setContent("\n\n\n\n\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-7.txt');
+        $file->setContent("\n\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-8.txt');
+        $file->setContent("\n\n  \n\n\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-8.txt');
+        $file->setContent("\n\n  \n\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-9.txt');
+        $file->setContent("\r\n\r\n  \r\n\r\n\r\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-9.txt');
+        $file->setContent("\r\n\r\n  \r\n\r\n");
         $this->root->addChild($file);
     }
 }

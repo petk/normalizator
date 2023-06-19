@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -25,23 +26,34 @@ use Normalizator\Util\EolDiscovery;
         'no-vendor',
     ]
 )]
-class FinalEolNormalization extends AbstractNormalization implements ConfigurableNormalizationInterface
+class FinalEolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
     /**
+     * Number of allowed redundant final EOLs.
+     */
+    public const MAX_EXTRA_FINAL_EOLS = 1;
+
+    /**
+     * Overridden configuration values.
+     *
      * @var array<string,mixed>
      */
-    protected array $configuration = [
-        'max' => 1,
-    ];
+    private array $overrides;
 
     /**
      * Class constructor.
      */
     public function __construct(
+        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private EolDiscovery $eolDiscovery
     ) {
+    }
+
+    public function configure(array $values): void
+    {
+        $this->overrides = $values;
     }
 
     /**
@@ -59,7 +71,7 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
         $newlines = $this->getFinalEols($content);
         $trimmed = rtrim($content, "\r\n");
 
-        $max = $this->configuration['max'];
+        $max = $this->getConfig('max_extra_final_eols', self::MAX_EXTRA_FINAL_EOLS);
 
         // Empty content doesn't need one final newline when max = 1
         if ('' === $trimmed && 1 === $max) {
@@ -85,6 +97,15 @@ class FinalEolNormalization extends AbstractNormalization implements Configurabl
         }
 
         return $file;
+    }
+
+    private function getConfig(string $key, mixed $default): mixed
+    {
+        if (isset($this->overrides[$key])) {
+            return $this->overrides[$key];
+        }
+
+        return $this->configuration->get($key, $default);
     }
 
    /**

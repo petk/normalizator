@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Normalizator;
 
 use Normalizator\Attribute\Normalization;
-use Normalizator\EventDispatcher\EventDispatcher;
-use Normalizator\Filter\FilterManager;
+use Normalizator\Exception\ContainerEntryNotFoundException;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalization\ConfigurableNormalizationInterface;
 use Normalizator\Normalization\NormalizationInterface;
-use Normalizator\Util\EolDiscovery;
-use Normalizator\Util\GitDiscovery;
-use Normalizator\Util\Slugify;
 
 /**
  * A simple factory that registers and creates all normalizations.
@@ -22,7 +18,7 @@ class NormalizationFactory
     /**
      * Array of registered normalization classes.
      *
-     * @var array<string,array<int,array<int,string>|string>>
+     * @var array<string,class-string<NormalizationInterface>>
      */
     private array $normalizationsRegister = [];
 
@@ -34,12 +30,8 @@ class NormalizationFactory
     private array $normalizations = [];
 
     public function __construct(
-        private Finder $finder,
-        private Slugify $slugify,
-        private EolDiscovery $eolDiscovery,
-        private GitDiscovery $gitDiscovery,
-        private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher,
+        private readonly Finder $finder,
+        private readonly Container $container,
     ) {
         $this->registerNormalizations();
     }
@@ -61,42 +53,7 @@ class NormalizationFactory
 
         $class = $this->normalizationsRegister[$name];
 
-        $dependencies = [$this->filterManager, $this->eventDispatcher];
-
-        // Normalizations with dependencies.
-        switch ($name) {
-            case 'eol':
-                array_push(
-                    $dependencies,
-                    $this->eolDiscovery,
-                );
-
-                break;
-
-            case 'final-eol':
-                array_push(
-                    $dependencies,
-                    $this->eolDiscovery,
-                );
-
-                break;
-
-            case 'name':
-                array_push(
-                    $dependencies,
-                    $this->slugify
-                );
-
-                break;
-
-            case 'permissions':
-                array_push(
-                    $dependencies,
-                    $this->gitDiscovery,
-                );
-
-                break;
-        }
+        $dependencies = $this->getDependencies($class);
 
         $normalization = new $class(...$dependencies);
 
@@ -113,15 +70,17 @@ class NormalizationFactory
             if (
                 'php' !== $normalization->getExtension()
                 || 'Normalization.php' !== substr($normalization->getFilename(), -17)
-                && 'AbstractNormalization.php' === $normalization->getFilename()
             ) {
                 continue;
             }
 
             $class = substr($normalization->getSubPathname(), 0, -4);
             $class = str_replace('/', '\\', $class);
+
+            /** @var class-string<NormalizationInterface> */
             $class = 'Normalizator\\Normalization\\' . $class;
 
+            // Resolve normalization attributes.
             $reflection = new \ReflectionClass($class);
             foreach ($reflection->getAttributes() as $attribute) {
                 if (Normalization::class === $attribute->getName()) {
@@ -130,7 +89,7 @@ class NormalizationFactory
                         throw new \Exception('The name attribute is required for Normalization ' . $class);
                     }
 
-                    $name = $arguments['name'];
+                    $name = (string) $arguments['name'];
 
                     $this->normalizationsRegister[$name] = $class;
 
@@ -138,5 +97,37 @@ class NormalizationFactory
                 }
             }
         }
+    }
+
+    /**
+     * Resolve normalization dependencies.
+     *
+     * @param class-string $class
+     *
+     * @return array<int,mixed>
+     */
+    private function getDependencies(string $class): array
+    {
+        $dependencies = [];
+
+        $ref = new \ReflectionClass($class);
+        $constructor = $ref->getConstructor();
+
+        if (null === $constructor) {
+            return $dependencies;
+        }
+
+        foreach ($constructor->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            if (null !== $type && $type instanceof \ReflectionNamedType) {
+                try {
+                    $dependencies[] = $this->container->get($type->getName());
+                } catch (ContainerEntryNotFoundException $e) {
+                    continue;
+                }
+            }
+        }
+
+        return $dependencies;
     }
 }

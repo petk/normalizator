@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator;
 
+use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
@@ -17,27 +18,13 @@ class Normalizator implements NormalizatorInterface
 {
     public const VERSION = '0.0.2-dev';
 
-    /**
-     * @var array<string,null|array<mixed>|bool|float|int|string>
-     */
-    private array $options = [];
-
     public function __construct(
+        private Configuration $configuration,
         private NormalizationFactory $normalizationFactory,
         private FilenameResolver $filenameResolver,
         private EventDispatcher $eventDispatcher,
         private Logger $logger,
     ) {
-    }
-
-    /**
-     * Set options for normalization configuration.
-     *
-     * @param array<string,null|array<mixed>|bool|float|int|string> $options
-     */
-    public function setOptions(array $options): void
-    {
-        $this->options = $options;
     }
 
     public function normalize(File $path): void
@@ -70,31 +57,31 @@ class Normalizator implements NormalizatorInterface
             return $path;
         }
 
-        if (false !== $this->options['encoding']) {
+        if (false !== $this->configuration->get('encoding')) {
             $path = $this->normalizationFactory->make('encoding')->normalize($path);
         }
 
-        if (false !== $this->options['trailing-whitespace']) {
+        if (false !== $this->configuration->get('trailing-whitespace')) {
             $path = $this->normalizationFactory->make('trailing-whitespace')->normalize($path);
         }
 
-        if (false !== $this->options['final-eol']) {
-            $path = $this->normalizationFactory->make('final-eol', ['max' => (int) ($this->options['final-eol'] ?? 1)])->normalize($path);
+        if (false !== $this->configuration->get('final-eol')) {
+            $path = $this->normalizationFactory->make('final-eol')->normalize($path);
         }
 
-        if (false !== $this->options['eol']) {
+        if (false !== $this->configuration->get('eol')) {
             $path = $this->normalizationFactory->make('eol')->normalize($path);
         }
 
-        if (false !== $this->options['leading-eol']) {
+        if (false !== $this->configuration->get('leading-eol')) {
             $path = $this->normalizationFactory->make('leading-eol')->normalize($path);
         }
 
-        if (false !== $this->options['middle-eol']) {
-            $path = $this->normalizationFactory->make('middle-eol', ['max' => (int) ($this->options['middle-eol'] ?? 1)])->normalize($path);
+        if (false !== $this->configuration->get('middle-eol')) {
+            $path = $this->normalizationFactory->make('middle-eol')->normalize($path);
         }
 
-        if (false !== $this->options['space-before-tab']) {
+        if (false !== $this->configuration->get('space-before-tab')) {
             $path = $this->normalizationFactory->make('space-before-tab')->normalize($path);
         }
 
@@ -103,11 +90,11 @@ class Normalizator implements NormalizatorInterface
 
     private function normalizePath(File $path): File
     {
-        if (false !== $this->options['extension']) {
+        if (false !== $this->configuration->get('extension')) {
             $path = $this->normalizationFactory->make('extension')->normalize($path);
         }
 
-        if (false !== $this->options['name']) {
+        if (false !== $this->configuration->get('name')) {
             $path = $this->normalizationFactory->make('name')->normalize($path);
         }
 
@@ -123,10 +110,10 @@ class Normalizator implements NormalizatorInterface
 
     private function normalizePermissions(File $path): File
     {
-        if (!isset($this->options['permissions']) || false === $this->options['permissions']) {
-            return $path;
+        if (false !== $this->configuration->get('permissions')) {
+            $path = $this->normalizationFactory->make('permissions')->normalize($path);
         }
 
-        return $this->normalizationFactory->make('permissions')->normalize($path);
+        return $path;
     }
 }

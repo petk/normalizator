@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -28,22 +29,32 @@ use function Normalizator\preg_replace;
         'no-vendor',
     ]
 )]
-class EolNormalization extends AbstractNormalization implements ConfigurableNormalizationInterface
+class EolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
     /**
+     * Some test files might include also CR characters as part of the test so
+     * those can be skipped.
+     */
+    public const SKIP_CR = false;
+
+    /**
+     * Overridden configuration values.
+     *
      * @var array<string,mixed>
      */
-    protected array $configuration = [
-        // Some *.phpt test files include also CR characters as part of the test
-        // so those can be skipped.
-        'skip-cr' => false,
-    ];
+    private array $overrides;
 
     public function __construct(
+        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private EolDiscovery $eolDiscovery
     ) {
+    }
+
+    public function configure(array $values): void
+    {
+        $this->overrides = $values;
     }
 
     /**
@@ -55,7 +66,7 @@ class EolNormalization extends AbstractNormalization implements ConfigurableNorm
             return $file;
         }
 
-        if ($this->configuration['skip-cr']) {
+        if ($this->getConfig('skip_cr', self::SKIP_CR)) {
             $regex = '/(?>\r\n|\n)/m';
         } else {
             $regex = '/(*BSR_ANYCRLF)\R/m';
@@ -72,6 +83,15 @@ class EolNormalization extends AbstractNormalization implements ConfigurableNorm
         }
 
         return $file;
+    }
+
+    private function getConfig(string $key, mixed $default): mixed
+    {
+        if (isset($this->overrides[$key])) {
+            return $this->overrides[$key];
+        }
+
+        return $this->configuration->get($key, $default);
     }
 
     /**

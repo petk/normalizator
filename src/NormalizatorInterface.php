@@ -12,13 +12,6 @@ use Normalizator\Finder\File;
 interface NormalizatorInterface
 {
     /**
-     * Set options for the normalizator.
-     *
-     * @param array<string,mixed> $options
-     */
-    public function setOptions(array $options): void;
-
-    /**
      * Normalize given path.
      */
     public function normalize(File $path): void;

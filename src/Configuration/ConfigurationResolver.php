@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Normalizator;
+namespace Normalizator\Configuration;
 
 use Normalizator\Util\EolDiscovery;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -30,8 +30,10 @@ class ConfigurationResolver
         'trailing-whitespace',
     ];
 
-    public function __construct(private EolDiscovery $eolDiscovery)
-    {
+    public function __construct(
+        private Configuration $configuration,
+        private EolDiscovery $eolDiscovery
+    ) {
     }
 
     /**
@@ -61,7 +63,9 @@ class ConfigurationResolver
         if (true === $all) {
             $configuration['eol'] = 'lf';
             $configuration['final-eol'] = 1;
+            $configuration['max_extra_final_eols'] = 1;
             $configuration['middle-eol'] = 1;
+            $configuration['max_extra_middle_eols'] = 1;
 
             foreach ($this->options as $key) {
                 if (false === $configuration[$key]) {
@@ -75,7 +79,10 @@ class ConfigurationResolver
         // Set the --middle-eol value
         if (null === $configuration['middle-eol']) {
             $configuration['middle-eol'] = 1;
+            $configuration['max_extra_middle_eols'] = 1;
         }
+
+        $this->configuration->setMultiple($configuration);
 
         return $configuration;
     }
