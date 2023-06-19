@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
+use Normalizator\Configuration\Configuration;
+use Normalizator\EventDispatcher\Event\AskForEncodingEvent;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -26,7 +28,7 @@ use function Normalizator\mb_convert_encoding;
         'no-vendor',
     ]
 )]
-class EncodingNormalization implements NormalizationInterface
+class EncodingNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
     /**
      * List of encodings that can be converted to UTF-8 confidently.
@@ -38,10 +40,23 @@ class EncodingNormalization implements NormalizationInterface
         'windows-1252',
     ];
 
+    /**
+     * Overridden configuration values.
+     *
+     * @var array<string,mixed>
+     */
+    private array $overrides;
+
     public function __construct(
+        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher
     ) {
+    }
+
+    public function configure(array $values): void
+    {
+        $this->overrides = $values;
     }
 
     /**
@@ -55,36 +70,68 @@ class EncodingNormalization implements NormalizationInterface
 
         $encoding = $this->getFileEncoding($file);
 
-        if ('' === $encoding) {
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'unknown encoding'));
+        // Encoding is ok.
+        if (in_array($encoding, ['ascii', 'us-ascii', 'utf-8'], true)) {
+            return $file;
+        }
+
+        // Automatic encoding normalization supports only a limited list of
+        // encoding conversions. Try asking user for encoding if encoding
+        // cannot be automatically converted.
+        if (
+            !in_array($encoding, $this->supportedEncodings, true)
+            && null !== $this->getConfig('encoding_callback')
+        ) {
+            /** @var AskForEncodingEvent */
+            $event = $this->eventDispatcher->dispatch(new AskForEncodingEvent($file, $encoding));
+            $encoding = $event->getEncoding();
+        }
+
+        // Validate encoding input.
+        $valid = false;
+        foreach (\mb_list_encodings() as $supported) {
+            if (strtolower($supported) === $encoding) {
+                $valid = true;
+
+                break;
+            }
+        }
+
+        $encoding = ('' === $encoding) ? 'unknown' : $encoding;
+
+        // Encoding is not valid.
+        if (
+            !$valid
+            || (!in_array($encoding, $this->supportedEncodings, true) && null === $this->getConfig('encoding_callback'))
+        ) {
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding, 'error'));
 
             return $file;
         }
 
-        // @todo: Here we should try to fix the encoding to proper one.
-        // Options:
-        // 1. iconv('ISO-8859-7', 'UTF-8', file_get_contents($fileName))
-        // 2. mb_convert_encoding
-        // 3. UConverter::transcode
-        if (!in_array($encoding, ['ascii', 'us-ascii', 'utf-8'], true)) {
-            // Encoding normalization allows only a limited list of encoding
-            // conversions.
-            if (!in_array($encoding, $this->supportedEncodings, true)) {
-                $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding, 'error'));
+        $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding . ' -> UTF-8'));
 
-                return $file;
-            }
+        return $this->convert($file, 'UTF-8', $encoding);
+    }
 
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding . ' -> UTF-8'));
+    protected function convert(File $file, string $to, string $from): File
+    {
+        $content = mb_convert_encoding($file->getNewContent(), $to, $from);
 
-            $content = mb_convert_encoding($file->getNewContent(), 'UTF-8', $encoding);
-
-            if (!is_array($content)) {
-                $file->setNewContent($content);
-            }
+        if (!is_array($content)) {
+            $file->setNewContent($content);
         }
 
         return $file;
+    }
+
+    private function getConfig(string $key, mixed $default = null): mixed
+    {
+        if (isset($this->overrides[$key])) {
+            return $this->overrides[$key];
+        }
+
+        return $this->configuration->get($key, $default);
     }
 
     /**

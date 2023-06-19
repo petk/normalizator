@@ -7,6 +7,10 @@ parameters:
         - config
         - src
         - tests
+    ignoreErrors:
+        -
+            message: '#Function [a-zA-Z0-9\\_]+ is unsafe to use.#'
+            path: src/functions.php
 
 includes:
     - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon

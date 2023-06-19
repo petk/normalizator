@@ -9,6 +9,7 @@ use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
 use Normalizator\Container;
+use Normalizator\EventDispatcher\Event\AskForEncodingEvent;
 use Normalizator\EventDispatcher\Event\DebugEvent;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
@@ -37,8 +38,15 @@ $container->set(Logger::class, function ($c) {
     return new Logger();
 });
 
+$container->set(Configuration::class, function ($c) {
+    return new Configuration();
+});
+
 $container->set(NormalizationListener::class, function ($c) {
-    return new NormalizationListener($c->get(Logger::class));
+    return new NormalizationListener(
+        $c->get(Logger::class),
+        $c->get(Configuration::class),
+    );
 });
 
 $container->set(DebugListener::class, function ($c) {
@@ -50,6 +58,11 @@ $container->set(ListenerProvider::class, function ($c) {
 
     $provider->addListener(
         NormalizationEvent::class,
+        $c->get(NormalizationListener::class),
+    );
+
+    $provider->addListener(
+        AskForEncodingEvent::class,
         $c->get(NormalizationListener::class),
     );
 
@@ -96,10 +109,6 @@ $container->set(Slugify::class, function ($c) {
     return new Slugify();
 });
 
-$container->set(Configuration::class, function ($c) {
-    return new Configuration();
-});
-
 $container->set(FilterManager::class, function ($c) {
     return new FilterManager($c->get(FilterFactory::class));
 });
@@ -144,6 +153,7 @@ $container->set(CheckCommand::class, function ($c) {
 
 $container->set(FixCommand::class, function ($c) {
     return new FixCommand(
+        $c->get(Configuration::class),
         $c->get(ConfigurationResolver::class),
         $c->get(Finder::class),
         $c->get(Normalizator::class),

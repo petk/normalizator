@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
+use Normalizator\Configuration\Configuration;
 use Normalizator\Configuration\ConfigurationResolver;
+use Normalizator\Finder\File;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
 use Normalizator\Util\Logger;
@@ -20,6 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(
     name: 'fix',
@@ -28,6 +31,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class FixCommand extends Command
 {
     public function __construct(
+        private Configuration $configuration,
         private ConfigurationResolver $configurationResolver,
         private Finder $finder,
         private Normalizator $normalizator,
@@ -51,6 +55,31 @@ class FixCommand extends Command
 
             Prior to running this command, a good idea is to first check what will be fixed with the <comment>check</comment> command.
             EOF;
+    }
+
+    /**
+     * Get manually entered encoding for a given file.
+     */
+    public function askForEncoding(
+        File $file,
+        InputInterface $input,
+        OutputInterface $output,
+        string $defaultEncoding = ''
+    ): string {
+        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
+        $helper = $this->getHelper('question');
+
+        $question = new Question(
+            sprintf(
+                'Please enter valid encoding for <info>%s</info> <comment>%s</comment> ',
+                $file->getSubPathname(),
+                '' !== $defaultEncoding ? '(' . $defaultEncoding . '?)' : ''
+            ),
+            $defaultEncoding
+        );
+
+        /** @var string */
+        return $helper->ask($input, $output, $question);
     }
 
     protected function configure(): void
@@ -99,6 +128,12 @@ class FixCommand extends Command
         }
 
         $output->writeln(['', 'Fixing files in progress.']);
+
+        if (true !== $input->getOption('no-interaction')) {
+            $this->configuration->set('encoding_callback', function (File $file, string $defaultEncoding = '') use ($input, $output): string {
+                return $this->askForEncoding($file, $input, $output, $defaultEncoding);
+            });
+        }
 
         $exitCode = 0;
 

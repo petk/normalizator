@@ -307,6 +307,11 @@ function mime_content_type(string $filename): string
  * Overridden \mb_convert_encoding() function that throws exception in case of
  * failure instead of the default false.
  *
+ * @param array<int,string>|string $string
+ * @param array<int,string>|string $from
+ *
+ * @return array<int,string>|string
+ *
  * @throws \RuntimeException
  */
 function mb_convert_encoding(array|string $string, string $to, null|array|string $from = null): array|string

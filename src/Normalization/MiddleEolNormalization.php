@@ -102,7 +102,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
         return $file;
     }
 
-    private function getConfig(string $key, mixed $default): mixed
+    private function getConfig(string $key, mixed $default = null): mixed
     {
         if (isset($this->overrides[$key])) {
             return $this->overrides[$key];
