@@ -108,40 +108,40 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
         return $this->configuration->get($key, $default);
     }
 
-   /**
-    * Get all final newlines.
-    *
-    * @return array<int,string>
-    */
-   private function getFinalEols(string $content): array
-   {
-       $newlines = [];
+    /**
+     * Get all final newlines.
+     *
+     * @return array<int,string>
+     */
+    private function getFinalEols(string $content): array
+    {
+        $newlines = [];
 
-       while ('' !== $content) {
-           if ("\r\n" === substr($content, -2)) {
-               $newlines[] = "\r\n";
-               $content = substr($content, 0, -2);
+        while ('' !== $content) {
+            if ("\r\n" === substr($content, -2)) {
+                $newlines[] = "\r\n";
+                $content = substr($content, 0, -2);
 
-               continue;
-           }
+                continue;
+            }
 
-           if ("\n" === substr($content, -1)) {
-               $newlines[] = "\n";
-               $content = substr($content, 0, -1);
+            if ("\n" === substr($content, -1)) {
+                $newlines[] = "\n";
+                $content = substr($content, 0, -1);
 
-               continue;
-           }
+                continue;
+            }
 
-           if ("\r" === substr($content, -1)) {
-               $newlines[] = "\r";
-               $content = substr($content, 0, -1);
+            if ("\r" === substr($content, -1)) {
+                $newlines[] = "\r";
+                $content = substr($content, 0, -1);
 
-               continue;
-           }
+                continue;
+            }
 
-           break;
-       }
+            break;
+        }
 
-       return array_reverse($newlines);
-   }
+        return array_reverse($newlines);
+    }
 }
