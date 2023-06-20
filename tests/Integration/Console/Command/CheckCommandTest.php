@@ -16,18 +16,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CheckCommandTest extends NormalizatorTestCase
 {
-    private function createApplication(): Application
-    {
-        $application = new Application();
-
-        /** @var CheckCommand */
-        $command = $this->container->get(CheckCommand::class);
-
-        $application->add($command);
-
-        return $application;
-    }
-
     public function testExecute(): void
     {
         $application = $this->createApplication();
@@ -82,5 +70,17 @@ class CheckCommandTest extends NormalizatorTestCase
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('- 4 leading EOL(s)', $output);
+    }
+
+    private function createApplication(): Application
+    {
+        $application = new Application();
+
+        /** @var CheckCommand */
+        $command = $this->container->get(CheckCommand::class);
+
+        $application->add($command);
+
+        return $application;
     }
 }

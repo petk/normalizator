@@ -17,18 +17,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class FixCommandTest extends NormalizatorTestCase
 {
-    private function createApplication(): Application
-    {
-        $application = new Application();
-
-        /** @var FixCommand */
-        $command = $this->container->get(FixCommand::class);
-
-        $application->add($command);
-
-        return $application;
-    }
-
     public function testExecute(): void
     {
         $application = $this->createApplication();
@@ -92,5 +80,17 @@ class FixCommandTest extends NormalizatorTestCase
 
             $this->assertFileExists($file->getPathname());
         }
+    }
+
+    private function createApplication(): Application
+    {
+        $application = new Application();
+
+        /** @var FixCommand */
+        $command = $this->container->get(FixCommand::class);
+
+        $application->add($command);
+
+        return $application;
     }
 }
