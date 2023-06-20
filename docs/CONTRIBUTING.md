@@ -90,3 +90,8 @@ released by the following release process:
   ```sh
   ./bin/build
   ```
+
+* **6. Docker image**
+
+  [Docker image](https://hub.docker.com/r/petk/normalizator) is built
+  automatically via GitHub actionts when new release is created.
