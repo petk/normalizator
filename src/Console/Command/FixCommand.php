@@ -137,7 +137,8 @@ class FixCommand extends Command
 
         $exitCode = 0;
 
-        foreach ($this->finder->getTree($input->getArgument('path')) as $file) {
+        $iterator = $this->finder->getTree($input->getArgument('path'));
+        foreach ($iterator as $file) {
             $this->normalizator->normalize($file);
 
             $tableStyle = new TableStyle();
@@ -186,8 +187,8 @@ class FixCommand extends Command
                 '<info>%d %s been fixed; Checked %d %s.</info>',
                 count($this->logger->getAllLogs()),
                 (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
-                count($this->finder),
-                (1 === count($this->finder)) ? 'file' : 'files',
+                \iterator_count($iterator),
+                (1 === \iterator_count($iterator)) ? 'file' : 'files',
             )]);
         }
 

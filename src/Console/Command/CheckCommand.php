@@ -109,7 +109,8 @@ class CheckCommand extends Command
 
         $exitCode = 0;
 
-        foreach ($this->finder->getTree($input->getArgument('path')) as $file) {
+        $iterator = $this->finder->getTree($input->getArgument('path'));
+        foreach ($iterator as $file) {
             $this->normalizator->normalize($file);
 
             $tableStyle = new TableStyle();
@@ -153,8 +154,8 @@ class CheckCommand extends Command
                 [sprintf(
                     '%d of %d %s should be fixed.',
                     count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
-                    count($this->finder),
-                    (1 === count($this->finder)) ? 'file' : 'files',
+                    \iterator_count($iterator),
+                    (1 === \iterator_count($iterator)) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -164,8 +165,8 @@ class CheckCommand extends Command
         } else {
             $output->writeln(['', sprintf(
                 '<info>Checked %d %s. Everything looks good.</info>',
-                count($this->finder),
-                (1 === count($this->finder)) ? 'file' : 'files',
+                \iterator_count($iterator),
+                (1 === \iterator_count($iterator)) ? 'file' : 'files',
             )]);
         }
 
