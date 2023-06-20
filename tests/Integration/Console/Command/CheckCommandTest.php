@@ -16,13 +16,21 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CheckCommandTest extends NormalizatorTestCase
 {
+    private function createApplication(): Application
+    {
+        $application = new Application();
+
+        /** @var CheckCommand */
+        $command = $this->container->get(CheckCommand::class);
+
+        $application->add($command);
+
+        return $application;
+    }
+
     public function testExecute(): void
     {
-        /** @var CheckCommand */
-        $checkCommand = $this->container->get(CheckCommand::class);
-
-        $application = new Application();
-        $application->add($checkCommand);
+        $application = $this->createApplication();
 
         $command = $application->find('check');
         $commandTester = new CommandTester($command);
@@ -46,5 +54,33 @@ class CheckCommandTest extends NormalizatorTestCase
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('CHECKING ', $output);
         $this->assertStringContainsString('trailing whitespace', $output);
+    }
+
+    public function testLeadingEol(): void
+    {
+        $application = $this->createApplication();
+
+        $command = $application->find('check');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([
+            'path' => 'vfs://' . $this->root->getChild('initial/leading-eol/file-5.txt')->path(),
+            '--leading-eol' => true,
+        ]);
+
+        $this->assertEquals(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('- 3 leading EOL(s)', $output);
+
+        $commandTester->execute([
+            'path' => 'vfs://' . $this->root->getChild('initial/leading-eol/file-6.txt')->path(),
+            '--leading-eol' => true,
+        ]);
+
+        $this->assertEquals(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('- 4 leading EOL(s)', $output);
     }
 }

@@ -17,14 +17,14 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class FixCommandTest extends NormalizatorTestCase
 {
-    public function createApplication(): Application
+    private function createApplication(): Application
     {
-        /** @var FixCommand */
-        $fixCommand = $this->container->get(FixCommand::class);
-
         $application = new Application();
 
-        $application->add($fixCommand);
+        /** @var FixCommand */
+        $command = $this->container->get(FixCommand::class);
+
+        $application->add($command);
 
         return $application;
     }

@@ -47,9 +47,46 @@ class LeadingEolNormalization implements NormalizationInterface
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'leading EOL(s)'));
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, count($this->getLeadingEols($content)) . ' leading EOL(s)'));
         }
 
         return $file;
+    }
+
+    /**
+     * Get all leading newlines.
+     *
+     * @return array<int,string>
+     */
+    private function getLeadingEols(string $content): array
+    {
+        $newlines = [];
+
+        while ('' !== $content) {
+            if ("\r\n" === substr($content, 0, 2)) {
+                $newlines[] = "\r\n";
+                $content = substr($content, 2);
+
+                continue;
+            }
+
+            if ("\n" === substr($content, 0, 1)) {
+                $newlines[] = "\n";
+                $content = substr($content, 1);
+
+                continue;
+            }
+
+            if ("\r" === substr($content, 0, 1)) {
+                $newlines[] = "\r";
+                $content = substr($content, 1);
+
+                continue;
+            }
+
+            break;
+        }
+
+        return array_reverse($newlines);
     }
 }

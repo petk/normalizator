@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Report contains number of redundant leading EOLs.
 - Encoding can be manually entered when cannot be confidently retrieved
   automatically.
 
