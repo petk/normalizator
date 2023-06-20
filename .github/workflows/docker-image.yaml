@@ -17,10 +17,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build Docker image
         run: |
-          make build-docker TAG="$GITHUB_REF_NAME"
+          make build-docker TAG="${GITHUB_REF_NAME#v}"
       - name: Publish Docker image
         run: |
-          make push-docker TAG="$GITHUB_REF_NAME"
+          make push-docker TAG="${GITHUB_REF_NAME#v}"
       - name: Tag latest Docker image
         run: |
-          make push-docker-latest TAG="$GITHUB_REF_NAME"
+          make push-docker-latest TAG="${GITHUB_REF_NAME#v}"
