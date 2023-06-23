@@ -65,7 +65,7 @@ class CrlfFilesTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'path' => $repo,
+            'paths' => [$repo],
             '--no-interaction' => true,
             '--eol' => null,
         ]);

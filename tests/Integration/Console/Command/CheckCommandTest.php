@@ -24,7 +24,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial')->path()],
         ]);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
@@ -34,7 +34,22 @@ class CheckCommandTest extends NormalizatorTestCase
 
         // Single file.
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial/trailing-whitespace/fileWithTrailingSpaces.php')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/trailing-whitespace/fileWithTrailingSpaces.php')->path()],
+        ]);
+
+        $this->assertEquals(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('CHECKING ', $output);
+        $this->assertStringContainsString('trailing whitespace', $output);
+
+        // Multiple paths.
+        $commandTester->execute([
+            'paths' => [
+                'vfs://' . $this->root->getChild('initial/trailing-whitespace/fileWithTrailingSpaces.php')->path(),
+                'vfs://' . $this->root->getChild('initial/final-eol')->path(),
+                'vfs://' . $this->root->getChild('initial/leading-eol')->path(),
+            ],
         ]);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
@@ -52,7 +67,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial/leading-eol/file-5.txt')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/leading-eol/file-5.txt')->path()],
             '--leading-eol' => true,
         ]);
 
@@ -62,7 +77,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $this->assertStringContainsString('- 3 leading EOL(s)', $output);
 
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial/leading-eol/file-6.txt')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/leading-eol/file-6.txt')->path()],
             '--leading-eol' => true,
         ]);
 
@@ -80,7 +95,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path()],
             '--final-eol' => null,
         ]);
 
@@ -91,7 +106,7 @@ class CheckCommandTest extends NormalizatorTestCase
 
         // Check file by setting the max final EOLS to 3.
         $commandTester->execute([
-            'path' => 'vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path()],
             '--final-eol' => 3,
         ]);
 

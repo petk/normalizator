@@ -26,6 +26,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class CheckCommand extends Command
 {
+    private int $exitCode;
+
     public function __construct(
         private Configurator $configurator,
         private Finder $finder,
@@ -46,7 +48,7 @@ class CheckCommand extends Command
         return <<<'EOF'
             The <info>%command.name%</info> command checks files with given normalizations.
 
-              <info>%command.full_name%</info> ~/path/to/files
+              <info>%command.full_name%</info> -- ~/path/to/files ~/path/to/other/files ...
 
             The <comment>--encoding, -c</comment> option converts file encoding to UTF-8. Files for writing code are usually encoded as UTF-8 or ASCII.
 
@@ -69,7 +71,7 @@ class CheckCommand extends Command
     protected function configure(): void
     {
         $this->setDefinition([
-            new InputArgument('path', InputArgument::REQUIRED, 'Path to check.'),
+            new InputArgument('paths', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Paths to check.'),
             new InputOption('encoding', 'c', InputOption::VALUE_NONE, 'Convert file encoding to UTF-8.'),
             new InputOption('eol', 'e', InputOption::VALUE_OPTIONAL, 'Convert EOL sequence.', false),
             new InputOption('final-eol', 'N', InputOption::VALUE_OPTIONAL, 'Trim redundant final EOLs.', false),
@@ -93,6 +95,8 @@ class CheckCommand extends Command
             return Command::FAILURE;
         }
 
+        $paths = $input->getArgument('paths');
+
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
@@ -100,16 +104,75 @@ class CheckCommand extends Command
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
-            ['CHECKING ' . $input->getArgument('path')],
+            ['CHECKING ' . implode(', ', $paths)],
             'header',
             true
         );
 
         $output->writeln([$formattedBlock, '']);
 
-        $exitCode = 0;
+        $this->exitCode = 0;
 
-        $iterator = $this->finder->getTree($input->getArgument('path'));
+        $count = 0;
+        foreach ($paths as $path) {
+            $iterator = $this->normalize($path, $output);
+            $count += \iterator_count($iterator);
+        }
+
+        // Script execution info.
+        $output->writeln(['', sprintf(
+            'Time: %.3f sec; Memory: %.3f MB.',
+            $this->timer->stop(),
+            round(memory_get_peak_usage() / 1024 / 1024, 3),
+        )]);
+
+        if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
+            $formattedBlock = $formatter->formatBlock(
+                [sprintf(
+                    '%d of %d %s should be fixed.',
+                    count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
+                    $count,
+                    (1 === $count) ? 'file' : 'files',
+                )],
+                'error',
+                true
+            );
+
+            $output->writeln(['', $formattedBlock]);
+        } else {
+            $output->writeln(['', sprintf(
+                '<info>Checked %d %s. Everything looks good.</info>',
+                $count,
+                (1 === $count) ? 'file' : 'files',
+            )]);
+        }
+
+        // Print debug messages.
+        if (0 < count($this->logger->getDebugMessages())) {
+            if ($output->isDebug()) {
+                $output->writeln([
+                    '',
+                    '<error>Debug errors and warnings:</error>',
+                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
+                ]);
+            }
+
+            $this->exitCode = 1;
+        }
+
+        // Clear logger for clean state.
+        $this->logger->clear();
+
+        return (1 === $this->exitCode) ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    /**
+     * Run normalizator on given path and send output.
+     */
+    private function normalize(string $path, OutputInterface $output): \Iterator
+    {
+        $iterator = $this->finder->getTree($path);
+
         foreach ($iterator as $file) {
             $this->normalizator->normalize($file);
 
@@ -135,57 +198,13 @@ class CheckCommand extends Command
                 $table->render();
                 $output->writeln('');
 
-                $exitCode = 1;
+                $this->exitCode = 1;
             } elseif ($output->isVerbose()) {
                 $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
                 $table->render();
             }
         }
 
-        // Script execution info.
-        $output->writeln(['', sprintf(
-            'Time: %.3f sec; Memory: %.3f MB.',
-            $this->timer->stop(),
-            round(memory_get_peak_usage() / 1024 / 1024, 3),
-        )]);
-
-        if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
-            $formattedBlock = $formatter->formatBlock(
-                [sprintf(
-                    '%d of %d %s should be fixed.',
-                    count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
-                    \iterator_count($iterator),
-                    (1 === \iterator_count($iterator)) ? 'file' : 'files',
-                )],
-                'error',
-                true
-            );
-
-            $output->writeln(['', $formattedBlock]);
-        } else {
-            $output->writeln(['', sprintf(
-                '<info>Checked %d %s. Everything looks good.</info>',
-                \iterator_count($iterator),
-                (1 === \iterator_count($iterator)) ? 'file' : 'files',
-            )]);
-        }
-
-        // Print debug messages.
-        if (0 < count($this->logger->getDebugMessages())) {
-            if ($output->isDebug()) {
-                $output->writeln([
-                    '',
-                    '<error>Debug errors and warnings:</error>',
-                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
-                ]);
-            }
-
-            $exitCode = 1;
-        }
-
-        // Clear logger for clean state.
-        $this->logger->clear();
-
-        return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
+        return $iterator;
     }
 }

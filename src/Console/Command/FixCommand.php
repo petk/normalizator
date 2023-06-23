@@ -30,6 +30,8 @@ use Symfony\Component\Console\Question\Question;
 )]
 class FixCommand extends Command
 {
+    private int $exitCode;
+
     public function __construct(
         private Configurator $configurator,
         private Configuration $configuration,
@@ -85,7 +87,7 @@ class FixCommand extends Command
     protected function configure(): void
     {
         $this->setDefinition([
-            new InputArgument('path', InputArgument::REQUIRED, 'Path to fix.'),
+            new InputArgument('paths', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Paths to check.'),
             new InputOption('encoding', 'c', InputOption::VALUE_NONE, 'Convert file encoding to UTF-8.'),
             new InputOption('eol', 'e', InputOption::VALUE_OPTIONAL, 'Convert EOL sequence.', false),
             new InputOption('final-eol', 'N', InputOption::VALUE_OPTIONAL, 'Trim redundant final EOLs.', false),
@@ -115,6 +117,8 @@ class FixCommand extends Command
             return Command::FAILURE;
         }
 
+        $paths = $input->getArgument('paths');
+
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
@@ -122,7 +126,7 @@ class FixCommand extends Command
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
-            ['FIXING ' . $input->getArgument('path')],
+            ['FIXING ' . implode(', ', $paths)],
             'header',
             true
         );
@@ -135,9 +139,90 @@ class FixCommand extends Command
 
         $output->writeln(['', 'Fixing files in progress.']);
 
-        $exitCode = 0;
+        $this->exitCode = 0;
 
-        $iterator = $this->finder->getTree($input->getArgument('path'));
+        $count = 0;
+        foreach ($paths as $path) {
+            $iterator = $this->normalize($path, $output);
+            $count += \iterator_count($iterator);
+        }
+
+        // Script execution info.
+        $output->writeln(['', sprintf(
+            'Time: %.3f sec; Memory: %.3f MB.',
+            $this->timer->stop(),
+            round(memory_get_peak_usage() / 1024 / 1024, 3),
+        )]);
+
+        if (0 < count($this->logger->getAllLogs())) {
+            $output->writeln(['', sprintf(
+                '<info>%d %s been fixed; Checked %d %s.</info>',
+                count($this->logger->getAllLogs()),
+                (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
+                $count,
+                (1 === $count) ? 'file' : 'files',
+            )]);
+        }
+
+        if (0 < count($this->logger->getAllErrors())) {
+            $formattedBlock = $formatter->formatBlock(
+                [sprintf(
+                    '%d %s should be fixed manually.',
+                    count($this->logger->getAllErrors()),
+                    (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
+                )],
+                'error',
+                true
+            );
+
+            $output->writeln(['', $formattedBlock]);
+
+            $this->exitCode = 1;
+        }
+
+        // Print debug messages.
+        if (0 < count($this->logger->getDebugMessages())) {
+            if ($output->isDebug()) {
+                $output->writeln([
+                    '',
+                    '<error>Debug errors and warnings:</error>',
+                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
+                ]);
+            }
+
+            $this->exitCode = 1;
+        }
+
+        // Clear logger for clean state.
+        $this->logger->clear();
+
+        return (1 === $this->exitCode) ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    /**
+     * Returns true if user confirms to continue, false otherwise.
+     */
+    private function askForConfirmation(InputInterface $input, OutputInterface $output): bool
+    {
+        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
+        $helper = $this->getHelper('question');
+
+        $noInteraction = (true === $input->getOption('no-interaction')) ? true : false;
+        $question = new ConfirmationQuestion('Files in given path will be overwriten. Do you want to continue? <comment>[N/y]</comment> ', $noInteraction, '/^(y|yes|1)$/i');
+
+        if (!$helper->ask($input, $output, $question)) {
+            $output->writeln(['', 'Exiting without fixing files.']);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function normalize(string $path, OutputInterface $output): \Iterator
+    {
+        $iterator = $this->finder->getTree($path);
+
         foreach ($iterator as $file) {
             $this->normalizator->normalize($file);
 
@@ -163,7 +248,7 @@ class FixCommand extends Command
                 }
 
                 foreach ($this->logger->getErrors($file) as $log) {
-                    $exitCode = 1;
+                    $this->exitCode = 1;
                     $table->addRow([' <error>✘</error> ' . $log]);
                 }
 
@@ -175,75 +260,6 @@ class FixCommand extends Command
             }
         }
 
-        // Script execution info.
-        $output->writeln(['', sprintf(
-            'Time: %.3f sec; Memory: %.3f MB.',
-            $this->timer->stop(),
-            round(memory_get_peak_usage() / 1024 / 1024, 3),
-        )]);
-
-        if (0 < count($this->logger->getAllLogs())) {
-            $output->writeln(['', sprintf(
-                '<info>%d %s been fixed; Checked %d %s.</info>',
-                count($this->logger->getAllLogs()),
-                (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
-                \iterator_count($iterator),
-                (1 === \iterator_count($iterator)) ? 'file' : 'files',
-            )]);
-        }
-
-        if (0 < count($this->logger->getAllErrors())) {
-            $formattedBlock = $formatter->formatBlock(
-                [sprintf(
-                    '%d %s should be fixed manually.',
-                    count($this->logger->getAllErrors()),
-                    (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
-                )],
-                'error',
-                true
-            );
-
-            $output->writeln(['', $formattedBlock]);
-
-            $exitCode = 1;
-        }
-
-        // Print debug messages.
-        if (0 < count($this->logger->getDebugMessages())) {
-            if ($output->isDebug()) {
-                $output->writeln([
-                    '',
-                    '<error>Debug errors and warnings:</error>',
-                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
-                ]);
-            }
-
-            $exitCode = 1;
-        }
-
-        // Clear logger for clean state.
-        $this->logger->clear();
-
-        return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
-    }
-
-    /**
-     * Returns true if user confirms to continue, false otherwise.
-     */
-    private function askForConfirmation(InputInterface $input, OutputInterface $output): bool
-    {
-        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
-        $helper = $this->getHelper('question');
-
-        $noInteraction = (true === $input->getOption('no-interaction')) ? true : false;
-        $question = new ConfirmationQuestion('Files in given path will be overwriten. Do you want to continue? <comment>[N/y]</comment> ', $noInteraction, '/^(y|yes|1)$/i');
-
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln(['', 'Exiting without fixing files.']);
-
-            return false;
-        }
-
-        return true;
+        return $iterator;
     }
 }

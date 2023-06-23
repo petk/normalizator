@@ -342,7 +342,7 @@ class NormalizatorTestCase extends TestCase
         $this->root->addChild($file);
 
         $file = vfsStream::newFile('initial/final-eol-2/file-10.txt');
-        $file->setContent("lorem ipsum dolor sit amet");
+        $file->setContent('lorem ipsum dolor sit amet');
         $this->root->addChild($file);
         $file = vfsStream::newFile('fixed/final-eol-2/file-10.txt');
         $file->setContent("lorem ipsum dolor sit amet\n");
@@ -357,7 +357,7 @@ class NormalizatorTestCase extends TestCase
         $this->root->addChild($file);
 
         $file = vfsStream::newFile('initial/final-eol-crlf/file_2.txt');
-        $file->setContent("lorem ipsum dolor sit amet");
+        $file->setContent('lorem ipsum dolor sit amet');
         $this->root->addChild($file);
         $file = vfsStream::newFile('fixed/final-eol-crlf/file_2.txt');
         $file->setContent("lorem ipsum dolor sit amet\r\n");

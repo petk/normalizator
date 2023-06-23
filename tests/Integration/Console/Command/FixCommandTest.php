@@ -26,7 +26,7 @@ class FixCommandTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'path' => 'vfs://' . $this->root->getChild('initial')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial')->path()],
             '--no-interaction' => true,
         ]);
 
@@ -37,7 +37,10 @@ class FixCommandTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'path' => 'vfs://' . $this->root->getChild('initial/trailing-whitespace')->path(),
+            'paths' => [
+                'vfs://' . $this->root->getChild('initial/trailing-whitespace')->path(),
+                'vfs://' . $this->root->getChild('initial/leading-eol')->path(),
+            ],
         ]);
 
         $commandTester->assertCommandIsSuccessful();
@@ -52,7 +55,7 @@ class FixCommandTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'path' => 'vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename')->path(),
+            'paths' => ['vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename')->path()],
             // Pass options to the helper.
             '--extension' => true,
             '--name' => true,
