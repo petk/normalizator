@@ -79,12 +79,14 @@ $container->set(EventDispatcher::class, function ($c) {
     return new EventDispatcher($c->get(ListenerProvider::class));
 });
 
-$container->set(GitDiscovery::class, function ($c) {
-    return new GitDiscovery();
-});
-
 $container->set(Cache::class, function ($c) {
     return new Cache();
+});
+
+$container->set(GitDiscovery::class, function ($c) {
+    return new GitDiscovery(
+        $c->get(Cache::class),
+    );
 });
 
 $container->set(EolDiscovery::class, function ($c) {

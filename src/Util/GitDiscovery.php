@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Util;
 
+use Normalizator\Cache\Cache;
 use Normalizator\Finder\File;
 
 use function Normalizator\exec;
@@ -15,28 +16,26 @@ use function Normalizator\preg_match;
  */
 class GitDiscovery
 {
-    private bool $hasGit;
+    public function __construct(private Cache $cache)
+    {
+    }
 
     /**
      * Determine if the given path is Git repository.
      */
     public function hasGit(string $path): bool
     {
-        if (isset($this->hasGit)) {
-            return $this->hasGit;
+        $key = static::class . ':' . $path;
+
+        if ($this->cache->has($key) && is_bool($this->cache->get($key))) {
+            return $this->cache->get($key);
         }
 
-        exec('git --version 2>&1', $output, $exitCode);
+        $hasGit = $this->checkGit($path);
 
-        if (0 !== $exitCode) {
-            return $this->hasGit = false;
-        }
+        $this->cache->set($key, $hasGit);
 
-        if (is_dir($path) && file_exists($path . '/.git')) {
-            return $this->hasGit = true;
-        }
-
-        return $this->hasGit = false;
+        return $hasGit;
     }
 
     /**
@@ -95,6 +94,21 @@ class GitDiscovery
         }
 
         return true;
+    }
+
+    private function checkGit(string $path): bool
+    {
+        exec('git --version 2>&1', $output, $exitCode);
+
+        if (0 !== $exitCode) {
+            return false;
+        }
+
+        if (is_dir($path) && file_exists($path . '/.git')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
