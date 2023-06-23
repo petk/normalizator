@@ -83,15 +83,16 @@ $container->set(GitDiscovery::class, function ($c) {
     return new GitDiscovery();
 });
 
+$container->set(Cache::class, function ($c) {
+    return new Cache();
+});
+
 $container->set(EolDiscovery::class, function ($c) {
     return new EolDiscovery(
         $c->get(EventDispatcher::class),
         $c->get(GitDiscovery::class),
+        $c->get(Cache::class),
     );
-});
-
-$container->set(Cache::class, function ($c) {
-    return new Cache();
 });
 
 $container->set(Finder::class, function ($c) {

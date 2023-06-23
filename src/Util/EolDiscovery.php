@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Util;
 
+use Normalizator\Cache\Cache;
 use Normalizator\EventDispatcher\Event\DebugEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
@@ -21,14 +22,10 @@ class EolDiscovery
      */
     public const DEFAULT_EOL = "\n";
 
-    /**
-     * @var array<int,string>
-     */
-    private array $crlfFiles;
-
     public function __construct(
         private EventDispatcher $eventDispatcher,
-        private GitDiscovery $gitDiscovery
+        private GitDiscovery $gitDiscovery,
+        private Cache $cache,
     ) {
     }
 
@@ -59,8 +56,10 @@ class EolDiscovery
      */
     private function getCrlfFiles(string $path): array
     {
-        if (isset($this->crlfFiles)) {
-            return $this->crlfFiles;
+        $key = static::class . ':' . $path;
+
+        if ($this->cache->has($key) && is_array($this->cache->get($key))) {
+            return $this->cache->get($key);
         }
 
         exec(sprintf('cd %s && git ls-files -z --eol 2>&1', escapeshellarg($path)), $output, $result);
@@ -76,8 +75,10 @@ class EolDiscovery
             return preg_match('/^i\/crlf.*[ ]+w\/.*attr\/.*eol=crlf.*$/', $item);
         });
 
-        $this->crlfFiles = preg_filter('/^i\/.*w\/.*attr\/.*[ \t]+/', '', $files);
+        $crlfFiles = preg_filter('/^i\/.*w\/.*attr\/.*[ \t]+/', '', $files);
 
-        return $this->crlfFiles;
+        $this->cache->set($key, $crlfFiles);
+
+        return $crlfFiles;
     }
 }
