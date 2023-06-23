@@ -117,6 +117,7 @@ class FixCommand extends Command
             return Command::FAILURE;
         }
 
+        /** @var array<int,string> */
         $paths = $input->getArgument('paths');
 
         $outputStyle = new OutputFormatterStyle('white', 'blue');
