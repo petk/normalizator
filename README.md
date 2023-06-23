@@ -90,13 +90,13 @@ docker run -it -v path/to/your/files/to/check:/opt/app:rw petk/normalizator:late
 To check files (dry run) without modyfing any file:
 
 ```sh
-normalizator check [OPTION...] [--] input-path
+normalizator check [OPTION...] [--] files...
 ```
 
 The `fix` command fixes and overwrites files:
 
 ```sh
-normalizator fix [OPTION...] [--] input-path
+normalizator fix [OPTION...] [--] files...
 ```
 
 ### File encoding
