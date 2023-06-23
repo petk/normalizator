@@ -42,4 +42,24 @@ class Configuration
     {
         return $this->values ?? [];
     }
+
+    /**
+     * Delete configuration by key.
+     */
+    public function delete(string $key): bool
+    {
+        unset($this->values[$key]);
+
+        return true;
+    }
+
+    /**
+     * Clear all configuration values.
+     */
+    public function clear(): bool
+    {
+        $this->values = [];
+
+        return true;
+    }
 }

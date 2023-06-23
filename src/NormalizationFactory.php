@@ -45,7 +45,7 @@ class NormalizationFactory
             $normalization = $this->normalizations[$name];
 
             if ($normalization instanceof ConfigurableNormalizationInterface) {
-                $normalization->configure($configuration);
+                $normalization->configure(...$configuration);
             }
 
             return $normalization;
@@ -58,7 +58,7 @@ class NormalizationFactory
         $normalization = new $class(...$dependencies);
 
         if ($normalization instanceof ConfigurableNormalizationInterface) {
-            $normalization->configure($configuration);
+            $normalization->configure(...$configuration);
         }
 
         return $this->normalizations[$name] = $normalization;

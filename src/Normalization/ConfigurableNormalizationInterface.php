@@ -10,9 +10,7 @@ namespace Normalizator\Normalization;
 interface ConfigurableNormalizationInterface extends NormalizationInterface
 {
     /**
-     * Set configuration for the normalization.
-     *
-     * @param array<string,mixed> $configuration
+     * Set configuration options for the normalization.
      */
-    public function configure(array $configuration): void;
+    public function configure(mixed ...$options): void;
 }

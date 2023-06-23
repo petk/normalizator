@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
-use Normalizator\Configuration\ConfigurationResolver;
+use Normalizator\Configuration\Configurator;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
 use Normalizator\Util\Logger;
@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CheckCommand extends Command
 {
     public function __construct(
-        private ConfigurationResolver $configurationResolver,
+        private Configurator $configurator,
         private Finder $finder,
         private Normalizator $normalizator,
         private Timer $timer,
@@ -86,7 +86,7 @@ class CheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->configurationResolver->resolve($input->getOptions());
+            $this->configurator->set($input->getOptions());
         } catch (InvalidOptionException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
 
@@ -182,6 +182,9 @@ class CheckCommand extends Command
 
             $exitCode = 1;
         }
+
+        // Clear logger for clean state.
+        $this->logger->clear();
 
         return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
     }

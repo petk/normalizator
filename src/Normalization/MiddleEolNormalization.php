@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
-use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -18,7 +17,7 @@ use function Normalizator\preg_split;
  * The middle newlines trimming utility.
  */
 #[Normalization(
-    name: 'middle-eol',
+    name: 'middle_eol',
     filters: [
         'file',
         'plain-text',
@@ -35,23 +34,21 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
      */
     public const MAX_EXTRA_MIDDLE_EOLS = 1;
 
-    /**
-     * Overridden configuration values.
-     *
-     * @var array<string,mixed>
-     */
-    private array $overrides;
+    private int $maxExtraMiddleEols = self::MAX_EXTRA_MIDDLE_EOLS;
 
     public function __construct(
-        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher
     ) {
     }
 
-    public function configure(array $values): void
+    public function configure(mixed ...$options): void
     {
-        $this->overrides = $values;
+        if (isset($options['max_extra_middle_eols']) && is_int($options['max_extra_middle_eols'])) {
+            $this->maxExtraMiddleEols = $options['max_extra_middle_eols'];
+        } else {
+            $this->maxExtraMiddleEols = self::MAX_EXTRA_MIDDLE_EOLS;
+        }
     }
 
     /**
@@ -85,7 +82,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
                 $redundantCount = 0;
             }
 
-            if ($redundantCount > $this->getConfig('max_extra_middle_eols', self::MAX_EXTRA_MIDDLE_EOLS) + 1) {
+            if ($redundantCount > $this->maxExtraMiddleEols + 1) {
                 $line = '';
             }
 
@@ -100,14 +97,5 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
         }
 
         return $file;
-    }
-
-    private function getConfig(string $key, mixed $default = null): mixed
-    {
-        if (isset($this->overrides[$key])) {
-            return $this->overrides[$key];
-        }
-
-        return $this->configuration->get($key, $default);
     }
 }

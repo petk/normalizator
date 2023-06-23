@@ -18,7 +18,7 @@ class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testNormalize(string $filename): void
     {
-        $normalization = $this->createNormalization('trailing-whitespace');
+        $normalization = $this->createNormalization('trailing_whitespace');
         $file = new File('vfs://' . $this->root->getChild('initial/trailing-whitespace/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();

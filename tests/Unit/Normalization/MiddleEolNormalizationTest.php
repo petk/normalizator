@@ -18,7 +18,7 @@ class MiddleEolNormalizationTest extends NormalizatorTestCase
     #[DataProvider('filesWithMaxOneProvider')]
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('middle-eol');
+        $normalization = $this->createNormalization('middle_eol');
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();
@@ -29,7 +29,7 @@ class MiddleEolNormalizationTest extends NormalizatorTestCase
     #[DataProvider('filesWithMaxTwoProvider')]
     public function testNormalizeWithMaxTwo(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('middle-eol', ['max_extra_middle_eols' => 2]);
+        $normalization = $this->createNormalization('middle_eol', ['max_extra_middle_eols' => 2]);
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();

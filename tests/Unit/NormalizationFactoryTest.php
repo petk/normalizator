@@ -46,13 +46,13 @@ class NormalizationFactoryTest extends NormalizatorTestCase
             ['encoding', EncodingNormalization::class],
             ['eol', EolNormalization::class],
             ['extension', ExtensionNormalization::class],
-            ['final-eol', FinalEolNormalization::class],
-            ['leading-eol', LeadingEolNormalization::class],
-            ['middle-eol', MiddleEolNormalization::class],
+            ['final_eol', FinalEolNormalization::class],
+            ['leading_eol', LeadingEolNormalization::class],
+            ['middle_eol', MiddleEolNormalization::class],
             ['name', NameNormalization::class],
             ['permissions', PermissionsNormalization::class],
-            ['space-before-tab', SpaceBeforeTabNormalization::class],
-            ['trailing-whitespace', TrailingWhitespaceNormalization::class],
+            ['space_before_tab', SpaceBeforeTabNormalization::class],
+            ['trailing_whitespace', TrailingWhitespaceNormalization::class],
         ];
     }
 }

@@ -18,7 +18,7 @@ use function Normalizator\preg_replace;
  * lines.
  */
 #[Normalization(
-    name: 'space-before-tab',
+    name: 'space_before_tab',
     filters: [
         'file',
         'plain-text',

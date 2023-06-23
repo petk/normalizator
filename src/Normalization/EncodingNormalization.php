@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
-use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\AskForEncodingEvent;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
@@ -40,23 +39,21 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         'windows-1252',
     ];
 
-    /**
-     * Overridden configuration values.
-     *
-     * @var array<string,mixed>
-     */
-    private array $overrides;
+    private ?\Closure $encodingCallback = null;
 
     public function __construct(
-        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher
     ) {
     }
 
-    public function configure(array $values): void
+    public function configure(mixed ...$options): void
     {
-        $this->overrides = $values;
+        if (isset($options['encoding_callback']) && $options['encoding_callback'] instanceof \Closure) {
+            $this->encodingCallback = $options['encoding_callback'];
+        } else {
+            $this->encodingCallback = null;
+        }
     }
 
     /**
@@ -80,7 +77,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         // cannot be automatically converted.
         if (
             !in_array($encoding, $this->supportedEncodings, true)
-            && null !== $this->getConfig('encoding_callback')
+            && null !== $this->encodingCallback
         ) {
             /** @var AskForEncodingEvent */
             $event = $this->eventDispatcher->dispatch(new AskForEncodingEvent($file, $encoding));
@@ -102,7 +99,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         // Encoding is not valid.
         if (
             !$valid
-            || (!in_array($encoding, $this->supportedEncodings, true) && null === $this->getConfig('encoding_callback'))
+            || (!in_array($encoding, $this->supportedEncodings, true) && null === $this->encodingCallback)
         ) {
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding, 'error'));
 
@@ -123,15 +120,6 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         }
 
         return $file;
-    }
-
-    private function getConfig(string $key, mixed $default = null): mixed
-    {
-        if (isset($this->overrides[$key])) {
-            return $this->overrides[$key];
-        }
-
-        return $this->configuration->get($key, $default);
     }
 
     /**

@@ -18,7 +18,7 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('final-eol');
+        $normalization = $this->createNormalization('final_eol');
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();
@@ -47,7 +47,7 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
     #[DataProvider('dataProvider2')]
     public function testNormalizeWithMax2(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('final-eol', ['max_extra_final_eols' => 2]);
+        $normalization = $this->createNormalization('final_eol', ['max_extra_final_eols' => 2]);
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();

@@ -16,7 +16,7 @@ use function Normalizator\preg_replace;
  * Normalization that trims trailing whitespace characters.
  */
 #[Normalization(
-    name: 'trailing-whitespace',
+    name: 'trailing_whitespace',
     filters: [
         'file',
         'plain-text',

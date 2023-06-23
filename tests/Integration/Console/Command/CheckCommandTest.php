@@ -72,6 +72,35 @@ class CheckCommandTest extends NormalizatorTestCase
         $this->assertStringContainsString('- 4 leading EOL(s)', $output);
     }
 
+    public function testFinalEol(): void
+    {
+        $application = $this->createApplication();
+
+        $command = $application->find('check');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([
+            'path' => 'vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path(),
+            '--final-eol' => null,
+        ]);
+
+        $this->assertEquals(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('- 3 final EOL(s)', $output);
+
+        // Check file by setting the max final EOLS to 3.
+        $commandTester->execute([
+            'path' => 'vfs://' . $this->root->getChild('initial/final-eol/file-5.txt')->path(),
+            '--final-eol' => 3,
+        ]);
+
+        $this->assertEquals(0, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('Everything looks good.', $output);
+    }
+
     private function createApplication(): Application
     {
         $application = new Application();

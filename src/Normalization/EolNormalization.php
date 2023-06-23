@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Normalizator\Normalization;
 
 use Normalizator\Attribute\Normalization;
-use Normalizator\Configuration\Configuration;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
@@ -37,24 +36,29 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
      */
     public const SKIP_CR = false;
 
-    /**
-     * Overridden configuration values.
-     *
-     * @var array<string,mixed>
-     */
-    private array $overrides;
+    private string $eol = EolDiscovery::DEFAULT_EOL;
+    private bool $skipCr = self::SKIP_CR;
 
     public function __construct(
-        private Configuration $configuration,
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private EolDiscovery $eolDiscovery
     ) {
     }
 
-    public function configure(array $values): void
+    public function configure(mixed ...$options): void
     {
-        $this->overrides = $values;
+        if (isset($options['eol']) && is_string($options['eol'])) {
+            $this->eol = $options['eol'];
+        } else {
+            $this->eol = EolDiscovery::DEFAULT_EOL;
+        }
+
+        if (isset($options['skip_cr']) && is_bool($options['skip_cr'])) {
+            $this->skipCr = $options['skip_cr'];
+        } else {
+            $this->skipCr = self::SKIP_CR;
+        }
     }
 
     /**
@@ -66,13 +70,14 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
             return $file;
         }
 
-        if ($this->getConfig('skip_cr', self::SKIP_CR)) {
+        if ($this->skipCr) {
             $regex = '/(?>\r\n|\n)/m';
         } else {
             $regex = '/(*BSR_ANYCRLF)\R/m';
         }
 
-        $defaultEol = $this->eolDiscovery->getDefaultEol($file);
+        $defaultEol = $this->eolDiscovery->getEolForFile($file, $this->eol);
+
         $content = $file->getNewContent();
         $newContent = preg_replace($regex, $defaultEol, $content);
 
@@ -83,15 +88,6 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
         }
 
         return $file;
-    }
-
-    private function getConfig(string $key, mixed $default = null): mixed
-    {
-        if (isset($this->overrides[$key])) {
-            return $this->overrides[$key];
-        }
-
-        return $this->configuration->get($key, $default);
     }
 
     /**

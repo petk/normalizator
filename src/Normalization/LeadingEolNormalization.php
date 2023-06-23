@@ -14,7 +14,7 @@ use Normalizator\Finder\File;
  * The leading newlines trimming utility.
  */
 #[Normalization(
-    name: 'leading-eol',
+    name: 'leading_eol',
     filters: [
         'file',
         'plain-text',

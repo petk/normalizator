@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Normalizator\Console\Command;
 
 use Normalizator\Configuration\Configuration;
-use Normalizator\Configuration\ConfigurationResolver;
+use Normalizator\Configuration\Configurator;
 use Normalizator\Finder\File;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
@@ -31,8 +31,8 @@ use Symfony\Component\Console\Question\Question;
 class FixCommand extends Command
 {
     public function __construct(
+        private Configurator $configurator,
         private Configuration $configuration,
-        private ConfigurationResolver $configurationResolver,
         private Finder $finder,
         private Normalizator $normalizator,
         private Timer $timer,
@@ -102,7 +102,13 @@ class FixCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->configurationResolver->resolve($input->getOptions());
+            $this->configurator->set($input->getOptions());
+
+            if (true !== $input->getOption('no-interaction')) {
+                $this->configuration->set('encoding_callback', function (File $file, string $defaultEncoding = '') use ($input, $output): string {
+                    return $this->askForEncoding($file, $input, $output, $defaultEncoding);
+                });
+            }
         } catch (InvalidOptionException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
 
@@ -128,12 +134,6 @@ class FixCommand extends Command
         }
 
         $output->writeln(['', 'Fixing files in progress.']);
-
-        if (true !== $input->getOption('no-interaction')) {
-            $this->configuration->set('encoding_callback', function (File $file, string $defaultEncoding = '') use ($input, $output): string {
-                return $this->askForEncoding($file, $input, $output, $defaultEncoding);
-            });
-        }
 
         $exitCode = 0;
 
@@ -220,6 +220,9 @@ class FixCommand extends Command
 
             $exitCode = 1;
         }
+
+        // Clear logger for clean state.
+        $this->logger->clear();
 
         return (1 === $exitCode) ? Command::FAILURE : Command::SUCCESS;
     }

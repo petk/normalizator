@@ -58,31 +58,41 @@ class Normalizator implements NormalizatorInterface
         }
 
         if (false !== $this->configuration->get('encoding')) {
-            $path = $this->normalizationFactory->make('encoding')->normalize($path);
+            $path = $this->normalizationFactory->make('encoding', [
+                'encoding_callback' => $this->configuration->get('encoding_callback'),
+            ])->normalize($path);
         }
 
-        if (false !== $this->configuration->get('trailing-whitespace')) {
-            $path = $this->normalizationFactory->make('trailing-whitespace')->normalize($path);
+        if (false !== $this->configuration->get('trailing_whitespace')) {
+            $path = $this->normalizationFactory->make('trailing_whitespace')->normalize($path);
         }
 
-        if (false !== $this->configuration->get('final-eol')) {
-            $path = $this->normalizationFactory->make('final-eol')->normalize($path);
+        if (false !== $this->configuration->get('final_eol')) {
+            $path = $this->normalizationFactory->make('final_eol', [
+                'eol' => $this->configuration->get('eol'),
+                'max_extra_final_eols' => $this->configuration->get('max_extra_final_eols'),
+            ])->normalize($path);
         }
 
         if (false !== $this->configuration->get('eol')) {
-            $path = $this->normalizationFactory->make('eol')->normalize($path);
+            $path = $this->normalizationFactory->make('eol', [
+                'eol' => $this->configuration->get('eol'),
+                'skip_cr' => $this->configuration->get('skip_cr'),
+            ])->normalize($path);
         }
 
-        if (false !== $this->configuration->get('leading-eol')) {
-            $path = $this->normalizationFactory->make('leading-eol')->normalize($path);
+        if (false !== $this->configuration->get('leading_eol')) {
+            $path = $this->normalizationFactory->make('leading_eol')->normalize($path);
         }
 
-        if (false !== $this->configuration->get('middle-eol')) {
-            $path = $this->normalizationFactory->make('middle-eol')->normalize($path);
+        if (false !== $this->configuration->get('middle_eol')) {
+            $path = $this->normalizationFactory->make('middle_eol', [
+                'max_extra_middle_eols' => $this->configuration->get('max_extra_middle_eols'),
+            ])->normalize($path);
         }
 
-        if (false !== $this->configuration->get('space-before-tab')) {
-            $path = $this->normalizationFactory->make('space-before-tab')->normalize($path);
+        if (false !== $this->configuration->get('space_before_tab')) {
+            $path = $this->normalizationFactory->make('space_before_tab')->normalize($path);
         }
 
         return $path;

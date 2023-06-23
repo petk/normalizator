@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Normalizator\Cache\Cache;
 use Normalizator\Configuration\Configuration;
 use Normalizator\Configuration\ConfigurationResolver;
+use Normalizator\Configuration\Configurator;
 use Normalizator\Console\Command\CheckCommand;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Console\Command\SelfUpdateCommand;
@@ -135,15 +136,19 @@ $container->set(Normalizator::class, function ($c) {
 });
 
 $container->set(ConfigurationResolver::class, function ($c) {
-    return new ConfigurationResolver(
+    return new ConfigurationResolver();
+});
+
+$container->set(Configurator::class, function ($c) {
+    return new Configurator(
         $c->get(Configuration::class),
-        $c->get(EolDiscovery::class),
+        $c->get(ConfigurationResolver::class),
     );
 });
 
 $container->set(CheckCommand::class, function ($c) {
     return new CheckCommand(
-        $c->get(ConfigurationResolver::class),
+        $c->get(Configurator::class),
         $c->get(Finder::class),
         $c->get(Normalizator::class),
         $c->get(Timer::class),
@@ -153,8 +158,8 @@ $container->set(CheckCommand::class, function ($c) {
 
 $container->set(FixCommand::class, function ($c) {
     return new FixCommand(
+        $c->get(Configurator::class),
         $c->get(Configuration::class),
-        $c->get(ConfigurationResolver::class),
         $c->get(Finder::class),
         $c->get(Normalizator::class),
         $c->get(Timer::class),

@@ -18,7 +18,7 @@ class LeadingEolNormalizationTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('leading-eol');
+        $normalization = $this->createNormalization('leading_eol');
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();

@@ -18,7 +18,7 @@ class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
     #[DataProvider('dataProvider')]
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
-        $normalization = $this->createNormalization('space-before-tab');
+        $normalization = $this->createNormalization('space_before_tab');
         $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();

@@ -10,7 +10,6 @@ use Normalizator\Finder\File;
 
 use function Normalizator\exec;
 use function Normalizator\preg_match;
-use function Normalizator\preg_match_all;
 
 /**
  * EOL discovery utility.
@@ -23,18 +22,10 @@ class EolDiscovery
     public const DEFAULT_EOL = "\n";
 
     /**
-     * Manually set EOL character from the command line option.
-     */
-    private string $eol;
-
-    /**
      * @var array<int,string>
      */
     private array $crlfFiles;
 
-    /**
-     * Class constructor.
-     */
     public function __construct(
         private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery
@@ -42,56 +33,27 @@ class EolDiscovery
     }
 
     /**
-     * Set EOL character to use when inserting new final newline otherwise the
-     * EOL will be determined automatically.
+     * Get the default EOL character by checking a value of command line option
+     * --eol option otherwise use Git configuration. When Git is not used, the
+     * default EOL is LF.
      */
-    public function setEol(string $eol): void
+    public function getEolForFile(File $file, string $defaultEol = self::DEFAULT_EOL): string
     {
-        $this->eol = $eol;
-    }
-
-    /**
-     * Get EOL based on the prevailing LF, CRLF or CR newline characters.
-     */
-    public function getPrevailingEol(string $content): string
-    {
-        // Match all LF, CRLF and CR EOL characters
-        preg_match_all('/(*BSR_ANYCRLF)\R/', $content, $matches);
-
-        // For single line files the default EOL is returned
-        if (is_array($matches[0])) {
-            $counts = array_count_values($matches[0]);
-            arsort($counts);
-
-            return (string) key($counts);
-        }
-
-        return $this->getDefaultEol();
-    }
-
-    /**
-     * Get the default EOL character by checking a value of command line option --eol,
-     * otherwise use Git configuration. When Git is not used, the default EOL is LF.
-     */
-    public function getDefaultEol(?File $file = null): string
-    {
-        if (isset($this->eol)) {
-            return $this->eol;
-        }
-
-        if (null === $file || !$this->gitDiscovery->hasGit($file->getRootPath())) {
-            return self::DEFAULT_EOL;
-        }
-
-        if (in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)) {
+        // File has eol=crlf Git attribute.
+        if (
+            $this->gitDiscovery->hasGit($file->getRootPath())
+            && in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)
+        ) {
             return "\r\n";
         }
 
-        return self::DEFAULT_EOL;
+        return $defaultEol;
     }
 
     /**
-     * Files with eol=crlf Git attribute should have CRLF line endings, others LF.
+     * Get all files with eol=crlf Git attribute.
+     *
+     * These files should always have CRLF line endings.
      *
      * @return array<int,string>
      */

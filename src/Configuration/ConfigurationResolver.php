@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Normalizator\Configuration;
 
-use Normalizator\Util\EolDiscovery;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 
 /**
- * Validates given configuration options and returns resolved ones.
+ * Validates given options and returns resolved configuration values.
  */
 class ConfigurationResolver
 {
@@ -30,59 +29,66 @@ class ConfigurationResolver
         'trailing-whitespace',
     ];
 
-    public function __construct(
-        private Configuration $configuration,
-        private EolDiscovery $eolDiscovery
-    ) {
-    }
-
     /**
-     * Resolve given configuration.
+     * Resolve command line options into configuration values.
      *
-     * @param array<string,null|array<mixed>|bool|float|int|string> $configuration
+     * @param array<string,null|array<mixed>|bool|float|int|string> $options
      *
      * @return array<string,null|array<mixed>|bool|float|int|string>
      */
-    public function resolve(array $configuration): array
+    public function resolve(array $options): array
     {
+        $configuration = [];
+
         // Set missing options.
         foreach ($this->options as $option) {
-            if (!isset($configuration[$option])) {
-                $configuration[$option] = null;
+            if (!isset($options[$option])) {
+                $options[$option] = null;
             }
         }
 
         // Check if no options are passed, which means to enable all.
         $all = true;
-        foreach ($configuration as $key => $option) {
+        foreach ($options as $key => $option) {
             if (in_array($key, $this->options, true) && false !== $option) {
                 $all = false;
             }
         }
 
         if (true === $all) {
-            $configuration['eol'] = 'lf';
-            $configuration['final-eol'] = 1;
-            $configuration['max_extra_final_eols'] = 1;
-            $configuration['middle-eol'] = 1;
-            $configuration['max_extra_middle_eols'] = 1;
+            $options['eol'] = 'lf';
+            $options['final-eol'] = 1;
+            $options['middle-eol'] = 1;
 
             foreach ($this->options as $key) {
-                if (false === $configuration[$key]) {
-                    $configuration[$key] = true;
+                if (false === $options[$key]) {
+                    $options[$key] = true;
                 }
             }
         }
 
-        $configuration['eol'] = $this->resolveEol($configuration['eol']);
+        $options['eol'] = $this->resolveEol($options['eol']);
 
-        // Set the --middle-eol value
-        if (null === $configuration['middle-eol']) {
-            $configuration['middle-eol'] = 1;
-            $configuration['max_extra_middle_eols'] = 1;
+        $configuration['encoding_callback'] = null;
+
+        $options['final-eol'] = $this->resolveFinalEol($options['final-eol']);
+
+        if (false !== $options['final-eol']) {
+            $configuration['max_extra_final_eols'] = $options['final-eol'];
         }
 
-        $this->configuration->setMultiple($configuration);
+        $options['middle-eol'] = $this->resolveMiddleEol($options['middle-eol']);
+
+        if (false !== $options['middle-eol']) {
+            $configuration['max_extra_middle_eols'] = $options['middle-eol'];
+        }
+
+        // Convert dashes to underscores for configuration parameters usage.
+        foreach ($options as $key => $value) {
+            if (in_array($key, $this->options, true)) {
+                $configuration[str_replace('-', '_', $key)] = $value;
+            }
+        }
 
         return $configuration;
     }
@@ -90,9 +96,11 @@ class ConfigurationResolver
     /**
      * Resolve the --eol option.
      *
+     * @param null|array<mixed>|bool|float|int|string $eol
+     *
      * @throws InvalidOptionException
      */
-    protected function resolveEol(mixed $eol): bool|string
+    private function resolveEol(null|array|bool|float|int|string $eol): bool|string
     {
         // Option has not been set.
         if (false === $eol) {
@@ -108,12 +116,60 @@ class ConfigurationResolver
             throw new InvalidOptionException('--eol can be either lf or crlf.');
         }
 
-        $eol = strtolower($eol);
+        return strtolower($eol);
+    }
 
-        // Set also EOL discovery utility.
-        $map = ['lf' => "\n", 'crlf' => "\r\n"];
-        $this->eolDiscovery->setEol($map[$eol]);
+    /**
+     * Resolve the --final-eol option.
+     *
+     * @param null|array<mixed>|bool|float|int|string $finalEol
+     *
+     * @throws InvalidOptionException
+     */
+    private function resolveFinalEol(null|array|bool|float|int|string $finalEol): bool|int
+    {
+        if (false === $finalEol) {
+            return false;
+        }
 
-        return $eol;
+        if (null === $finalEol) {
+            $finalEol = 1;
+        }
+
+        if (
+            false === \filter_var($finalEol, \FILTER_VALIDATE_INT)
+            || 0 > $finalEol
+        ) {
+            throw new InvalidOptionException('--final-eol can be either empty, 0, or positive integer.');
+        }
+
+        return (int) $finalEol;
+    }
+
+    /**
+     * Resolve the --middle-eol option.
+     *
+     * @param null|array<mixed>|bool|float|int|string $middleEol
+     *
+     * @throws InvalidOptionException
+     */
+    private function resolveMiddleEol(null|array|bool|float|int|string $middleEol): bool|int
+    {
+        if (false === $middleEol) {
+            return false;
+        }
+
+        if (null === $middleEol) {
+            $middleEol = 1;
+        }
+
+        if (
+            false === \filter_var($middleEol, \FILTER_VALIDATE_INT)
+            || 0 > $middleEol
+        ) {
+            throw new InvalidOptionException('--middle-eol can be either empty, 0, or positive integer.');
+        }
+
+        return (int) $middleEol;
     }
 }
