@@ -49,7 +49,8 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
     public function configure(mixed ...$options): void
     {
         if (isset($options['eol']) && is_string($options['eol'])) {
-            $this->eol = $options['eol'];
+            $map = ['lf' => "\n", 'crlf' => "\r\n"];
+            $this->eol = $map[$options['eol']] ?? EolDiscovery::DEFAULT_EOL;
         } else {
             $this->eol = EolDiscovery::DEFAULT_EOL;
         }

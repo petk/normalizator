@@ -70,6 +70,32 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
             ['initial/final-eol-2/file-7.txt', 'fixed/final-eol-2/file-7.txt'],
             ['initial/final-eol-2/file-8.txt', 'fixed/final-eol-2/file-8.txt'],
             ['initial/final-eol-2/file-9.txt', 'fixed/final-eol-2/file-9.txt'],
+            ['initial/final-eol-2/file-10.txt', 'fixed/final-eol-2/file-10.txt'],
+        ];
+    }
+
+    #[DataProvider('dataProviderCrlf')]
+    public function testNormalizeWithCrlf(string $initialFile, string $fixedFile): void
+    {
+        $normalization = $this->createNormalization('final_eol', [
+            'eol' => 'crlf',
+            'max_extra_final_eols' => 2,
+        ]);
+        $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
+        $file = $normalization->normalize($file);
+        $file->save();
+
+        $this->assertFileEquals('vfs://tests/' . $fixedFile, $file->getPathname());
+    }
+
+    /**
+     * @return array<int,array<int,string>>
+     */
+    public static function dataProviderCrlf(): array
+    {
+        return [
+            ['initial/final-eol-crlf/file_1.txt', 'fixed/final-eol-crlf/file_1.txt'],
+            ['initial/final-eol-crlf/file_2.txt', 'fixed/final-eol-crlf/file_2.txt'],
         ];
     }
 }

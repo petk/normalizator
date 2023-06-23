@@ -50,8 +50,8 @@ class NormalizatorTestCase extends TestCase
         $file->chmod(Permissions::EXECUTABLE->get());
 
         $this->addWhitespaceFiles();
-
         $this->addEolFiles();
+        $this->addFinalEolFiles();
     }
 
     /**
@@ -231,6 +231,53 @@ class NormalizatorTestCase extends TestCase
 
     private function addEolFiles(): void
     {
+        // LF files.
+        $file = vfsStream::newFile('initial/eol/lf/file_1.txt');
+        $file->setContent("lorem ipsum\ndolor\nsit\namet\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/lf/file_1.txt');
+        $file->setContent("lorem ipsum\ndolor\nsit\namet\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/eol/lf/file_2.txt');
+        $file->setContent("lorem ipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/lf/file_2.txt');
+        $file->setContent("lorem ipsum\ndolor\nsit\namet\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/eol/lf/file_3.txt');
+        $file->setContent("lorem ipsum\r\ndolor\nsit\namet\r\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/lf/file_3.txt');
+        $file->setContent("lorem ipsum\ndolor\nsit\namet\n");
+        $this->root->addChild($file);
+
+        // CRLF files.
+        $file = vfsStream::newFile('initial/eol/crlf/file_1.txt');
+        $file->setContent("lorem ipsum\ndolor\nsit\namet\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/crlf/file_1.txt');
+        $file->setContent("lorem ipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/eol/crlf/file_2.txt');
+        $file->setContent("lorem ipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/crlf/file_2.txt');
+        $file->setContent("lorem ipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/eol/crlf/file_3.txt');
+        $file->setContent("lorem ipsum\r\ndolor\nsit\namet\r\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/eol/crlf/file_3.txt');
+        $file->setContent("lorem ipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+    }
+
+    private function addFinalEolFiles(): void
+    {
         $file = vfsStream::newFile('initial/final-eol-2/file-1.txt');
         $file->setContent("\r\r\rlorem ipsum");
         $this->root->addChild($file);
@@ -292,6 +339,28 @@ class NormalizatorTestCase extends TestCase
         $this->root->addChild($file);
         $file = vfsStream::newFile('fixed/final-eol-2/file-9.txt');
         $file->setContent("\r\n\r\n  \r\n\r\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-2/file-10.txt');
+        $file->setContent("lorem ipsum dolor sit amet");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-2/file-10.txt');
+        $file->setContent("lorem ipsum dolor sit amet\n");
+        $this->root->addChild($file);
+
+        // CRLF files.
+        $file = vfsStream::newFile('initial/final-eol-crlf/file_1.txt');
+        $file->setContent("lorem\r\nipsum\r\ndolor\r\nsit\r\namet");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-crlf/file_1.txt');
+        $file->setContent("lorem\r\nipsum\r\ndolor\r\nsit\r\namet\r\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/final-eol-crlf/file_2.txt');
+        $file->setContent("lorem ipsum dolor sit amet");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/final-eol-crlf/file_2.txt');
+        $file->setContent("lorem ipsum dolor sit amet\r\n");
         $this->root->addChild($file);
     }
 }

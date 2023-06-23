@@ -50,7 +50,8 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
     public function configure(mixed ...$options): void
     {
         if (isset($options['eol']) && is_string($options['eol'])) {
-            $this->eol = $options['eol'];
+            $map = ['lf' => "\n", 'crlf' => "\r\n"];
+            $this->eol = $map[$options['eol']] ?? EolDiscovery::DEFAULT_EOL;
         } else {
             $this->eol = EolDiscovery::DEFAULT_EOL;
         }
@@ -154,7 +155,7 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
         // Match all LF, CRLF and CR EOL characters
         preg_match_all('/(*BSR_ANYCRLF)\R/', $content, $matches);
 
-        if (is_array($matches[0])) {
+        if (is_array($matches[0]) && [] !== $matches[0]) {
             $counts = array_count_values($matches[0]);
             arsort($counts);
 
