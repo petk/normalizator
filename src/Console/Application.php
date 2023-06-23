@@ -15,9 +15,10 @@ class Application extends ConsoleApplication
 {
     public function getLongVersion(): string
     {
-        return implode('', [
+        return implode("\n", [
             parent::getLongVersion(),
-            "\n\nCommand line tool that checks and fixes trailing whitespace, LF or CRLF newline characters, redundant newlines, permissions and similar in given files.",
+            '',
+            'Command line tool that checks and fixes trailing whitespace, LF or CRLF newline characters, redundant newlines, permissions and similar in given files.',
         ]);
     }
 
