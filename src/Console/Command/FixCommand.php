@@ -74,7 +74,7 @@ class FixCommand extends Command
         $question = new Question(
             sprintf(
                 'Please enter valid encoding for <info>%s</info> <comment>%s</comment> ',
-                $file->getSubPathname(),
+                $file->getPathname(),
                 '' !== $defaultEncoding ? '(' . $defaultEncoding . '?)' : ''
             ),
             $defaultEncoding
@@ -239,9 +239,9 @@ class FixCommand extends Command
                 $this->normalizator->save($file);
 
                 if ([] !== $this->logger->getErrors($file)) {
-                    $table->setHeaders(['<info>🔧 ' . $file->getSubPathname() . '</info>']);
+                    $table->setHeaders(['<info>🔧 ' . $file->getPathname() . '</info>']);
                 } else {
-                    $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
+                    $table->setHeaders(['<info>✔ ' . $file->getPathname() . '</info>']);
                 }
 
                 foreach ($this->logger->getLogs($file) as $log) {
@@ -256,7 +256,7 @@ class FixCommand extends Command
                 $table->render();
                 $output->writeln('');
             } elseif ($output->isVerbose()) {
-                $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
+                $table->setHeaders(['<info>✔ ' . $file->getPathname() . '</info>']);
                 $table->render();
             }
         }

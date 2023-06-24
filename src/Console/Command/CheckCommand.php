@@ -186,7 +186,7 @@ class CheckCommand extends Command
             $table->setStyle($tableStyle);
 
             if ($this->normalizator->isNormalized($file)) {
-                $table->setHeaders(['<error>✘</error> <info>' . $file->getSubPathname() . '</info>']);
+                $table->setHeaders(['<error>✘</error> <info>' . $file->getPathname() . '</info>']);
 
                 foreach ($this->logger->getLogs($file) as $log) {
                     $table->addRow([' - ' . $log]);
@@ -201,7 +201,7 @@ class CheckCommand extends Command
 
                 $this->exitCode = 1;
             } elseif ($output->isVerbose()) {
-                $table->setHeaders(['<info>✔ ' . $file->getSubPathname() . '</info>']);
+                $table->setHeaders(['<info>✔ ' . $file->getPathname() . '</info>']);
                 $table->render();
             }
         }
