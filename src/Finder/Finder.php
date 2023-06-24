@@ -9,6 +9,9 @@ namespace Normalizator\Finder;
  */
 class Finder
 {
+    /**
+     * @return \Iterator<string,File>
+     */
     public function getTree(string $path, ?callable $filter = null, int $flags = \RecursiveIteratorIterator::CHILD_FIRST): \Iterator
     {
         $path = new File($path);

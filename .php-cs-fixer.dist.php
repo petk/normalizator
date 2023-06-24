@@ -18,7 +18,8 @@ return $config->setRules([
         '@PhpCsFixer' => true,
         // Override PhpCsFixer rules.
         'concat_space' => false,
-        'phpdoc_to_comment' => ['ignored_tags' => ['var']]
+        'phpdoc_to_comment' => ['ignored_tags' => ['var']],
+        'phpdoc_annotation_without_dot' => false,
     ])
     ->setFinder($finder)
 ;

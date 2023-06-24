@@ -18,14 +18,14 @@ class FilterFactory
     /**
      * Array of registered filter classes.
      *
-     * @var array<string,class-string>
+     * @var array<string,class-string<NormalizationFilterInterface>>
      */
     private array $filterRegistry = [];
 
     /**
      * Array of initialized filter objects.
      *
-     * @var array<string,object>
+     * @var array<string,NormalizationFilterInterface>
      */
     private array $filters = [];
 
@@ -68,9 +68,7 @@ class FilterFactory
             if ('php' === $filter->getExtension()
                 && 'Filter.php' === substr($filter->getFilename(), -10)
             ) {
-                /**
-                 * @var class-string
-                 */
+                /** @var class-string<NormalizationFilterInterface> */
                 $class = 'Normalizator\\Filter\\' . substr($filter->getFilename(), 0, -4);
 
                 $reflection = new \ReflectionClass($class);

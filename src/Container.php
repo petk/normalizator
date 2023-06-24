@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Normalizator;
 
+use Normalizator\Exception\ContainerCircularDependencyException;
 use Normalizator\Exception\ContainerEntryNotFoundException;
-use Normalizator\Exception\ContainerException;
+use Normalizator\Exception\ContainerInvalidEntryException;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -18,7 +19,7 @@ class Container implements ContainerInterface
      *
      * @var array<string,mixed>
      */
-    public array $entries = [];
+    private array $entries = [];
 
     /**
      * Already retrieved items are stored for faster retrievals in the same run.
@@ -35,25 +36,35 @@ class Container implements ContainerInterface
     private array $locks = [];
 
     /**
-     * Class constructor.
+     * @param array<string,mixed> $entries A list of initial parameters.
+     */
+    public function __construct(array $entries = [])
+    {
+        foreach ($entries as $id => $entry) {
+            $this->set($id, $entry);
+        }
+    }
+
+    /**
+     * Set entry to container.
      *
-     * @param array<string,mixed> $configurations
+     * @throws ContainerInvalidEntryException
      */
-    public function __construct(array $configurations = [])
+    public function set(string $id, mixed $entry): void
     {
-        $this->entries = $configurations;
+        // Invalid entry.
+        if (class_exists($id) && !is_callable($entry)) {
+            throw new ContainerInvalidEntryException(
+                sprintf('Entry %s must be callable.', $id)
+            );
+        }
+
+        $this->entries[$id] = $entry;
     }
 
     /**
-     * Set service.
-     */
-    public function set(string $key, mixed $entry): void
-    {
-        $this->entries[$key] = $entry;
-    }
-
-    /**
-     * Get entry.
+     * @throws ContainerCircularDependencyException
+     * @throws ContainerEntryNotFoundException
      */
     public function get(string $id): mixed
     {
@@ -78,6 +89,8 @@ class Container implements ContainerInterface
 
     /**
      * Create new entry - service or configuration parameter.
+     *
+     * @throws ContainerCircularDependencyException
      */
     private function createEntry(string $id): mixed
     {
@@ -88,14 +101,9 @@ class Container implements ContainerInterface
             return $entry;
         }
 
-        // Invalid entry.
-        if (class_exists($id) && !is_callable($entry)) {
-            throw new ContainerException($id . ' entry must be callable.');
-        }
-
         // Circular reference.
         if (class_exists($id) && isset($this->locks[$id])) {
-            throw new ContainerException($id . ' entry contains a circular reference.');
+            throw new ContainerCircularDependencyException($id . ' entry contains a circular reference.');
         }
 
         $this->locks[$id] = true;

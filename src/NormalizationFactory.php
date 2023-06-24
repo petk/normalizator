@@ -25,7 +25,7 @@ class NormalizationFactory
     /**
      * Array of initialized normalization objects.
      *
-     * @var array<string,object>
+     * @var array<string,NormalizationInterface>
      */
     private array $normalizations = [];
 
