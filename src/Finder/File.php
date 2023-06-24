@@ -7,6 +7,7 @@ namespace Normalizator\Finder;
 use function Normalizator\chmod;
 use function Normalizator\file_get_contents;
 use function Normalizator\file_put_contents;
+use function Normalizator\fileperms;
 use function Normalizator\mime_content_type;
 use function Normalizator\rename;
 

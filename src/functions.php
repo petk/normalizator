@@ -513,3 +513,31 @@ function mkdir(string $directory, int $permissions = 0777, bool $recursive = fal
 
     return $result;
 }
+
+/**
+ * Overridden \fileperms() function that throws exception in case of failure
+ * instead of default false.
+ *
+ * @throws \RuntimeException
+ */
+function fileperms(string $filename): int
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \fileperms($filename);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (false === $result) {
+        throw new \RuntimeException($error);
+    }
+
+    return $result;
+}
