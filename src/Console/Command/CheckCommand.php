@@ -54,14 +54,18 @@ class CheckCommand extends Command
 
             The <comment>--eol[=EOL], -e [EOL]</comment> option converts the EOL sequence. The default EOL character is determined by Git, otherwise falls back to LF. It can be manually set with the <info>newline</info> value of LF or CRLF.
 
+            The <comment>--extension, -x</comment> option normalizes the file extension.
+            For example, filename.JPEG -> filename.jpg.
+
             The <comment>--final-eol[=NUM], -N [NUM]</comment> option trims redundant final newlines. The value presents the maximum allowed trailing final newlines. Default number of final newlines is 1. It also inserts a final newline at the end of the file if one is missing. Default EOL character is LF. If file has multiple different EOL characters (LF, CRLF, or CR), the prevailing EOL is used.
+
+            The <comment>--indentation[=TYPE], -i [TYPE]</comment> option normalizes the mixed indentation style (tabs and spaces).
+
+            The <comment>--indentation-size=SIZE</comment> option sets the indentation size level (number of spaces in tab).
 
             The <comment>--middle-eol[=NUM], -m [NUM]</comment> option trims redundant newlines in the middle of the content. The value presents the maximum allowed middle final newlines. Default number of middle newlines is 1.
 
             The <comment>--trailing-whitespace, -w</comment> option trims all trailing whitespace characters in text files (spaces, tabs, no-break spaces, Mongolian vowel separators, en quads, em quads, en spaces, em spaces, three-per-em spaces, four-per-em spaces, six-per-em spaces, figure spaces, punctuation spaces, thin spaces, hair spaces, narrow no-break spaces, medium mathematical spaces, ideographic spaces, zero width spaces, and zero width no-break spaces).
-
-            The <comment>--extension, -x</comment> option normalizes the file extension.
-            For example, filename.JPEG -> filename.jpg.
 
             The <comment>--name, -a</comment> option transliterates and slugifies special characters in the directory name or file basename (filename part without extension). For example, foo bar.jpg -> foo-bar.jpg.
 
@@ -74,10 +78,12 @@ class CheckCommand extends Command
             new InputArgument('paths', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Paths to check.'),
             new InputOption('encoding', 'c', InputOption::VALUE_NONE, 'Convert file encoding to UTF-8.'),
             new InputOption('eol', 'e', InputOption::VALUE_OPTIONAL, 'Convert EOL sequence.', false),
+            new InputOption('extension', 'x', InputOption::VALUE_NONE, 'Fix file extensions.'),
             new InputOption('final-eol', 'N', InputOption::VALUE_OPTIONAL, 'Trim redundant final EOLs.', false),
+            new InputOption('indentation', 'i', InputOption::VALUE_OPTIONAL, 'Normalize indentation style.', false),
+            new InputOption('indentation-size', null, InputOption::VALUE_REQUIRED, 'Set indentation size.', false),
             new InputOption('leading-eol', 'l', InputOption::VALUE_NONE, 'Trim redundant leading newlines.'),
             new InputOption('middle-eol', 'm', InputOption::VALUE_OPTIONAL, 'Trim redundant middle empty newlines.', false),
-            new InputOption('extension', 'x', InputOption::VALUE_NONE, 'Fix file extensions.'),
             new InputOption('name', 'a', InputOption::VALUE_NONE, 'Fix file and directory names.'),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),

@@ -20,6 +20,7 @@ and similar in given files.
 * Checks file and directory names if they contain any special characters
   (spaces, non-ASCII characters, etc.)
 * Checks file encodings
+* Checks indentation style
 
 ## Installation
 
@@ -128,6 +129,24 @@ To fix files:
 
 ```sh
 normalizator fix -w -- ~/projects/path/to/files/
+```
+
+### Indentation style
+
+Indentation style can be checked with:
+
+```sh
+normalizator check --indentation -- ~/projects/path/to/files
+# or
+normalizator check -i -- ~/projects/path/to/files
+```
+
+Indentation size is set to 4 (one tab equals to 4 spaces). Indentation size can
+be changed with the `--indentation-size` option. For example, the following will
+set indentation size to 2:
+
+```sh
+normalizator fix --indentation --indentation-size=2 -- ~/projects/path/to/files
 ```
 
 ### Space before tab

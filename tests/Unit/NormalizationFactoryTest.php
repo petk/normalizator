@@ -8,6 +8,7 @@ use Normalizator\Normalization\EncodingNormalization;
 use Normalizator\Normalization\EolNormalization;
 use Normalizator\Normalization\ExtensionNormalization;
 use Normalizator\Normalization\FinalEolNormalization;
+use Normalizator\Normalization\IndentationNormalization;
 use Normalizator\Normalization\LeadingEolNormalization;
 use Normalizator\Normalization\MiddleEolNormalization;
 use Normalizator\Normalization\NameNormalization;
@@ -47,6 +48,7 @@ class NormalizationFactoryTest extends NormalizatorTestCase
             ['eol', EolNormalization::class],
             ['extension', ExtensionNormalization::class],
             ['final_eol', FinalEolNormalization::class],
+            ['indentation', IndentationNormalization::class],
             ['leading_eol', LeadingEolNormalization::class],
             ['middle_eol', MiddleEolNormalization::class],
             ['name', NameNormalization::class],

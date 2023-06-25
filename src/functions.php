@@ -126,7 +126,7 @@ function chmod(string $filename, int $permissions): bool
 }
 
 /**
- * Overridden \preg_replace() function which will throw exception in case of a
+ * Overridden \preg_replace() function which throws exception in case of a
  * failure instead of the default null.
  *
  * @param array<int|string,string>|string $pattern
@@ -160,10 +160,44 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
 }
 
 /**
+ * Overridden \preg_replace_callback() function which throws exception in case
+ * of a failure instead of the default null.
+ *
+ * @param array<int|string,string>|string $pattern
+ * @param array<int,string>|string        $subject
+ *
+ * @return array<int,string>|string
+ *
+ * @throws \RuntimeException
+ */
+function preg_replace_callback(array|string $pattern, \Closure $callback, array|string $subject, int $limit = -1, int &$count = null, int $flags = 0): array|string
+{
+    $error = '';
+    set_error_handler(function (int $type, string $message) use (&$error): bool {
+        $error = $message;
+
+        return true;
+    });
+
+    try {
+        $result = \preg_replace_callback($pattern, $callback, $subject, $limit, $count, $flags);
+    } finally {
+        restore_error_handler();
+    }
+
+    if (null === $result) {
+        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+    }
+
+    return $result;
+}
+
+/**
  * Overriden \preg_match() function which will throw exception in case of a
  * failure instead of the default false.
  *
  * @param array<int,string> $matches
+ * @param 0|256|512|768     $flags
  *
  * @throws \RuntimeException
  */
@@ -224,6 +258,8 @@ function preg_match_all(string $pattern, string $subject, array &$matches = null
  * instead of the default false.
  *
  * @return array<int,string>
+ *
+ * @throws \RuntimeException
  */
 function preg_split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array
 {
@@ -463,6 +499,8 @@ function md5_file(string $filename, bool $binary = false): string
  * of default false.
  *
  * @param resource $context
+ *
+ * @throws \RuntimeException
  */
 function rmdir(string $directory, $context = null): bool
 {
@@ -491,6 +529,8 @@ function rmdir(string $directory, $context = null): bool
  * of default false.
  *
  * @param resource $context
+ *
+ * @throws \RuntimeException
  */
 function mkdir(string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool
 {

@@ -52,6 +52,7 @@ class NormalizatorTestCase extends TestCase
         $this->addWhitespaceFiles();
         $this->addEolFiles();
         $this->addFinalEolFiles();
+        $this->addIndentationFiles();
     }
 
     /**
@@ -361,6 +362,88 @@ class NormalizatorTestCase extends TestCase
         $this->root->addChild($file);
         $file = vfsStream::newFile('fixed/final-eol-crlf/file_2.txt');
         $file->setContent("lorem ipsum dolor sit amet\r\n");
+        $this->root->addChild($file);
+    }
+
+    private function addIndentationFiles(): void
+    {
+        // --indentation=space --indentation-size=4
+        $file = vfsStream::newFile('initial/indentation/file_1.txt');
+        $file->setContent("    README\n\tLorem ipsum dolor sit amet.\n\n    \tLorem ipsum dolor sit amet,\n\nconsectetur adipiscing elit\n\t\t    \t    \t    sed do eiusmod tempor\n                        incididunt ut\n\t\t\t\t\t\tlabore et dolore magna aliqua.\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_1.txt');
+        $file->setContent("    README\n    Lorem ipsum dolor sit amet.\n\n        Lorem ipsum dolor sit amet,\n\nconsectetur adipiscing elit\n                            sed do eiusmod tempor\n                        incididunt ut\n                        labore et dolore magna aliqua.\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_2.txt');
+        $file->setContent("# README\n\t## About\n\n\t\tLorem ipsum dolor sit amet,\n\n\t\t\tconsectetur adipiscing elit,\n\n\t\tsed do eiusmod tempor incididunt\n\t");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_2.txt');
+        $file->setContent("# README\n    ## About\n\n        Lorem ipsum dolor sit amet,\n\n            consectetur adipiscing elit,\n\n        sed do eiusmod tempor incididunt\n    ");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_3.txt');
+        $file->setContent("README\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_3.txt');
+        $file->setContent("README\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_4.txt');
+        $file->setContent('');
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_4.txt');
+        $file->setContent('');
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_5.txt');
+        $file->setContent("    README\n\n    Lorem ipsum dolor sit amet.\n");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_5.txt');
+        $file->setContent("    README\n\n    Lorem ipsum dolor sit amet.\n");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_6.txt');
+        $file->setContent("\tREADME");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_6.txt');
+        $file->setContent('    README');
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_7.txt');
+        $file->setContent("\tREADME\r\n\t\tLorem ipsum\r\n\r\n\t\t    \t    \tdolor sit\r\n\t");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_7.txt');
+        $file->setContent("    README\r\n        Lorem ipsum\r\n\r\n                        dolor sit\r\n    ");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation/file_8.txt');
+        $file->setContent("\tREADME\r\t\tLorem ipsum\r\r\t\t    \t    \tdolor sit\r\t");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation/file_8.txt');
+        $file->setContent("    README\r        Lorem ipsum\r\r                        dolor sit\r    ");
+        $this->root->addChild($file);
+
+        // --indentation=space --indentation-size=2
+        $file = vfsStream::newFile('initial/indentation-2/file_1.txt');
+        $file->setContent("\tREADME");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation-2/file_1.txt');
+        $file->setContent('  README');
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation-2/file_2.txt');
+        $file->setContent("\tREADME\r\n\t\tLorem ipsum\r\n\r\n\t\t    \t    \tdolor sit\r\n\t");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation-2/file_2.txt');
+        $file->setContent("  README\r\n    Lorem ipsum\r\n\r\n                dolor sit\r\n  ");
+        $this->root->addChild($file);
+
+        $file = vfsStream::newFile('initial/indentation-2/file_3.txt');
+        $file->setContent("\tREADME\r\t\tLorem ipsum\r\r\t\t    \t    \tdolor sit\r\t");
+        $this->root->addChild($file);
+        $file = vfsStream::newFile('fixed/indentation-2/file_3.txt');
+        $file->setContent("  README\r    Lorem ipsum\r\r                dolor sit\r  ");
         $this->root->addChild($file);
     }
 }

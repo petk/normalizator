@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Configuration;
 
+use Normalizator\Normalization\IndentationNormalization;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 
 /**
@@ -21,6 +22,8 @@ class ConfigurationResolver
         'eol',
         'extension',
         'final-eol',
+        'indentation',
+        'indentation-size',
         'leading-eol',
         'middle-eol',
         'name',
@@ -58,6 +61,8 @@ class ConfigurationResolver
         if (true === $all) {
             $options['eol'] = 'lf';
             $options['final-eol'] = 1;
+            $options['indentation'] = null;
+            $options['indentation-size'] = IndentationNormalization::INDENTATION_SIZE;
             $options['middle-eol'] = 1;
 
             foreach ($this->options as $key) {
@@ -68,6 +73,8 @@ class ConfigurationResolver
         }
 
         $options['eol'] = $this->resolveEol($options['eol']);
+        $options['indentation'] = $this->resolveIndentation($options['indentation']);
+        $options['indentation-size'] = $this->resolveIndentationSize($options['indentation-size']);
 
         $configuration['encoding_callback'] = null;
 
@@ -171,5 +178,63 @@ class ConfigurationResolver
         }
 
         return (int) $middleEol;
+    }
+
+    /**
+     * Resolve the --indentation option.
+     *
+     * @param null|array<mixed>|bool|float|int|string $indentation
+     *
+     * @throws InvalidOptionException
+     */
+    private function resolveIndentation(null|array|bool|float|int|string $indentation): bool|string
+    {
+        if (false === $indentation) {
+            return false;
+        }
+
+        if (null === $indentation) {
+            $indentation = 'space';
+        }
+
+        if (
+            !is_string($indentation)
+            || !in_array(strtolower($indentation), ['space', 'tab'], true)
+        ) {
+            throw new InvalidOptionException('--indentation can be either "space" or "tab".');
+        }
+
+        $indentation = strtolower($indentation);
+
+        $map = ['space' => ' ', 'tab' => "\t"];
+
+        return $map[$indentation];
+    }
+
+    /**
+     * Resolve the --indentation-size option.
+     *
+     * @param null|array<mixed>|bool|float|int|string $size
+     *
+     * @throws InvalidOptionException
+     */
+    private function resolveIndentationSize(null|array|bool|float|int|string $size): int
+    {
+        if (false === $size) {
+            return IndentationNormalization::INDENTATION_SIZE;
+        }
+
+        if (null === $size) {
+            $size = IndentationNormalization::INDENTATION_SIZE;
+        }
+
+        if (
+            false === \filter_var($size, \FILTER_VALIDATE_INT)
+            || 1 > $size
+        ) {
+            throw new InvalidOptionException('--indentation-size must be integer greater than 0.');
+        }
+
+        return (int) $size;
     }
 }

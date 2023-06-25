@@ -95,6 +95,13 @@ class Normalizator implements NormalizatorInterface
             $path = $this->normalizationFactory->make('space_before_tab')->normalize($path);
         }
 
+        if (false !== $this->configuration->get('indentation')) {
+            $path = $this->normalizationFactory->make('indentation', [
+                'indentation' => $this->configuration->get('indentation'),
+                'indentation_size' => $this->configuration->get('indentation_size'),
+            ])->normalize($path);
+        }
+
         return $path;
     }
 
