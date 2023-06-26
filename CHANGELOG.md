@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- ...
+
+## [0.0.3] - 2023-06-26
+
+### Fixed
+
 - Command line options validation and resolving configuration.
 - Finder iterator counting.
 - Docker tag format fixed.

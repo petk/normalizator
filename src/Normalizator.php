@@ -16,7 +16,7 @@ use Normalizator\Util\Logger;
  */
 class Normalizator implements NormalizatorInterface
 {
-    public const VERSION = '0.0.3-dev';
+    public const VERSION = '0.0.3';
 
     public function __construct(
         private Configuration $configuration,
