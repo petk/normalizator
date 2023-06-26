@@ -54,12 +54,12 @@ class NameNormalizationTest extends NormalizatorTestCase
         ];
 
         foreach ($array as $path => $valid) {
-            $file = new File('vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename/' . $path)->path());
+            $file = new File('vfs://' . $this->virtualRoot->getChild('initial/extension-duplicates-after-rename/' . $path)->path());
             $normalizator->normalize($file);
             $normalizator->save($file);
 
             $this->assertSame($valid, $file->getNewFilename());
-            $this->assertFileExists('vfs://tests/initial/extensions/files-with-duplicates-after-rename/' . $valid);
+            $this->assertFileExists('vfs://virtual/initial/extension-duplicates-after-rename/' . $valid);
         }
     }
 }

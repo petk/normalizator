@@ -50,24 +50,24 @@ class NoVendorFilterTest extends NormalizatorTestCase
          * @var array<string,bool>
          */
         $valid = [
-            'vfs://tests/php-project' => true,
-            'vfs://tests/php-project/vendor' => false,
-            'vfs://tests/php-project/vendor/autoload.php' => false,
-            'vfs://tests/php-project/vendor/composer' => false,
-            'vfs://tests/php-project/vendor/dependency' => false,
-            'vfs://tests/php-project/vendor/dependency/index.php' => false,
-            'vfs://tests/php-project/vendor/dependency/src' => false,
-            'vfs://tests/php-project/vendor/dependency/src/Application.php' => false,
-            'vfs://tests/php-project/vendor/other-dependency' => false,
-            'vfs://tests/php-project/vendor/other-dependency/vendor' => false,
-            'vfs://tests/php-project/vendor/other-dependency/vendor/autoload.php' => false,
-            'vfs://tests/php-project/vendor/other-dependency/vendor/dependency' => false,
-            'vfs://tests/php-project/vendor/other-dependency/vendor/dependency/app.php' => false,
-            'vfs://tests/php-project/vendor/other-dependency/index.php' => false,
-            'vfs://tests/php-project/vendor/other-dependency/src' => false,
-            'vfs://tests/php-project/vendor/other-dependency/src/Application.php' => false,
-            'vfs://tests/php-project/src' => true,
-            'vfs://tests/php-project/index.php' => true,
+            'vfs://virtual/php-project' => true,
+            'vfs://virtual/php-project/vendor' => false,
+            'vfs://virtual/php-project/vendor/autoload.php' => false,
+            'vfs://virtual/php-project/vendor/composer' => false,
+            'vfs://virtual/php-project/vendor/dependency' => false,
+            'vfs://virtual/php-project/vendor/dependency/index.php' => false,
+            'vfs://virtual/php-project/vendor/dependency/src' => false,
+            'vfs://virtual/php-project/vendor/dependency/src/Application.php' => false,
+            'vfs://virtual/php-project/vendor/other-dependency' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/vendor' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/vendor/autoload.php' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/vendor/dependency' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/vendor/dependency/app.php' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/index.php' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/src' => false,
+            'vfs://virtual/php-project/vendor/other-dependency/src/Application.php' => false,
+            'vfs://virtual/php-project/src' => true,
+            'vfs://virtual/php-project/index.php' => true,
         ];
 
         vfsStream::create($structure);
@@ -76,7 +76,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         $finder = new Finder();
 
-        foreach ($finder->getTree('vfs://tests/php-project') as $key => $file) {
+        foreach ($finder->getTree('vfs://virtual/php-project') as $key => $file) {
             $this->assertSame($valid[$key], $filter->filter($file));
         }
     }
@@ -99,14 +99,14 @@ class NoVendorFilterTest extends NormalizatorTestCase
         ];
 
         $valid = [
-            'vfs://tests/non-php-project' => true,
-            'vfs://tests/non-php-project/vendor' => true,
-            'vfs://tests/non-php-project/vendor/dependency' => true,
-            'vfs://tests/non-php-project/vendor/dependency/index.php' => true,
-            'vfs://tests/non-php-project/vendor/dependency/src' => true,
-            'vfs://tests/non-php-project/vendor/dependency/src/Application.php' => true,
-            'vfs://tests/non-php-project/src' => true,
-            'vfs://tests/non-php-project/index.php' => true,
+            'vfs://virtual/non-php-project' => true,
+            'vfs://virtual/non-php-project/vendor' => true,
+            'vfs://virtual/non-php-project/vendor/dependency' => true,
+            'vfs://virtual/non-php-project/vendor/dependency/index.php' => true,
+            'vfs://virtual/non-php-project/vendor/dependency/src' => true,
+            'vfs://virtual/non-php-project/vendor/dependency/src/Application.php' => true,
+            'vfs://virtual/non-php-project/src' => true,
+            'vfs://virtual/non-php-project/index.php' => true,
         ];
 
         vfsStream::create($structure);
@@ -115,7 +115,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         $finder = new Finder();
 
-        foreach ($finder->getTree('vfs://tests/non-php-project') as $key => $file) {
+        foreach ($finder->getTree('vfs://virtual/non-php-project') as $key => $file) {
             $this->assertSame($valid[$key], $filter->filter($file));
         }
     }
@@ -140,16 +140,16 @@ class NoVendorFilterTest extends NormalizatorTestCase
         ];
 
         $valid = [
-            'vfs://tests/non-php-project' => true,
-            'vfs://tests/non-php-project/asdfvendor' => true,
-            'vfs://tests/non-php-project/asdfvendor/autoload.php' => true,
-            'vfs://tests/non-php-project/asdfvendor/composer' => true,
-            'vfs://tests/non-php-project/asdfvendor/dependency' => true,
-            'vfs://tests/non-php-project/asdfvendor/dependency/index.php' => true,
-            'vfs://tests/non-php-project/asdfvendor/dependency/src' => true,
-            'vfs://tests/non-php-project/asdfvendor/dependency/src/Application.php' => true,
-            'vfs://tests/non-php-project/src' => true,
-            'vfs://tests/non-php-project/index.php' => true,
+            'vfs://virtual/non-php-project' => true,
+            'vfs://virtual/non-php-project/asdfvendor' => true,
+            'vfs://virtual/non-php-project/asdfvendor/autoload.php' => true,
+            'vfs://virtual/non-php-project/asdfvendor/composer' => true,
+            'vfs://virtual/non-php-project/asdfvendor/dependency' => true,
+            'vfs://virtual/non-php-project/asdfvendor/dependency/index.php' => true,
+            'vfs://virtual/non-php-project/asdfvendor/dependency/src' => true,
+            'vfs://virtual/non-php-project/asdfvendor/dependency/src/Application.php' => true,
+            'vfs://virtual/non-php-project/src' => true,
+            'vfs://virtual/non-php-project/index.php' => true,
         ];
 
         vfsStream::create($structure);
@@ -158,7 +158,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         $finder = new Finder();
 
-        foreach ($finder->getTree('vfs://tests/non-php-project') as $key => $file) {
+        foreach ($finder->getTree('vfs://virtual/non-php-project') as $key => $file) {
             $this->assertSame($valid[$key], $filter->filter($file));
         }
     }
@@ -183,16 +183,16 @@ class NoVendorFilterTest extends NormalizatorTestCase
         ];
 
         $valid = [
-            'vfs://tests/non-php-project' => true,
-            'vfs://tests/non-php-project/vendorasdf' => true,
-            'vfs://tests/non-php-project/vendorasdf/autoload.php' => true,
-            'vfs://tests/non-php-project/vendorasdf/composer' => true,
-            'vfs://tests/non-php-project/vendorasdf/dependency' => true,
-            'vfs://tests/non-php-project/vendorasdf/dependency/index.php' => true,
-            'vfs://tests/non-php-project/vendorasdf/dependency/src' => true,
-            'vfs://tests/non-php-project/vendorasdf/dependency/src/Application.php' => true,
-            'vfs://tests/non-php-project/src' => true,
-            'vfs://tests/non-php-project/index.php' => true,
+            'vfs://virtual/non-php-project' => true,
+            'vfs://virtual/non-php-project/vendorasdf' => true,
+            'vfs://virtual/non-php-project/vendorasdf/autoload.php' => true,
+            'vfs://virtual/non-php-project/vendorasdf/composer' => true,
+            'vfs://virtual/non-php-project/vendorasdf/dependency' => true,
+            'vfs://virtual/non-php-project/vendorasdf/dependency/index.php' => true,
+            'vfs://virtual/non-php-project/vendorasdf/dependency/src' => true,
+            'vfs://virtual/non-php-project/vendorasdf/dependency/src/Application.php' => true,
+            'vfs://virtual/non-php-project/src' => true,
+            'vfs://virtual/non-php-project/index.php' => true,
         ];
 
         vfsStream::create($structure);
@@ -201,7 +201,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         $finder = new Finder();
 
-        foreach ($finder->getTree('vfs://tests/non-php-project') as $key => $file) {
+        foreach ($finder->getTree('vfs://virtual/non-php-project') as $key => $file) {
             $this->assertSame($valid[$key], $filter->filter($file));
         }
     }

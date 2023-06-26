@@ -16,14 +16,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
-    public function testNormalize(string $initialFile, string $fixedFile): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('space_before_tab');
-        $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/space-before-tab/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals($this->fixturesRoot . '/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/space-before-tab/' . $filename)->path(), $file->getPathname());
     }
 
     /**
@@ -32,7 +32,7 @@ class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['initial/space-before-tab/spaceBeforeTab.php', 'fixed/space-before-tab/spaceBeforeTab.php'],
+            ['spaceBeforeTab.php'],
         ];
     }
 }

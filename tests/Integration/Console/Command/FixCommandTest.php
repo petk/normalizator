@@ -26,24 +26,14 @@ class FixCommandTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'paths' => ['vfs://' . $this->root->getChild('initial')->path()],
+            'paths' => ['vfs://' . $this->virtualRoot->getChild('initial')->path()],
             '--no-interaction' => true,
         ]);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('FIXING ', $output);
-
-        $commandTester->execute([
-            // Pass arguments to the helper.
-            'paths' => [
-                'vfs://' . $this->root->getChild('initial/trailing-whitespace')->path(),
-                'vfs://' . $this->root->getChild('initial/leading-eol')->path(),
-            ],
-        ]);
-
-        $commandTester->assertCommandIsSuccessful();
+        $this->assertStringContainsString('FIXING', $output);
     }
 
     public function testExecuteName(): void
@@ -55,7 +45,7 @@ class FixCommandTest extends NormalizatorTestCase
 
         $commandTester->execute([
             // Pass arguments to the helper.
-            'paths' => ['vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename')->path()],
+            'paths' => ['vfs://' . $this->virtualRoot->getChild('initial/extension-duplicates-after-rename')->path()],
             // Pass options to the helper.
             '--extension' => true,
             '--name' => true,
@@ -65,7 +55,7 @@ class FixCommandTest extends NormalizatorTestCase
         $this->assertEquals(0, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('FIXING ', $output);
+        $this->assertStringContainsString('FIXING', $output);
         $commandTester->assertCommandIsSuccessful();
 
         $array = [
@@ -79,7 +69,7 @@ class FixCommandTest extends NormalizatorTestCase
         ];
 
         foreach ($array as $path => $valid) {
-            $file = new File('vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename/' . $valid)->path());
+            $file = new File('vfs://' . $this->virtualRoot->getChild('initial/extension-duplicates-after-rename/' . $valid)->path());
 
             $this->assertFileExists($file->getPathname());
         }

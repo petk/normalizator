@@ -19,9 +19,10 @@ class ExtensionNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $path, string $valid): void
     {
         $normalization = $this->createNormalization('extension');
-        $file = new File($this->fixturesRoot . '/initial/extensions/' . $path);
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/extension/' . $path)->path());
+        $file = $normalization->normalize($file);
 
-        $this->assertSame($valid, $normalization->normalize($file)->getNewFilename());
+        $this->assertSame($valid, $file->getNewFilename());
     }
 
     /**
@@ -42,7 +43,7 @@ class ExtensionNormalizationTest extends NormalizatorTestCase
         ];
     }
 
-    public function testNormalizeWithDuplicatesAfterRename(): void
+    private function testNormalizeWithDuplicatesAfterRename(): void
     {
         // Due to setUp method, we'll loop over files so that we don't loose
         // renamed files between loops.
@@ -61,7 +62,7 @@ class ExtensionNormalizationTest extends NormalizatorTestCase
 
         foreach ($array as $path => $valid) {
             $normalization = $this->createNormalization('extension');
-            $file = new File('vfs://' . $this->root->getChild('initial/extensions/files-with-duplicates-after-rename/' . $path)->path());
+            $file = new File('vfs://' . $this->virtualRoot->getChild('initial/extension-duplicates-after-rename/' . $path)->path());
             $file = $normalization->normalize($file);
 
             $this->assertSame($valid, $file->getNewFilename());

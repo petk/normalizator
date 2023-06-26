@@ -19,11 +19,11 @@ class IndentationNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('indentation');
-        $file = new File('vfs://' . $this->root->getChild('initial/indentation/' . $filename)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/indentation/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://tests/fixed/indentation/' . $filename, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/indentation/' . $filename, $file->getPathname());
     }
 
     /**
@@ -49,11 +49,11 @@ class IndentationNormalizationTest extends NormalizatorTestCase
         $normalization = $this->createNormalization('indentation', [
             'indentation_size' => 2,
         ]);
-        $file = new File('vfs://' . $this->root->getChild('initial/indentation-2/' . $filename)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/indentation-2/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://tests/fixed/indentation-2/' . $filename, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/indentation-2/' . $filename, $file->getPathname());
     }
 
     /**

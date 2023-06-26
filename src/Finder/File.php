@@ -58,7 +58,7 @@ class File extends \SplFileInfo
             return $this->content;
         }
 
-        return $this->content = file_get_contents($this->getPathname());
+        return $this->content = file_get_contents($this->getEncodedPathname());
     }
 
     /**
@@ -131,11 +131,11 @@ class File extends \SplFileInfo
     public function save(): void
     {
         if ($this->isFile() && $this->hasContentChanged()) {
-            file_put_contents($this->getPathname(), $this->getNewContent());
+            file_put_contents($this->getEncodedPathname(), $this->getNewContent());
         }
 
         if (!$this->isLink() && $this->hasPermissionsChanged()) {
-            chmod($this->getPathname(), $this->getNewPermissions());
+            chmod($this->getEncodedPathname(), $this->getNewPermissions());
         }
 
         if ($this->hasFilenameChanged()) {
@@ -177,6 +177,11 @@ class File extends \SplFileInfo
         }
 
         return $this->extension = $extension;
+    }
+
+    public function isFile(): bool
+    {
+        return is_file($this->getEncodedPathname());
     }
 
     /**

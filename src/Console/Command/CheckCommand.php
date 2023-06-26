@@ -111,7 +111,7 @@ class CheckCommand extends Command
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
-            ['CHECKING ' . implode(', ', $paths)],
+            ['CHECKING', ...$paths],
             'header',
             true
         );

@@ -19,11 +19,11 @@ class LeadingEolNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
         $normalization = $this->createNormalization('leading_eol');
-        $file = new File('vfs://' . $this->root->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals($this->fixturesRoot . '/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild($fixedFile)->path(), $file->getPathname());
     }
 
     /**
@@ -32,12 +32,12 @@ class LeadingEolNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['initial/leading-eol/file-1.txt', 'fixed/leading-eol/file-1.txt'],
-            ['initial/leading-eol/file-2.txt', 'fixed/leading-eol/file-2.txt'],
-            ['initial/leading-eol/file-3.txt', 'fixed/leading-eol/file-3.txt'],
-            ['initial/leading-eol/file-4.txt', 'fixed/leading-eol/file-4.txt'],
-            ['initial/leading-eol/file-5.txt', 'fixed/leading-eol/file-5.txt'],
-            ['initial/leading-eol/file-6.txt', 'fixed/leading-eol/file-6.txt'],
+            ['initial/leading-eol/file_1.txt', 'fixed/leading-eol/file_1.txt'],
+            ['initial/leading-eol/file_2.txt', 'fixed/leading-eol/file_2.txt'],
+            ['initial/leading-eol/file_3.txt', 'fixed/leading-eol/file_3.txt'],
+            ['initial/leading-eol/file_4.txt', 'fixed/leading-eol/file_4.txt'],
+            ['initial/leading-eol/file_5.txt', 'fixed/leading-eol/file_5.txt'],
+            ['initial/leading-eol/file_6.txt', 'fixed/leading-eol/file_6.txt'],
         ];
     }
 }

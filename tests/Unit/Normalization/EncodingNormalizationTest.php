@@ -18,15 +18,16 @@ use function Normalizator\file_get_contents;
 class EncodingNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
-    public function testNormalize(string $initial, string $fixed): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('encoding');
 
-        $file = new File($this->fixturesRoot . '/' . $initial);
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/encoding/' . $filename)->path());
+        $file = $normalization->normalize($file);
 
-        $valid = file_get_contents($this->fixturesRoot . '/'  . $fixed);
+        $valid = file_get_contents('vfs://' . $this->virtualRoot->getChild('fixed/encoding/' . $filename)->path());
 
-        $this->assertSame($valid, $normalization->normalize($file)->getNewContent());
+        $this->assertSame($valid, $file->getNewContent());
     }
 
     /**
@@ -35,10 +36,10 @@ class EncodingNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['initial/encoding/utf-8.txt', 'fixed/encoding/utf-8.txt'],
+            ['windows-1252.txt'],
+            ['utf-8.txt'],
             // @todo: Not implemented yet.
-            // ['initial/encoding/iso-8859-2.txt', 'fixed/encoding/iso-8859-2.txt'],
-            ['initial/encoding/windows-1252.txt', 'fixed/encoding/windows-1252.txt'],
+            // ['iso-8859-2.txt'],
         ];
     }
 }

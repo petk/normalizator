@@ -19,11 +19,11 @@ class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('trailing_whitespace');
-        $file = new File('vfs://' . $this->root->getChild('initial/trailing-whitespace/' . $filename)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/trailing-whitespace/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://tests/fixed/trailing-whitespace/' . $filename, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/trailing-whitespace/' . $filename, $file->getPathname());
     }
 
     /**
@@ -32,7 +32,7 @@ class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['fileWithTrailingSpaces.php'],
+            ['fileWithTrailingWhitespace.php'],
             ['no-break-space.txt'],
             ['mongolian-vowel-separator.txt'],
             ['en-quad.txt'],
@@ -52,6 +52,9 @@ class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
             ['zero-width-space.txt'],
             ['zero-width-no-break-space.txt'],
             ['various.txt'],
+            ['various-crlf.txt'],
+            ['various-cr.txt'],
+            ['various-mixed-eol.txt'],
         ];
     }
 }

@@ -22,9 +22,9 @@ class EolNormalizationTest extends NormalizatorTestCase
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'lf']);
 
-        $file = new File('vfs://tests/' . $initial);
+        $file = new File('vfs://virtual/' . $initial);
 
-        $valid = file_get_contents('vfs://tests/'  . $fixed);
+        $valid = file_get_contents('vfs://virtual/'  . $fixed);
 
         $this->assertSame($valid, $normalization->normalize($file)->getNewContent());
     }
@@ -34,9 +34,9 @@ class EolNormalizationTest extends NormalizatorTestCase
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'crlf']);
 
-        $file = new File('vfs://tests/' . $initial);
+        $file = new File('vfs://virtual/' . $initial);
 
-        $valid = file_get_contents('vfs://tests/'  . $fixed);
+        $valid = file_get_contents('vfs://virtual/'  . $fixed);
 
         $this->assertSame($valid, $normalization->normalize($file)->getNewContent());
     }

@@ -129,7 +129,7 @@ class FixCommand extends Command
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
-            ['FIXING ' . implode(', ', $paths)],
+            ['FIXING', ...$paths],
             'header',
             true
         );

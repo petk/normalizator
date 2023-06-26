@@ -19,7 +19,7 @@ class NameNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
         $normalization = $this->createNormalization('name');
-        $file = new File('vfs://' . $this->root->getChild('initial/name/' . $initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/name/' . $initialFile)->path());
         $file = $normalization->normalize($file);
 
         $this->assertSame($fixedFile, $file->getNewFilename());
@@ -71,7 +71,7 @@ class NameNormalizationTest extends NormalizatorTestCase
 
         foreach ($array as $initialFile => $fixedFile) {
             $normalization = $this->createNormalization('name');
-            $file = new File('vfs://' . $this->root->getChild('initial/name/files-with-duplicates-after-rename/' . $initialFile)->path());
+            $file = new File('vfs://' . $this->virtualRoot->getChild('initial/name/files-with-duplicates-after-rename/' . $initialFile)->path());
             $file = $normalization->normalize($file);
 
             $this->assertSame($fixedFile, $file->getNewFilename());
