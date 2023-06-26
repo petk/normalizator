@@ -43,12 +43,12 @@ class FilterFactoryTest extends NormalizatorTestCase
         return [
             ['executable', ExecutableFilter::class],
             ['file', FileFilter::class],
-            ['no-git', NoGitFilter::class],
-            ['no-links', NoLinksFilter::class],
-            ['no-node-modules', NoNodeModulesFilter::class],
-            ['no-svn', NoSvnFilter::class],
-            ['no-vendor', NoVendorFilter::class],
-            ['plain-text', PlainTextFilter::class],
+            ['no_git', NoGitFilter::class],
+            ['no_links', NoLinksFilter::class],
+            ['no_node_modules', NoNodeModulesFilter::class],
+            ['no_svn', NoSvnFilter::class],
+            ['no_vendor', NoVendorFilter::class],
+            ['plain_text', PlainTextFilter::class],
         ];
     }
 }

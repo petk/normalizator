@@ -17,11 +17,11 @@ use Normalizator\Finder\File;
     name: 'leading_eol',
     filters: [
         'file',
-        'plain-text',
-        'no-git',
-        'no-node-modules',
-        'no-svn',
-        'no-vendor',
+        'plain_text',
+        'no_git',
+        'no_node_modules',
+        'no_svn',
+        'no_vendor',
     ]
 )]
 class LeadingEolNormalization implements NormalizationInterface

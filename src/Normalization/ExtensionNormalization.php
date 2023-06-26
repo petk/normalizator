@@ -17,10 +17,10 @@ use Normalizator\Finder\File;
     name: 'extension',
     filters: [
         'file',
-        'no-git',
-        'no-node-modules',
-        'no-svn',
-        'no-vendor',
+        'no_git',
+        'no_node_modules',
+        'no_svn',
+        'no_vendor',
     ]
 )]
 class ExtensionNormalization implements NormalizationInterface

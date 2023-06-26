@@ -65,7 +65,7 @@ class NoNodeModulesFilterTest extends NormalizatorTestCase
             'vfs://virtual/node-project/app.js' => true,
         ];
 
-        $filter = $this->createFilter('no-node-modules');
+        $filter = $this->createFilter('no_node_modules');
 
         $finder = new Finder();
 
@@ -104,7 +104,7 @@ class NoNodeModulesFilterTest extends NormalizatorTestCase
             'vfs://virtual/non-node-project/index.js' => true,
         ];
 
-        $filter = $this->createFilter('no-node-modules');
+        $filter = $this->createFilter('no_node_modules');
 
         $finder = new Finder();
 
@@ -145,7 +145,7 @@ class NoNodeModulesFilterTest extends NormalizatorTestCase
             'vfs://virtual/non-node-project/index.js' => true,
         ];
 
-        $filter = $this->createFilter('no-node-modules');
+        $filter = $this->createFilter('no_node_modules');
 
         $finder = new Finder();
 
@@ -186,7 +186,7 @@ class NoNodeModulesFilterTest extends NormalizatorTestCase
             'vfs://virtual/non-node-project/index.js' => true,
         ];
 
-        $filter = $this->createFilter('no-node-modules');
+        $filter = $this->createFilter('no_node_modules');
 
         $finder = new Finder();
 

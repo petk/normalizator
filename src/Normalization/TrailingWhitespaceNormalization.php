@@ -19,11 +19,11 @@ use function Normalizator\preg_replace;
     name: 'trailing_whitespace',
     filters: [
         'file',
-        'plain-text',
-        'no-git',
-        'no-node-modules',
-        'no-svn',
-        'no-vendor',
+        'plain_text',
+        'no_git',
+        'no_node_modules',
+        'no_svn',
+        'no_vendor',
     ]
 )]
 class TrailingWhitespaceNormalization implements NormalizationInterface

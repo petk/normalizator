@@ -15,7 +15,7 @@ use function Normalizator\preg_match;
  * Composer.
  */
 #[Filter(
-    name: 'no-vendor'
+    name: 'no_vendor'
 )]
 class NoVendorFilter implements NormalizationFilterInterface
 {

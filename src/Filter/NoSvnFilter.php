@@ -14,7 +14,7 @@ use function Normalizator\preg_match;
  * Filter which doesn't pass the SVN directory.
  */
 #[Filter(
-    name: 'no-svn'
+    name: 'no_svn'
 )]
 class NoSvnFilter implements NormalizationFilterInterface
 {

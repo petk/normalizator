@@ -50,7 +50,7 @@ class FilterFactory
         $dependencies = [$this->cache];
 
         switch ($name) {
-            case 'no-git':
+            case 'no_git':
                 array_push(
                     $dependencies,
                     $this->gitDiscovery,

@@ -15,7 +15,7 @@ use Normalizator\Finder\File;
  * do that here. So we just filter links out on certain normalizations.
  */
 #[Filter(
-    name: 'no-links'
+    name: 'no_links'
 )]
 class NoLinksFilter implements NormalizationFilterInterface
 {

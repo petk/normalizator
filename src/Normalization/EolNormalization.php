@@ -21,11 +21,11 @@ use function Normalizator\preg_replace;
     name: 'eol',
     filters: [
         'file',
-        'plain-text',
-        'no-git',
-        'no-node-modules',
-        'no-svn',
-        'no-vendor',
+        'plain_text',
+        'no_git',
+        'no_node_modules',
+        'no_svn',
+        'no_vendor',
     ]
 )]
 class EolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface

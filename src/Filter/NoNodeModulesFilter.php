@@ -15,7 +15,7 @@ use function Normalizator\preg_match;
  * Composer.
  */
 #[Filter(
-    name: 'no-node-modules'
+    name: 'no_node_modules'
 )]
 class NoNodeModulesFilter implements NormalizationFilterInterface
 {

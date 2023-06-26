@@ -14,7 +14,7 @@ use function Normalizator\preg_match;
  * Must be plain-text file.
  */
 #[Filter(
-    name: 'plain-text'
+    name: 'plain_text'
 )]
 class PlainTextFilter implements NormalizationFilterInterface
 {

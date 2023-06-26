@@ -20,7 +20,7 @@ use function Normalizator\preg_match;
 #[Normalization(
     name: 'permissions',
     filters: [
-        'no-links',
+        'no_links',
     ]
 )]
 class PermissionsNormalization implements NormalizationInterface

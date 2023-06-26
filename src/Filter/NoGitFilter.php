@@ -13,7 +13,7 @@ use Normalizator\Util\GitDiscovery;
  * Filter which doesn't pass Git directory or bare Git directory.
  */
 #[Filter(
-    name: 'no-git'
+    name: 'no_git'
 )]
 class NoGitFilter implements NormalizationFilterInterface
 {

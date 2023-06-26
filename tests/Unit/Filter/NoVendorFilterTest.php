@@ -72,7 +72,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         vfsStream::create($structure);
 
-        $filter = $this->createFilter('no-vendor');
+        $filter = $this->createFilter('no_vendor');
 
         $finder = new Finder();
 
@@ -111,7 +111,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         vfsStream::create($structure);
 
-        $filter = $this->createFilter('no-vendor');
+        $filter = $this->createFilter('no_vendor');
 
         $finder = new Finder();
 
@@ -154,7 +154,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         vfsStream::create($structure);
 
-        $filter = $this->createFilter('no-vendor');
+        $filter = $this->createFilter('no_vendor');
 
         $finder = new Finder();
 
@@ -197,7 +197,7 @@ class NoVendorFilterTest extends NormalizatorTestCase
 
         vfsStream::create($structure);
 
-        $filter = $this->createFilter('no-vendor');
+        $filter = $this->createFilter('no_vendor');
 
         $finder = new Finder();
 
