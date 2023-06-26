@@ -35,7 +35,7 @@ class NormalizatorTestCase extends TestCase
 
         $this->fixturesRoot = __DIR__ . '/fixtures';
 
-        //$this->realRoot = vfsStream::setup('real');
+        // $this->realRoot = vfsStream::setup('real');
         $this->virtualRoot = vfsStream::setup('virtual');
 
         $structure = [];
@@ -53,7 +53,7 @@ class NormalizatorTestCase extends TestCase
             'trailingWhitespace.php',
         ];
 
-        $append = function($fixture) {
+        $append = function ($fixture) {
             return require $this->fixturesRoot . '/' . $fixture;
         };
 
@@ -63,7 +63,7 @@ class NormalizatorTestCase extends TestCase
 
         vfsStream::create($structure);
 
-        //vfsStream::copyFromFileSystem($this->fixturesRoot, $this->realRoot);
+        // vfsStream::copyFromFileSystem($this->fixturesRoot, $this->realRoot);
 
         // Set some permissions on some files.
         /*$file = $this->realRoot->getChild('initial/permissions/Rakefile');
