@@ -8,11 +8,11 @@ declare(strict_types=1);
 
 $structure = [
     'initial' => [
-        'trailing-whitespace' => []
+        'trailing-whitespace' => [],
     ],
     'fixed' => [
-        'trailing-whitespace' => []
-    ]
+        'trailing-whitespace' => [],
+    ],
 ];
 
 // Add generic trailing whitespace file.

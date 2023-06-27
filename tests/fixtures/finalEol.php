@@ -16,7 +16,7 @@ $structure = [
         'final-eol' => [],
         'final-eol-2' => [],
         'final-eol-crlf' => [],
-    ]
+    ],
 ];
 
 // --final-eol

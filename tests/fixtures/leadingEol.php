@@ -28,7 +28,7 @@ $structure['initial']['leading-eol']['file_4.txt'] = "\r\n\nlorem ipsum";
 $structure['fixed']['leading-eol']['file_4.txt'] = 'lorem ipsum';
 
 $structure['initial']['leading-eol']['file_5.txt'] = "\r\r\rlorem ipsum";
-$structure['fixed']['leading-eol']['file_5.txt'] = "lorem ipsum";
+$structure['fixed']['leading-eol']['file_5.txt'] = 'lorem ipsum';
 
 $structure['initial']['leading-eol']['file_6.txt'] = "\n\n\n\n";
 $structure['fixed']['leading-eol']['file_6.txt'] = '';

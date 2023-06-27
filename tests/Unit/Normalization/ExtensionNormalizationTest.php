@@ -43,7 +43,7 @@ class ExtensionNormalizationTest extends NormalizatorTestCase
         ];
     }
 
-    private function testNormalizeWithDuplicatesAfterRename(): void
+    public function testNormalizeWithDuplicatesAfterRename(): void
     {
         // Due to setUp method, we'll loop over files so that we don't loose
         // renamed files between loops.

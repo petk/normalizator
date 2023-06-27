@@ -35,6 +35,10 @@ class NormalizatorTestCase extends TestCase
 
         $this->fixturesRoot = __DIR__ . '/fixtures';
 
+        // Generate phisical files.
+        $generator = new Generator();
+        $generator->generate();
+
         // $this->realRoot = vfsStream::setup('real');
         $this->virtualRoot = vfsStream::setup('virtual');
 

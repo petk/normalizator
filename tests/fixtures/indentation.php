@@ -14,7 +14,7 @@ $structure = [
     'fixed' => [
         'indentation' => [],
         'indentation-2' => [],
-    ]
+    ],
 ];
 
 // --indentation=space --indentation-size=4

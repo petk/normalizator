@@ -1,6 +1,5 @@
 /.github/                             export-ignore
 /bin/build                            export-ignore
-/bin/dev/                             export-ignore
 /docs/                                export-ignore
 /src/Console/Command/BuildCommand.php export-ignore
 /src/Util/PharBuilder.php             export-ignore

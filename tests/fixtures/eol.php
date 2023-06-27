@@ -11,14 +11,14 @@ $structure = [
         'eol' => [
             'lf' => [],
             'crlf' => [],
-        ]
+        ],
     ],
     'fixed' => [
         'eol' => [
             'lf' => [],
             'crlf' => [],
-        ]
-    ]
+        ],
+    ],
 ];
 
 // LF files.

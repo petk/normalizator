@@ -7,8 +7,56 @@
 declare(strict_types=1);
 
 $structure = [
-    'initial' => [],
-    'fixed' => [],
+    'initial' => [
+        'permissions' => [],
+    ],
+    'fixed' => [
+        'permissions' => [],
+    ],
 ];
+
+$structure['initial']['permissions']['Rakefile'] = <<<'EOL'
+namespace :book do
+
+  def check_contrib
+  end
+
+  desc 'build HTML format'
+  task :build => 'book/contributors.txt' do
+      check_contrib()
+
+      puts 'Converting to HTML...'
+  end
+end
+
+task :default => "book:build"
+EOL;
+
+$structure['initial']['permissions']['not-a-script.sh'] = "echo 'foobar';\n";
+
+$structure['initial']['permissions']['php-script'] = <<<'EOL'
+#!/usr/bin/env php
+<?php
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script'] = <<<'EOL'
+#!/bin/sh
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script_2'] = <<<'EOL'
+#! /bin/sh
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script_3'] = <<<EOL
+#! \t \t/bin/bash\t
+
+echo 'foobar';
+EOL;
 
 return $structure;
