@@ -170,7 +170,7 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
  *
  * @throws \RuntimeException
  */
-function preg_replace_callback(array|string $pattern, \Closure $callback, array|string $subject, int $limit = -1, int &$count = null, int $flags = 0): array|string
+function preg_replace_callback(array|string $pattern, callable $callback, array|string $subject, int $limit = -1, int &$count = null, int $flags = 0): array|string
 {
     $error = '';
     set_error_handler(function (int $type, string $message) use (&$error): bool {

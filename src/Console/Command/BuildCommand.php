@@ -37,10 +37,6 @@ class BuildCommand extends Command
             EOF;
     }
 
-    protected function configure()
-    {
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln([
