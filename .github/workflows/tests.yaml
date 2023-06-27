@@ -38,6 +38,7 @@ jobs:
         with:
           php-version: "${{ matrix.php }}"
           tools: composer
+          ini-values: phar.readonly=Off
 
       - name: Install dependencies
         run: composer install
