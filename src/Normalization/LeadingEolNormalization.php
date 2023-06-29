@@ -47,7 +47,14 @@ class LeadingEolNormalization implements NormalizationInterface
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, count($this->getLeadingEols($content)) . ' leading EOL(s)'));
+            $this->eventDispatcher->dispatch(new NormalizationEvent(
+                $file,
+                sprintf(
+                    '%d leading EOL%s',
+                    count($this->getLeadingEols($content)),
+                    (1 === count($this->getLeadingEols($content))) ? '' : 's'
+                )
+            ));
         }
 
         return $file;

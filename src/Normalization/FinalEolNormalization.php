@@ -104,7 +104,10 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
 
         if ($content !== $trimmed) {
             $file->setNewContent($trimmed);
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, count($newlines) . ' final EOL(s)'));
+            $this->eventDispatcher->dispatch(new NormalizationEvent(
+                $file,
+                sprintf('%d final EOL%s', count($newlines), (1 === count($newlines)) ? '' : 's')
+            ));
         }
 
         return $file;

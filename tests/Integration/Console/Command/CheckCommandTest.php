@@ -67,6 +67,16 @@ class CheckCommandTest extends NormalizatorTestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
+            'paths' => ['vfs://' . $this->virtualRoot->getChild('initial/leading-eol/file_1.txt')->path()],
+            '--leading-eol' => true,
+        ]);
+
+        $this->assertEquals(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('- 1 leading EOL ', $output);
+
+        $commandTester->execute([
             'paths' => ['vfs://' . $this->virtualRoot->getChild('initial/leading-eol/file_5.txt')->path()],
             '--leading-eol' => true,
         ]);
@@ -74,7 +84,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $this->assertEquals(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('- 3 leading EOL(s)', $output);
+        $this->assertStringContainsString('- 3 leading EOLs', $output);
 
         $commandTester->execute([
             'paths' => ['vfs://' . $this->virtualRoot->getChild('initial/leading-eol/file_6.txt')->path()],
@@ -84,7 +94,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $this->assertEquals(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('- 4 leading EOL(s)', $output);
+        $this->assertStringContainsString('- 4 leading EOLs', $output);
     }
 
     public function testFinalEol(): void
@@ -102,7 +112,7 @@ class CheckCommandTest extends NormalizatorTestCase
         $this->assertEquals(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('- 3 final EOL(s)', $output);
+        $this->assertStringContainsString('- 3 final EOLs', $output);
 
         // Check file by setting the max final EOLS to 3.
         $commandTester->execute([

@@ -95,7 +95,10 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, $count . ' redundant middle EOL(s)'));
+            $this->eventDispatcher->dispatch(new NormalizationEvent(
+                $file,
+                sprintf('%d redundant middle EOL%s', $count, (1 === $count) ? '' : 's')
+            ));
         }
 
         return $file;
