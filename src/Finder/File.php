@@ -127,6 +127,8 @@ class File extends \SplFileInfo
 
     /**
      * Save file with new content, new permissions and new filename on disk.
+     *
+     * @throws \RuntimeException
      */
     public function save(): void
     {
@@ -143,7 +145,7 @@ class File extends \SplFileInfo
 
             // Safety when renaming a file to existing one so it doesn't overwrite it.
             if (file_exists($newFile)) {
-                throw new \Exception('Attempting to rename ' . $this->getPathname() . ' to ' . $newFile . ' which already exists on disk.');
+                throw new \RuntimeException('Attempting to rename ' . $this->getPathname() . ' to ' . $newFile . ' which already exists on disk.');
             }
 
             rename($this->getEncodedPathname(), $newFile);

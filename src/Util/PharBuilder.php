@@ -22,6 +22,9 @@ class PharBuilder
     {
     }
 
+    /**
+     * @throws \BadMethodCallException
+     */
     public function build(string $pharFile = 'normalizator.phar', ?OutputInterface $output = null): void
     {
         if (file_exists($pharFile)) {

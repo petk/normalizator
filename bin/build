@@ -22,12 +22,18 @@ if (0 !== $result) {
     exit(1);
 }
 
-$finder = new Finder();
-$pharBuilder = new PharBuilder($finder);
+try {
+    $finder = new Finder();
+    $pharBuilder = new PharBuilder($finder);
 
-$command = new BuildCommand($pharBuilder);
+    $command = new BuildCommand($pharBuilder);
 
-$application = new Application('Normalizator Builder', Normalizator::VERSION);
-$application->add($command);
-$application->setDefaultCommand($command->getName());
-$application->run();
+    $application = new Application('Normalizator Builder', Normalizator::VERSION);
+    $application->add($command);
+    $application->setDefaultCommand($command->getName());
+    $application->run();
+} catch (\Throwable $e) {
+    fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
+
+    exit(1);
+}

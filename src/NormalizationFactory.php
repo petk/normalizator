@@ -20,7 +20,7 @@ class NormalizationFactory
      *
      * @var array<string,class-string<NormalizationInterface>>
      */
-    private array $normalizationsRegister = [];
+    private array $normalizationsRegister;
 
     /**
      * Array of initialized normalization objects.
@@ -64,8 +64,13 @@ class NormalizationFactory
         return $this->normalizations[$name] = $normalization;
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     private function registerNormalizations(): void
     {
+        $this->normalizationsRegister = [];
+
         foreach ($this->finder->getTree(__DIR__ . '/Normalization') as $normalization) {
             if (
                 'php' !== $normalization->getExtension()
@@ -86,7 +91,7 @@ class NormalizationFactory
                 if (Normalization::class === $attribute->getName()) {
                     $arguments = $attribute->getArguments();
                     if (!isset($arguments['name'])) {
-                        throw new \Exception('The name attribute is required for Normalization ' . $class);
+                        throw new \RuntimeException('The name attribute is required for ' . $class);
                     }
 
                     $name = (string) $arguments['name'];

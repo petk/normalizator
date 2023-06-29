@@ -28,6 +28,10 @@ class SelfUpdateCommand extends Command
         ;
     }
 
+    /**
+     * @throws \UnexpectedValueException
+     * @throws \PharException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ('' === \Phar::running()) {

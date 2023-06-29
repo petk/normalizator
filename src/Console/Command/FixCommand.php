@@ -30,8 +30,6 @@ use Symfony\Component\Console\Question\Question;
 )]
 class FixCommand extends Command
 {
-    private int $exitCode;
-
     public function __construct(
         private Configurator $configurator,
         private Configuration $configuration,
@@ -106,27 +104,36 @@ class FixCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->configurator->set($input->getOptions());
+            $exitCode = $this->doExecute($input, $output);
+        } catch (\Exception $e) {
+            $exitCode = Command::FAILURE;
 
-            if (true !== $input->getOption('no-interaction')) {
-                $this->configuration->set('encoding_callback', function (File $file, string $defaultEncoding = '') use ($input, $output): string {
-                    return $this->askForEncoding($file, $input, $output, $defaultEncoding);
-                });
-            }
-        } catch (InvalidOptionException $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-
-            return Command::FAILURE;
+            $output->writeln('<error>' . $e::class . ': ' . $e->getMessage() . '</error>');
         }
 
-        /** @var array<int,string> */
-        $paths = $input->getArgument('paths');
+        return $exitCode;
+    }
+
+    private function doExecute(InputInterface $input, OutputInterface $output): int
+    {
+        $exitCode = Command::SUCCESS;
+
+        $this->configurator->set($input->getOptions());
+
+        if (true !== $input->getOption('no-interaction')) {
+            $this->configuration->set('encoding_callback', function (File $file, string $defaultEncoding = '') use ($input, $output): string {
+                return $this->askForEncoding($file, $input, $output, $defaultEncoding);
+            });
+        }
 
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
         /** @var \Symfony\Component\Console\Helper\FormatterHelper */
         $formatter = $this->getHelper('formatter');
+
+        /** @var array<int,string> */
+        $paths = $input->getArgument('paths');
 
         $formattedBlock = $formatter->formatBlock(
             ['FIXING', ...$paths],
@@ -141,8 +148,6 @@ class FixCommand extends Command
         }
 
         $output->writeln(['', 'Fixing files in progress.']);
-
-        $this->exitCode = 0;
 
         $count = 0;
         foreach ($paths as $path) {
@@ -167,6 +172,7 @@ class FixCommand extends Command
             )]);
         }
 
+        // Print info about files that should be fixed manually.
         if (0 < count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
@@ -180,26 +186,27 @@ class FixCommand extends Command
 
             $output->writeln(['', $formattedBlock]);
 
-            $this->exitCode = 1;
+            $exitCode = Command::FAILURE;
         }
 
         // Print debug messages.
-        if (0 < count($this->logger->getDebugMessages())) {
-            if ($output->isDebug()) {
-                $output->writeln([
-                    '',
-                    '<error>Debug errors and warnings:</error>',
-                    '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
-                ]);
-            }
+        if (
+            0 < count($this->logger->getDebugMessages())
+            && ($output->isDebug())
+        ) {
+            $output->writeln([
+                '',
+                '<error>Debug errors and warnings:</error>',
+                '  - ' . implode("\n  - ", $this->logger->getDebugMessages()),
+            ]);
 
-            $this->exitCode = 1;
+            $exitCode = Command::FAILURE;
         }
 
         // Clear logger for clean state.
         $this->logger->clear();
 
-        return (1 === $this->exitCode) ? Command::FAILURE : Command::SUCCESS;
+        return $exitCode;
     }
 
     /**
@@ -251,7 +258,6 @@ class FixCommand extends Command
                 }
 
                 foreach ($this->logger->getErrors($file) as $log) {
-                    $this->exitCode = 1;
                     $table->addRow([' <error>✘</error> ' . $log]);
                 }
 

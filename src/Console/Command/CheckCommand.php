@@ -26,8 +26,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class CheckCommand extends Command
 {
-    private int $exitCode;
-
     public function __construct(
         private Configurator $configurator,
         private Finder $finder,
@@ -94,12 +92,21 @@ class CheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->configurator->set($input->getOptions());
-        } catch (InvalidOptionException $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $exitCode = $this->doExecute($input, $output);
+        } catch (\Exception $e) {
+            $exitCode = Command::FAILURE;
 
-            return Command::FAILURE;
+            $output->writeln('<error>' . $e::class . ': ' . $e->getMessage() . '</error>');
         }
+
+        return $exitCode;
+    }
+
+    private function doExecute(InputInterface $input, OutputInterface $output): int
+    {
+        $exitCode = Command::SUCCESS;
+
+        $this->configurator->set($input->getOptions());
 
         /** @var array<int,string> */
         $paths = $input->getArgument('paths');
@@ -117,8 +124,6 @@ class CheckCommand extends Command
         );
 
         $output->writeln([$formattedBlock, '']);
-
-        $this->exitCode = 0;
 
         $count = 0;
         foreach ($paths as $path) {
@@ -164,13 +169,20 @@ class CheckCommand extends Command
                 ]);
             }
 
-            $this->exitCode = 1;
+            $exitCode = Command::FAILURE;
+        }
+
+        if (
+            0 < count($this->logger->getAllErrors())
+            || 0 < count($this->logger->getAllLogs())
+        ) {
+            $exitCode = Command::FAILURE;
         }
 
         // Clear logger for clean state.
         $this->logger->clear();
 
-        return (1 === $this->exitCode) ? Command::FAILURE : Command::SUCCESS;
+        return $exitCode;
     }
 
     /**
@@ -204,8 +216,6 @@ class CheckCommand extends Command
 
                 $table->render();
                 $output->writeln('');
-
-                $this->exitCode = 1;
             } elseif ($output->isVerbose()) {
                 $table->setHeaders(['<info>✔ ' . $file->getPathname() . '</info>']);
                 $table->render();

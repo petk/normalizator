@@ -40,7 +40,11 @@ class Normalizator implements NormalizatorInterface
             $this->normalize($path);
         }
 
-        $path->save();
+        try {
+            $path->save();
+        } catch (\RuntimeException $e) {
+            $this->eventDispatcher->dispatch(new NormalizationEvent($path, 'file ' . $path->getNewFilename() . ' could not be saved. ' . $e->getMessage(), 'error'));
+        }
     }
 
     public function isNormalized(File $file): bool

@@ -48,15 +48,21 @@ use Normalizator\Console\Command\SelfUpdateCommand;
 use Normalizator\Normalizator;
 use Normalizator\Util\Timer;
 
-$container = require_once __DIR__ . '/../config/container.php';
+try {
+    $container = require_once __DIR__ . '/../config/container.php';
 
-// Start script execution timer.
-$container->get(Timer::class)->start();
+    // Start script execution timer.
+    $container->get(Timer::class)->start();
 
-$application = new Application('Normalizator', Normalizator::VERSION);
+    $application = new Application('Normalizator', Normalizator::VERSION);
 
-$application->add($container->get(CheckCommand::class));
-$application->add($container->get(FixCommand::class));
-$application->add($container->get(SelfUpdateCommand::class));
+    $application->add($container->get(CheckCommand::class));
+    $application->add($container->get(FixCommand::class));
+    $application->add($container->get(SelfUpdateCommand::class));
 
-$application->run();
+    $application->run();
+} catch (\Throwable $e) {
+    fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
+
+    exit(1);
+}
