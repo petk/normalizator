@@ -73,16 +73,18 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
         $lines = preg_split('/(*BSR_ANYCRLF)(\R)/', trim($content), -1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
 
         $trimmed = '';
-        $redundantCount = 0;
+        $countByLine = 0;
+        $count = 0;
 
         foreach ($lines as $line) {
-            if ('' === trim($line)) {
-                ++$redundantCount;
+            if ('' === trim($line, "\n\r")) {
+                ++$countByLine;
             } else {
-                $redundantCount = 0;
+                $countByLine = 0;
             }
 
-            if ($redundantCount > $this->maxExtraMiddleEols + 1) {
+            if ($countByLine > $this->maxExtraMiddleEols + 1) {
+                ++$count;
                 $line = '';
             }
 
@@ -93,7 +95,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
 
         if ($content !== $newContent) {
             $file->setNewContent($newContent);
-            $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'redundant middle EOL(s)'));
+            $this->eventDispatcher->dispatch(new NormalizationEvent($file, $count . ' redundant middle EOL(s)'));
         }
 
         return $file;

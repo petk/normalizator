@@ -53,6 +53,8 @@ class MiddleEolNormalizationTest extends NormalizatorTestCase
             ['initial/middle-eol/file_8.txt', 'fixed/middle-eol/file_8.txt'],
             ['initial/middle-eol/file_9.txt', 'fixed/middle-eol/file_9.txt'],
             ['initial/middle-eol/file_10.txt', 'fixed/middle-eol/file_10.txt'],
+            ['initial/middle-eol/file_11.txt', 'fixed/middle-eol/file_11.txt'],
+            ['initial/middle-eol/file_12.txt', 'fixed/middle-eol/file_12.txt'],
         ];
     }
 

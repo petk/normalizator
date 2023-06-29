@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Number of middle redundant lines added to report.
 - File saving issues are added to logging report.
 
 ## [0.0.3] - 2023-06-26

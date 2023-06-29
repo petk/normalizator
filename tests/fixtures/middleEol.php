@@ -48,6 +48,12 @@ $structure['fixed']['middle-eol']['file_9.txt'] = "\n\nlorem \n\nipsum\n\n\n\n";
 $structure['initial']['middle-eol']['file_10.txt'] = "\r\nlorem \r\n\r\n\r\nipsum\r\n\r\n";
 $structure['fixed']['middle-eol']['file_10.txt'] = "\r\nlorem \r\n\r\nipsum\r\n\r\n";
 
+$structure['initial']['middle-eol']['file_11.txt'] = "\r\nlorem \r\n\r\n\r\n\r\nipsum\r\n\r\ndolor \r\n\r\n\r\nsit\r\n\r\n\r\namet\r\n\r\n\r\n";
+$structure['fixed']['middle-eol']['file_11.txt'] = "\r\nlorem \r\n\r\nipsum\r\n\r\ndolor \r\n\r\nsit\r\n\r\namet\r\n\r\n\r\n";
+
+$structure['initial']['middle-eol']['file_12.txt'] = "  \n  \n  \nlorem\n  \n  \n  \n\n\n\n  \n  \nipsum dolor sit\n\n\n\n\namet\n\n\n";
+$structure['fixed']['middle-eol']['file_12.txt'] = "  \n  \n  \nlorem\n  \n  \n  \n\n  \n  \nipsum dolor sit\n\namet\n\n\n";
+
 // --middle-eol=2
 $structure['initial']['middle-eol-2']['file_1.txt'] = "\nlorem \n\nipsum";
 $structure['fixed']['middle-eol-2']['file_1.txt'] = "\nlorem \n\nipsum";
