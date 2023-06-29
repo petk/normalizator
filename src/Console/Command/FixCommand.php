@@ -13,7 +13,6 @@ use Normalizator\Util\Logger;
 use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
@@ -192,7 +191,7 @@ class FixCommand extends Command
         // Print debug messages.
         if (
             0 < count($this->logger->getDebugMessages())
-            && ($output->isDebug())
+            && $output->isDebug()
         ) {
             $output->writeln([
                 '',
