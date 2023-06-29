@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Normalizator\Tests\Unit;
 
-use Normalizator\Filter\ExecutableFilter;
 use Normalizator\Filter\FileFilter;
 use Normalizator\Filter\NoGitFilter;
 use Normalizator\Filter\NoLinksFilter;
@@ -41,7 +40,6 @@ class FilterFactoryTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['executable', ExecutableFilter::class],
             ['file', FileFilter::class],
             ['no_git', NoGitFilter::class],
             ['no_links', NoLinksFilter::class],
