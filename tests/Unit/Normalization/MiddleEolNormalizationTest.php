@@ -16,25 +16,25 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class MiddleEolNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('filesWithMaxOneProvider')]
-    public function testNormalize(string $initialFile, string $fixedFile): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('middle_eol');
-        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/middle-eol/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild($fixedFile)->path(), $file->getPathname());
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/middle-eol/' . $filename)->path(), $file->getPathname());
     }
 
     #[DataProvider('filesWithMaxTwoProvider')]
-    public function testNormalizeWithMaxTwo(string $initialFile, string $fixedFile): void
+    public function testNormalizeWithMaxTwo(string $filename): void
     {
         $normalization = $this->createNormalization('middle_eol', ['max_extra_middle_eols' => 2]);
-        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/middle-eol-2/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild($fixedFile)->path(), $file->getPathname());
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/middle-eol-2/' . $filename)->path(), $file->getPathname());
     }
 
     /**
@@ -43,18 +43,18 @@ class MiddleEolNormalizationTest extends NormalizatorTestCase
     public static function filesWithMaxOneProvider(): array
     {
         return [
-            ['initial/middle-eol/file_1.txt', 'fixed/middle-eol/file_1.txt'],
-            ['initial/middle-eol/file_2.txt', 'fixed/middle-eol/file_2.txt'],
-            ['initial/middle-eol/file_3.txt', 'fixed/middle-eol/file_3.txt'],
-            ['initial/middle-eol/file_4.txt', 'fixed/middle-eol/file_4.txt'],
-            ['initial/middle-eol/file_5.txt', 'fixed/middle-eol/file_5.txt'],
-            ['initial/middle-eol/file_6.txt', 'fixed/middle-eol/file_6.txt'],
-            ['initial/middle-eol/file_7.txt', 'fixed/middle-eol/file_7.txt'],
-            ['initial/middle-eol/file_8.txt', 'fixed/middle-eol/file_8.txt'],
-            ['initial/middle-eol/file_9.txt', 'fixed/middle-eol/file_9.txt'],
-            ['initial/middle-eol/file_10.txt', 'fixed/middle-eol/file_10.txt'],
-            ['initial/middle-eol/file_11.txt', 'fixed/middle-eol/file_11.txt'],
-            ['initial/middle-eol/file_12.txt', 'fixed/middle-eol/file_12.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
+            ['file_4.txt'],
+            ['file_5.txt'],
+            ['file_6.txt'],
+            ['file_7.txt'],
+            ['file_8.txt'],
+            ['file_9.txt'],
+            ['file_10.txt'],
+            ['file_11.txt'],
+            ['file_12.txt'],
         ];
     }
 
@@ -64,15 +64,15 @@ class MiddleEolNormalizationTest extends NormalizatorTestCase
     public static function filesWithMaxTwoProvider(): array
     {
         return [
-            ['initial/middle-eol-2/file_1.txt', 'fixed/middle-eol-2/file_1.txt'],
-            ['initial/middle-eol-2/file_2.txt', 'fixed/middle-eol-2/file_2.txt'],
-            ['initial/middle-eol-2/file_3.txt', 'fixed/middle-eol-2/file_3.txt'],
-            ['initial/middle-eol-2/file_4.txt', 'fixed/middle-eol-2/file_4.txt'],
-            ['initial/middle-eol-2/file_5.txt', 'fixed/middle-eol-2/file_5.txt'],
-            ['initial/middle-eol-2/file_6.txt', 'fixed/middle-eol-2/file_6.txt'],
-            ['initial/middle-eol-2/file_7.txt', 'fixed/middle-eol-2/file_7.txt'],
-            ['initial/middle-eol-2/file_8.txt', 'fixed/middle-eol-2/file_8.txt'],
-            ['initial/middle-eol-2/file_9.txt', 'fixed/middle-eol-2/file_9.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
+            ['file_4.txt'],
+            ['file_5.txt'],
+            ['file_6.txt'],
+            ['file_7.txt'],
+            ['file_8.txt'],
+            ['file_9.txt'],
         ];
     }
 }

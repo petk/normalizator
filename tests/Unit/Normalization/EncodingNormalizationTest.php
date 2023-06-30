@@ -8,8 +8,6 @@ use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function Normalizator\file_get_contents;
-
 /**
  * @internal
  *
@@ -24,10 +22,12 @@ class EncodingNormalizationTest extends NormalizatorTestCase
 
         $file = new File('vfs://' . $this->virtualRoot->getChild('initial/encoding/' . $filename)->path());
         $file = $normalization->normalize($file);
+        $file->save();
 
-        $valid = file_get_contents('vfs://' . $this->virtualRoot->getChild('fixed/encoding/' . $filename)->path());
-
-        $this->assertSame($valid, $file->getNewContent());
+        $this->assertFileEquals(
+            'vfs://' . $this->virtualRoot->getChild('fixed/encoding/' . $filename)->path(),
+            $file->getPathname()
+        );
     }
 
     /**

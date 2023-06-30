@@ -16,14 +16,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class FinalEolNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
-    public function testNormalize(string $initialFile, string $fixedFile): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol');
-        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/final-eol/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://virtual/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/final-eol/' . $filename, $file->getPathname());
     }
 
     /**
@@ -32,27 +32,27 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['initial/final-eol/file_1.txt', 'fixed/final-eol/file_1.txt'],
-            ['initial/final-eol/file_2.txt', 'fixed/final-eol/file_2.txt'],
-            ['initial/final-eol/file_3.txt', 'fixed/final-eol/file_3.txt'],
-            ['initial/final-eol/file_4.txt', 'fixed/final-eol/file_4.txt'],
-            ['initial/final-eol/file_5.txt', 'fixed/final-eol/file_5.txt'],
-            ['initial/final-eol/file_6.txt', 'fixed/final-eol/file_6.txt'],
-            ['initial/final-eol/file_7.txt', 'fixed/final-eol/file_7.txt'],
-            ['initial/final-eol/file_8.txt', 'fixed/final-eol/file_8.txt'],
-            ['initial/final-eol/file_9.txt', 'fixed/final-eol/file_9.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
+            ['file_4.txt'],
+            ['file_5.txt'],
+            ['file_6.txt'],
+            ['file_7.txt'],
+            ['file_8.txt'],
+            ['file_9.txt'],
         ];
     }
 
     #[DataProvider('dataProvider2')]
-    public function testNormalizeWithMax2(string $initialFile, string $fixedFile): void
+    public function testNormalizeWithMax2(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol', ['max_extra_final_eols' => 2]);
-        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/final-eol-2/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://virtual/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/final-eol-2/' . $filename, $file->getPathname());
     }
 
     /**
@@ -61,31 +61,31 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
     public static function dataProvider2(): array
     {
         return [
-            ['initial/final-eol-2/file_1.txt', 'fixed/final-eol-2/file_1.txt'],
-            ['initial/final-eol-2/file_2.txt', 'fixed/final-eol-2/file_2.txt'],
-            ['initial/final-eol-2/file_3.txt', 'fixed/final-eol-2/file_3.txt'],
-            ['initial/final-eol-2/file_4.txt', 'fixed/final-eol-2/file_4.txt'],
-            ['initial/final-eol-2/file_5.txt', 'fixed/final-eol-2/file_5.txt'],
-            ['initial/final-eol-2/file_6.txt', 'fixed/final-eol-2/file_6.txt'],
-            ['initial/final-eol-2/file_7.txt', 'fixed/final-eol-2/file_7.txt'],
-            ['initial/final-eol-2/file_8.txt', 'fixed/final-eol-2/file_8.txt'],
-            ['initial/final-eol-2/file_9.txt', 'fixed/final-eol-2/file_9.txt'],
-            ['initial/final-eol-2/file_10.txt', 'fixed/final-eol-2/file_10.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
+            ['file_4.txt'],
+            ['file_5.txt'],
+            ['file_6.txt'],
+            ['file_7.txt'],
+            ['file_8.txt'],
+            ['file_9.txt'],
+            ['file_10.txt'],
         ];
     }
 
     #[DataProvider('dataProviderCrlf')]
-    public function testNormalizeWithCrlf(string $initialFile, string $fixedFile): void
+    public function testNormalizeWithCrlf(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol', [
             'eol' => 'crlf',
             'max_extra_final_eols' => 2,
         ]);
-        $file = new File('vfs://' . $this->virtualRoot->getChild($initialFile)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/final-eol-crlf/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://virtual/' . $fixedFile, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/final-eol-crlf/' . $filename, $file->getPathname());
     }
 
     /**
@@ -94,8 +94,8 @@ class FinalEolNormalizationTest extends NormalizatorTestCase
     public static function dataProviderCrlf(): array
     {
         return [
-            ['initial/final-eol-crlf/file_1.txt', 'fixed/final-eol-crlf/file_1.txt'],
-            ['initial/final-eol-crlf/file_2.txt', 'fixed/final-eol-crlf/file_2.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
         ];
     }
 }

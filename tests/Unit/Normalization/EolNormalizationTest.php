@@ -8,8 +8,6 @@ use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function Normalizator\file_get_contents;
-
 /**
  * @internal
  *
@@ -18,27 +16,25 @@ use function Normalizator\file_get_contents;
 class EolNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('lfDataProvider')]
-    public function testNormalize(string $initial, string $fixed): void
+    public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'lf']);
+        $file = new File('vfs://virtual/initial/eol/lf/' . $filename);
+        $file = $normalization->normalize($file);
+        $file->save();
 
-        $file = new File('vfs://virtual/' . $initial);
-
-        $valid = file_get_contents('vfs://virtual/'  . $fixed);
-
-        $this->assertSame($valid, $normalization->normalize($file)->getNewContent());
+        $this->assertFileEquals('vfs://virtual/fixed/eol/lf/' . $filename, $file->getPathname());
     }
 
     #[DataProvider('crlfDataProvider')]
-    public function testNormalizeCrlf(string $initial, string $fixed): void
+    public function testNormalizeCrlf(string $filename): void
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'crlf']);
+        $file = new File('vfs://virtual/initial/eol/crlf/' . $filename);
+        $file = $normalization->normalize($file);
+        $file->save();
 
-        $file = new File('vfs://virtual/' . $initial);
-
-        $valid = file_get_contents('vfs://virtual/'  . $fixed);
-
-        $this->assertSame($valid, $normalization->normalize($file)->getNewContent());
+        $this->assertFileEquals('vfs://virtual/fixed/eol/crlf/'  . $filename, $file->getPathname());
     }
 
     /**
@@ -47,9 +43,9 @@ class EolNormalizationTest extends NormalizatorTestCase
     public static function lfDataProvider(): array
     {
         return [
-            ['initial/eol/lf/file_1.txt', 'fixed/eol/lf/file_1.txt'],
-            ['initial/eol/lf/file_2.txt', 'fixed/eol/lf/file_2.txt'],
-            ['initial/eol/lf/file_3.txt', 'fixed/eol/lf/file_3.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
         ];
     }
 
@@ -59,9 +55,9 @@ class EolNormalizationTest extends NormalizatorTestCase
     public static function crlfDataProvider(): array
     {
         return [
-            ['initial/eol/crlf/file_1.txt', 'fixed/eol/crlf/file_1.txt'],
-            ['initial/eol/crlf/file_2.txt', 'fixed/eol/crlf/file_2.txt'],
-            ['initial/eol/crlf/file_3.txt', 'fixed/eol/crlf/file_3.txt'],
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
         ];
     }
 }
