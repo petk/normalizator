@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class CacheTest extends NormalizatorTestCase
+final class CacheTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
     public function testSet(string $key, string $value): void

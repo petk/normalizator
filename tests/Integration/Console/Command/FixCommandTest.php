@@ -15,7 +15,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @coversNothing
  */
-class FixCommandTest extends NormalizatorTestCase
+final class FixCommandTest extends NormalizatorTestCase
 {
     public function testExecute(): void
     {

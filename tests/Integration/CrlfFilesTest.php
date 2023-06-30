@@ -19,7 +19,7 @@ use function Normalizator\rmdir;
  *
  * @coversNothing
  */
-class CrlfFilesTest extends NormalizatorTestCase
+final class CrlfFilesTest extends NormalizatorTestCase
 {
     /**
      * Test CRLF files in the Git repository.
@@ -30,9 +30,7 @@ class CrlfFilesTest extends NormalizatorTestCase
 
         // Clean any previous Git repo.
         if (is_dir($repo)) {
-            /**
-             * @var iterable<string,\SplFileInfo>
-             */
+            /** @var iterable<string,\SplFileInfo> */
             $files = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($repo, \RecursiveDirectoryIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::CHILD_FIRST

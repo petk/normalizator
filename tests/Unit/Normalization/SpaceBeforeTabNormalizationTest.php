@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
+final class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
     public function testNormalize(string $filename): void

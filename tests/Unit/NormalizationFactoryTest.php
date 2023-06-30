@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class NormalizationFactoryTest extends NormalizatorTestCase
+final class NormalizationFactoryTest extends NormalizatorTestCase
 {
     /**
      * @param class-string<object> $valid

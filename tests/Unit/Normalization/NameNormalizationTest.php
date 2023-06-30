@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class NameNormalizationTest extends NormalizatorTestCase
+final class NameNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('filesProvider')]
     public function testNormalize(string $initialFile, string $fixedFile): void

@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class MiddleEolNormalizationTest extends NormalizatorTestCase
+final class MiddleEolNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('filesWithMaxOneProvider')]
     public function testNormalize(string $filename): void

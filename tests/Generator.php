@@ -34,6 +34,7 @@ class Generator
             file_put_contents($this->root . '/initial/permissions/' . $file, $content);
         }
 
+        chmod($this->root . '/initial/permissions/Rakefile', Permissions::FILE->get());
         chmod($this->root . '/initial/permissions/not-a-script.sh', Permissions::EXECUTABLE->get());
         chmod($this->root . '/initial/permissions/shell-script', Permissions::EXECUTABLE->get());
         chmod($this->root . '/initial/permissions/shell-script_2', Permissions::EXECUTABLE->get());

@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class FilterFactoryTest extends NormalizatorTestCase
+final class FilterFactoryTest extends NormalizatorTestCase
 {
     /**
      * @param class-string<object> $valid
@@ -31,7 +31,7 @@ class FilterFactoryTest extends NormalizatorTestCase
         /** @var FilterFactory */
         $factory = $this->container->get(FilterFactory::class);
 
-        $this->assertInstanceOf($valid, $factory->make($key));
+        self::assertInstanceOf($valid, $factory->make($key));
     }
 
     /**

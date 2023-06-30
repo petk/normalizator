@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Normalizator\Tests;
 
 use Normalizator\Container;
-use Normalizator\Enum\Permissions;
 use Normalizator\Filter\NormalizationFilterInterface;
 use Normalizator\FilterFactory;
 use Normalizator\Normalization\NormalizationInterface;
@@ -29,7 +28,7 @@ class NormalizatorTestCase extends TestCase
     /**
      * Set up test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = require __DIR__ . '/../config/container.php';
 
@@ -39,7 +38,6 @@ class NormalizatorTestCase extends TestCase
         $generator = new Generator();
         $generator->generate();
 
-        // $this->realRoot = vfsStream::setup('real');
         $this->virtualRoot = vfsStream::setup('virtual');
 
         $structure = [];
@@ -66,21 +64,6 @@ class NormalizatorTestCase extends TestCase
         }
 
         vfsStream::create($structure);
-
-        // vfsStream::copyFromFileSystem($this->fixturesRoot, $this->realRoot);
-
-        // Set some permissions on some files.
-        /*$file = $this->realRoot->getChild('initial/permissions/Rakefile');
-        $file->chmod(Permissions::FILE->get());
-        $file = $this->realRoot->getChild('initial/permissions/not-a-script.sh');
-        $file->chmod(Permissions::EXECUTABLE->get());
-        $file = $this->realRoot->getChild('initial/permissions/shell-script');
-        $file->chmod(Permissions::EXECUTABLE->get());
-        $file = $this->realRoot->getChild('initial/permissions/shell-script-2');
-        $file->chmod(Permissions::EXECUTABLE->get());
-        $file = $this->realRoot->getChild('initial/permissions/shell-script-3');
-        $file->chmod(Permissions::EXECUTABLE->get());
-        */
     }
 
     /**

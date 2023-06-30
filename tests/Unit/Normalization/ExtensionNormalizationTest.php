@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class ExtensionNormalizationTest extends NormalizatorTestCase
+final class ExtensionNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('pathProvider')]
     public function testNormalize(string $path, string $valid): void

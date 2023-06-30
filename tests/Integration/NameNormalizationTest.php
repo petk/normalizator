@@ -16,7 +16,7 @@ use Normalizator\Tests\NormalizatorTestCase;
  *
  * @coversNothing
  */
-class NameNormalizationTest extends NormalizatorTestCase
+final class NameNormalizationTest extends NormalizatorTestCase
 {
     /**
      * Test extension and name normalization together.

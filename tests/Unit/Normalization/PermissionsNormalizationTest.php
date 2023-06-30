@@ -16,7 +16,7 @@ use function Normalizator\chmod;
  *
  * @coversNothing
  */
-class PermissionsNormalizationTest extends NormalizatorTestCase
+final class PermissionsNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('filesProvider')]
     public function testNormalize(string $initialFile, int $validPermissions): void

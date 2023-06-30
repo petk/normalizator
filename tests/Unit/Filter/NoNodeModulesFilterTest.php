@@ -13,7 +13,7 @@ use org\bovigo\vfs\vfsStream;
  *
  * @coversNothing
  */
-class NoNodeModulesFilterTest extends NormalizatorTestCase
+final class NoNodeModulesFilterTest extends NormalizatorTestCase
 {
     public function testFilter(): void
     {

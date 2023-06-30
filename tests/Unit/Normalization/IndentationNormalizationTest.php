@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * @coversNothing
  */
-class IndentationNormalizationTest extends NormalizatorTestCase
+final class IndentationNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]
     public function testNormalize(string $filename): void
