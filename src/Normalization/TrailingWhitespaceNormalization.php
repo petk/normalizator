@@ -98,7 +98,7 @@ class TrailingWhitespaceNormalization implements NormalizationInterface
 
         $newContent = preg_replace('/(*BSR_ANYCRLF)(' . implode('|', $this->whitespace) . ')+(\R|$)/m', '$2', $content);
 
-        if (!is_array($newContent) && $content !== $newContent) {
+        if (!\is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'trailing whitespace'));
         }

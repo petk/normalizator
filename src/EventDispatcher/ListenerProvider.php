@@ -17,13 +17,13 @@ class ListenerProvider implements ListenerProviderInterface
     private array $listeners = [];
 
     /**
-     * @return array<int,callable>>
+     * @return array<int,callable>
      */
     public function getListenersForEvent(object $event): iterable
     {
         $eventType = $event::class;
 
-        if (array_key_exists($eventType, $this->listeners)) {
+        if (\array_key_exists($eventType, $this->listeners)) {
             return $this->listeners[$eventType];
         }
 
@@ -39,7 +39,7 @@ class ListenerProvider implements ListenerProviderInterface
 
     public function clearListeners(string $eventType): void
     {
-        if (array_key_exists($eventType, $this->listeners)) {
+        if (\array_key_exists($eventType, $this->listeners)) {
             unset($this->listeners[$eventType]);
         }
     }

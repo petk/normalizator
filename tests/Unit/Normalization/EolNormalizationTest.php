@@ -34,7 +34,7 @@ final class EolNormalizationTest extends NormalizatorTestCase
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://virtual/fixed/eol/crlf/'  . $filename, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/eol/crlf/' . $filename, $file->getPathname());
     }
 
     /**

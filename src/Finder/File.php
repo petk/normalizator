@@ -33,7 +33,7 @@ class File extends \SplFileInfo
     private string $content;
     private string $newContent;
     private string $newFilename;
-    private string $extension;
+    private ?string $extension = null;
     private int $newPermissions;
 
     public function __construct(string $pathname, string $subPathname = null, string $rootPath = null)
@@ -91,7 +91,7 @@ class File extends \SplFileInfo
      */
     public function setNewFilename(string $filename): void
     {
-        unset($this->extension);
+        $this->extension = null;
         $this->newFilename = $filename;
         $this->extension = $this->getExtension();
     }
@@ -172,7 +172,7 @@ class File extends \SplFileInfo
             return $this->extension;
         }
 
-        $extension = pathinfo($this->getNewFilename(), \PATHINFO_EXTENSION);
+        $extension = pathinfo($this->getNewFilename(), PATHINFO_EXTENSION);
 
         if ('tar.gz' === substr($this->getNewFilename(), 0, -6)) {
             $extension = 'tar.gz';

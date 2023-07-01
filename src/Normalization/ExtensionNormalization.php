@@ -55,7 +55,7 @@ class ExtensionNormalization implements NormalizationInterface
         }
 
         // If the filename is known leave it as it is.
-        if (in_array($file->getNewFilename(), $this->knownFiles, true)) {
+        if (\in_array($file->getNewFilename(), $this->knownFiles, true)) {
             return $file;
         }
 

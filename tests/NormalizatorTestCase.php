@@ -13,12 +13,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class NormalizatorTestCase extends TestCase
+abstract class NormalizatorTestCase extends TestCase
 {
     protected Container $container;
     protected string $fixturesRoot;

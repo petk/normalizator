@@ -127,7 +127,7 @@ class CheckCommand extends Command
         $count = 0;
         foreach ($paths as $path) {
             $iterator = $this->normalize($path, $output);
-            $count += \iterator_count($iterator);
+            $count += iterator_count($iterator);
         }
 
         // Script execution info.
@@ -137,11 +137,11 @@ class CheckCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
+        if (0 < \count($this->logger->getAllLogs()) + \count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should be fixed.',
-                    count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
+                    \count($this->logger->getAllLogs()) + \count($this->logger->getAllErrors()),
                     $count,
                     (1 === $count) ? 'file' : 'files',
                 )],
@@ -159,7 +159,7 @@ class CheckCommand extends Command
         }
 
         // Print debug messages.
-        if (0 < count($this->logger->getDebugMessages())) {
+        if (0 < \count($this->logger->getDebugMessages())) {
             if ($output->isDebug()) {
                 $output->writeln([
                     '',
@@ -172,8 +172,8 @@ class CheckCommand extends Command
         }
 
         if (
-            0 < count($this->logger->getAllErrors())
-            || 0 < count($this->logger->getAllLogs())
+            0 < \count($this->logger->getAllErrors())
+            || 0 < \count($this->logger->getAllLogs())
         ) {
             $exitCode = Command::FAILURE;
         }

@@ -151,7 +151,7 @@ class FixCommand extends Command
         $count = 0;
         foreach ($paths as $path) {
             $iterator = $this->normalize($path, $output);
-            $count += \iterator_count($iterator);
+            $count += iterator_count($iterator);
         }
 
         // Script execution info.
@@ -161,23 +161,23 @@ class FixCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (0 < count($this->logger->getAllLogs())) {
+        if (0 < \count($this->logger->getAllLogs())) {
             $output->writeln(['', sprintf(
                 '<info>%d %s been fixed; Checked %d %s.</info>',
-                count($this->logger->getAllLogs()),
-                (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
+                \count($this->logger->getAllLogs()),
+                (1 === \count($this->logger->getAllLogs())) ? 'file has' : 'files have',
                 $count,
                 (1 === $count) ? 'file' : 'files',
             )]);
         }
 
         // Print info about files that should be fixed manually.
-        if (0 < count($this->logger->getAllErrors())) {
+        if (0 < \count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
-                    count($this->logger->getAllErrors()),
-                    (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
+                    \count($this->logger->getAllErrors()),
+                    (1 === \count($this->logger->getAllErrors())) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -190,7 +190,7 @@ class FixCommand extends Command
 
         // Print debug messages.
         if (
-            0 < count($this->logger->getDebugMessages())
+            0 < \count($this->logger->getDebugMessages())
             && $output->isDebug()
         ) {
             $output->writeln([

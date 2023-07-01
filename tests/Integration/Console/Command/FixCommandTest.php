@@ -30,7 +30,7 @@ final class FixCommandTest extends NormalizatorTestCase
             '--no-interaction' => true,
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('FIXING', $output);
@@ -52,7 +52,7 @@ final class FixCommandTest extends NormalizatorTestCase
             '--no-interaction' => true,
         ]);
 
-        $this->assertEquals(0, $commandTester->getStatusCode());
+        $this->assertSame(0, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('FIXING', $output);

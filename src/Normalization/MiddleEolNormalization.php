@@ -44,7 +44,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['max_extra_middle_eols']) && is_int($options['max_extra_middle_eols'])) {
+        if (isset($options['max_extra_middle_eols']) && \is_int($options['max_extra_middle_eols'])) {
             $this->maxExtraMiddleEols = $options['max_extra_middle_eols'];
         } else {
             $this->maxExtraMiddleEols = self::MAX_EXTRA_MIDDLE_EOLS;
@@ -70,7 +70,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
         preg_match('/(*BSR_ANYCRLF)\s*\R*$/', $content, $matches);
         $end = $matches[0] ?? '';
 
-        $lines = preg_split('/(*BSR_ANYCRLF)(\R)/', trim($content), -1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
+        $lines = preg_split('/(*BSR_ANYCRLF)(\R)/', trim($content), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         $trimmed = '';
         $countByLine = 0;

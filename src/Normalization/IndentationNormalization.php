@@ -45,7 +45,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
     {
         if (
             isset($options['indentation'])
-            && in_array($options['indentation'], [' ', "\t"], true)
+            && \in_array($options['indentation'], [' ', "\t"], true)
         ) {
             $this->indentation = $options['indentation'];
         } else {
@@ -54,7 +54,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
 
         if (
             isset($options['indentation_size'])
-            && is_int($options['indentation_size'])
+            && \is_int($options['indentation_size'])
         ) {
             $this->indentationSize = $options['indentation_size'];
         } else {
@@ -105,7 +105,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
             }, $content);
         }
 
-        if (!is_array($newContent) && $newContent !== $content) {
+        if (!\is_array($newContent) && $newContent !== $content) {
             $file->setNewContent($newContent);
         }
 

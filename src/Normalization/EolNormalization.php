@@ -48,14 +48,14 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['eol']) && is_string($options['eol'])) {
+        if (isset($options['eol']) && \is_string($options['eol'])) {
             $map = ['lf' => "\n", 'crlf' => "\r\n"];
             $this->eol = $map[$options['eol']] ?? EolDiscovery::DEFAULT_EOL;
         } else {
             $this->eol = EolDiscovery::DEFAULT_EOL;
         }
 
-        if (isset($options['skip_cr']) && is_bool($options['skip_cr'])) {
+        if (isset($options['skip_cr']) && \is_bool($options['skip_cr'])) {
             $this->skipCr = $options['skip_cr'];
         } else {
             $this->skipCr = self::SKIP_CR;
@@ -82,7 +82,7 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
         $content = $file->getNewContent();
         $newContent = preg_replace($regex, $defaultEol, $content);
 
-        if (!is_array($newContent) && $content !== $newContent) {
+        if (!\is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             // Report EOLs from the original content.
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, $this->getEols($file->getContent()) . 'line terminators'));
@@ -111,9 +111,9 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
             }
         }
 
-        $message = ($eols['lf'] > 0) ? $eols['lf'].' LF ' : '';
-        $message .= ($eols['crlf'] > 0) ? $eols['crlf'].' CRLF ' : '';
-        $message .= ($eols['cr'] > 0) ? $eols['cr'].' CR ' : '';
+        $message = ($eols['lf'] > 0) ? $eols['lf'] . ' LF ' : '';
+        $message .= ($eols['crlf'] > 0) ? $eols['crlf'] . ' CRLF ' : '';
+        $message .= ($eols['cr'] > 0) ? $eols['cr'] . ' CR ' : '';
 
         return $message;
     }

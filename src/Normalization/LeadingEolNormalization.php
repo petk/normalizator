@@ -51,8 +51,8 @@ class LeadingEolNormalization implements NormalizationInterface
                 $file,
                 sprintf(
                     '%d leading EOL%s',
-                    count($this->getLeadingEols($content)),
-                    (1 === count($this->getLeadingEols($content))) ? '' : 's'
+                    \count($this->getLeadingEols($content)),
+                    (1 === \count($this->getLeadingEols($content))) ? '' : 's'
                 )
             ));
         }

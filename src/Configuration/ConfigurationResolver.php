@@ -53,7 +53,7 @@ class ConfigurationResolver
         // Check if no options are passed, which means to enable all.
         $all = true;
         foreach ($options as $key => $option) {
-            if (in_array($key, $this->options, true) && false !== $option) {
+            if (\in_array($key, $this->options, true) && false !== $option) {
                 $all = false;
             }
         }
@@ -92,7 +92,7 @@ class ConfigurationResolver
 
         // Convert dashes to underscores for configuration parameters usage.
         foreach ($options as $key => $value) {
-            if (in_array($key, $this->options, true)) {
+            if (\in_array($key, $this->options, true)) {
                 $configuration[str_replace('-', '_', $key)] = $value;
             }
         }
@@ -119,7 +119,7 @@ class ConfigurationResolver
             return 'lf';
         }
 
-        if (!is_string($eol) || !in_array(strtolower($eol), ['lf', 'crlf'], true)) {
+        if (!\is_string($eol) || !\in_array(strtolower($eol), ['lf', 'crlf'], true)) {
             throw new InvalidOptionException('--eol can be either lf or crlf.');
         }
 
@@ -144,7 +144,7 @@ class ConfigurationResolver
         }
 
         if (
-            false === \filter_var($finalEol, \FILTER_VALIDATE_INT)
+            false === filter_var($finalEol, FILTER_VALIDATE_INT)
             || 0 > $finalEol
         ) {
             throw new InvalidOptionException('--final-eol can be either empty, 0, or positive integer.');
@@ -171,7 +171,7 @@ class ConfigurationResolver
         }
 
         if (
-            false === \filter_var($middleEol, \FILTER_VALIDATE_INT)
+            false === filter_var($middleEol, FILTER_VALIDATE_INT)
             || 0 > $middleEol
         ) {
             throw new InvalidOptionException('--middle-eol can be either empty, 0, or positive integer.');
@@ -198,8 +198,8 @@ class ConfigurationResolver
         }
 
         if (
-            !is_string($indentation)
-            || !in_array(strtolower($indentation), ['space', 'tab'], true)
+            !\is_string($indentation)
+            || !\in_array(strtolower($indentation), ['space', 'tab'], true)
         ) {
             throw new InvalidOptionException('--indentation can be either "space" or "tab".');
         }
@@ -229,7 +229,7 @@ class ConfigurationResolver
         }
 
         if (
-            false === \filter_var($size, \FILTER_VALIDATE_INT)
+            false === filter_var($size, FILTER_VALIDATE_INT)
             || 1 > $size
         ) {
             throw new InvalidOptionException('--indentation-size must be integer greater than 0.');

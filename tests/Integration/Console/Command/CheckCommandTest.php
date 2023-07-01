@@ -27,7 +27,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             'paths' => ['vfs://' . $this->virtualRoot->getChild('initial')->path()],
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('CHECKING', $output);
@@ -37,7 +37,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             'paths' => ['vfs://' . $this->virtualRoot->getChild('initial/trailing-whitespace/fileWithTrailingWhitespace.php')->path()],
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('CHECKING', $output);
@@ -52,7 +52,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             ],
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('CHECKING ', $output);
@@ -71,7 +71,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             '--leading-eol' => true,
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('- 1 leading EOL ', $output);
@@ -81,7 +81,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             '--leading-eol' => true,
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('- 3 leading EOLs', $output);
@@ -91,7 +91,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             '--leading-eol' => true,
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('- 4 leading EOLs', $output);
@@ -109,7 +109,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             '--final-eol' => null,
         ]);
 
-        $this->assertEquals(1, $commandTester->getStatusCode());
+        $this->assertSame(1, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('- 3 final EOLs', $output);
@@ -120,7 +120,7 @@ final class CheckCommandTest extends NormalizatorTestCase
             '--final-eol' => 3,
         ]);
 
-        $this->assertEquals(0, $commandTester->getStatusCode());
+        $this->assertSame(0, $commandTester->getStatusCode());
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Everything looks good.', $output);

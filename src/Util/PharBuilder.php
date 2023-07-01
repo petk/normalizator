@@ -47,7 +47,7 @@ class PharBuilder
 
         // Add src files
         $files = $this->finder->getTree(__DIR__ . '/../../src/', function (File $file) {
-            if (in_array($file->getFilename(), ['BuildCommand.php', 'PharBuilder.php'], true)) {
+            if (\in_array($file->getFilename(), ['BuildCommand.php', 'PharBuilder.php'], true)) {
                 return false;
             }
 
@@ -66,7 +66,7 @@ class PharBuilder
 
         // Add vendor files
         $vendor = $this->finder->getTree(__DIR__ . '/../../vendor/', function (File $file) {
-            if ($file->isDir() || in_array($file->getExtension(), ['php', 'bash', 'fish', 'zsh'], true)) {
+            if ($file->isDir() || \in_array($file->getExtension(), ['php', 'bash', 'fish', 'zsh'], true)) {
                 return true;
             }
 
@@ -100,7 +100,7 @@ class PharBuilder
 
         $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $file->getContent());
 
-        if (!is_array($content)) {
+        if (!\is_array($content)) {
             $phar->addFromString('normalizator', $content);
         }
     }

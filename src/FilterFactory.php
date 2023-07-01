@@ -75,7 +75,7 @@ class FilterFactory
                 foreach ($reflection->getAttributes() as $attribute) {
                     if (Filter::class === $attribute->getName()) {
                         $arguments = $attribute->getArguments();
-                        if (isset($arguments['name']) && is_string($arguments['name'])) {
+                        if (isset($arguments['name']) && \is_string($arguments['name'])) {
                             $this->filterRegistry[$arguments['name']] = $class;
                         }
 

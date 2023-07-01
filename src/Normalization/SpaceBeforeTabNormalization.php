@@ -49,11 +49,11 @@ class SpaceBeforeTabNormalization implements NormalizationInterface
         $regex = '/^(\t*)([ ]+)(\t+)/m';
         $content = $newContent = $file->getNewContent();
 
-        while (!is_array($newContent) && 1 === preg_match($regex, $newContent)) {
+        while (!\is_array($newContent) && 1 === preg_match($regex, $newContent)) {
             $newContent = preg_replace($regex, '$1$3', $newContent);
         }
 
-        if (!is_array($newContent) && $content !== $newContent) {
+        if (!\is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'space before tab'));
         }

@@ -27,7 +27,7 @@ class GitDiscovery
     {
         $key = static::class . ':' . $path;
 
-        if ($this->cache->has($key) && is_bool($this->cache->get($key))) {
+        if ($this->cache->has($key) && \is_bool($this->cache->get($key))) {
             return $this->cache->get($key);
         }
 

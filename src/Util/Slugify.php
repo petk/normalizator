@@ -56,7 +56,7 @@ class Slugify
         // Replace all patterns.
         $transliterated = preg_replace(array_keys($this->patterns), array_values($this->patterns), $transliterated);
 
-        if (is_array($transliterated)) {
+        if (\is_array($transliterated)) {
             throw new \RuntimeException('Something got wrong when replacing patterns');
         }
 

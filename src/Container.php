@@ -53,7 +53,7 @@ class Container implements ContainerInterface
     public function set(string $id, mixed $entry): void
     {
         // Invalid entry.
-        if (class_exists($id) && !is_callable($entry)) {
+        if (class_exists($id) && !\is_callable($entry)) {
             throw new ContainerInvalidEntryException(
                 sprintf('Entry %s must be callable.', $id)
             );
@@ -97,7 +97,7 @@ class Container implements ContainerInterface
         $entry = &$this->entries[$id];
 
         // Entry is a configuration parameter.
-        if (!class_exists($id) && !is_callable($entry)) {
+        if (!class_exists($id) && !\is_callable($entry)) {
             return $entry;
         }
 

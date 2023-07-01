@@ -31,7 +31,7 @@ final class FilterFactoryTest extends NormalizatorTestCase
         /** @var FilterFactory */
         $factory = $this->container->get(FilterFactory::class);
 
-        self::assertInstanceOf($valid, $factory->make($key));
+        $this->assertInstanceOf($valid, $factory->make($key));
     }
 
     /**

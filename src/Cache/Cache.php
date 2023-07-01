@@ -24,6 +24,10 @@ class Cache implements CacheInterface
 
     public function get(string $key, mixed $default = null): mixed
     {
+        if ('' === $key) {
+            throw new CacheInvalidArgumentException('Key must not be empty string');
+        }
+
         return $this->values[$key] ?? $default;
     }
 

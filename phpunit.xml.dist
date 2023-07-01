@@ -11,8 +11,11 @@
 >
   <coverage/>
   <testsuites>
-    <testsuite name="Normalizator Test Suite">
-      <directory>tests</directory>
+    <testsuite name="unit">
+        <directory>tests/Unit</directory>
+    </testsuite>
+    <testsuite name="integration">
+        <directory>tests/Integration</directory>
     </testsuite>
   </testsuites>
 </phpunit>

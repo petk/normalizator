@@ -69,7 +69,7 @@ final class CrlfFilesTest extends NormalizatorTestCase
         ]);
 
         $output = $commandTester->getDisplay();
-        $this->assertEquals(0, $commandTester->getStatusCode());
+        $this->assertSame(0, $commandTester->getStatusCode());
         $this->assertStringContainsString('FIXING', $output);
     }
 }

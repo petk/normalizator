@@ -39,7 +39,7 @@ class EolDiscovery
         // File has eol=crlf Git attribute.
         if (
             $this->gitDiscovery->hasGit($file->getRootPath())
-            && in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)
+            && \in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)
         ) {
             return "\r\n";
         }
@@ -58,7 +58,7 @@ class EolDiscovery
     {
         $key = static::class . ':' . $path;
 
-        if ($this->cache->has($key) && is_array($this->cache->get($key))) {
+        if ($this->cache->has($key) && \is_array($this->cache->get($key))) {
             return $this->cache->get($key);
         }
 

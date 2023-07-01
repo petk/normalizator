@@ -42,7 +42,7 @@ class SelfUpdateCommand extends Command
 
         $remoteFilename = 'https://github.com/petk/normalizator/releases/latest/download/normalizator.phar';
         $localFilename = $_SERVER['argv'][0];
-        $tempFilename = basename($localFilename, '.phar').'-temp.phar';
+        $tempFilename = basename($localFilename, '.phar') . '-temp.phar';
 
         try {
             copy($remoteFilename, $tempFilename);
@@ -74,7 +74,7 @@ class SelfUpdateCommand extends Command
 
             unlink($tempFilename);
 
-            $output->writeln('<error>The download is corrupt ('.$e->getMessage().').</error>');
+            $output->writeln('<error>The download is corrupt (' . $e->getMessage() . ').</error>');
             $output->writeln('<error>Please re-run the self-update command to try again.</error>');
 
             return Command::FAILURE;
