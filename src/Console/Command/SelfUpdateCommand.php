@@ -14,6 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
 
 use function basename;
+use function is_array;
+use function is_string;
 use function Normalizator\chmod;
 use function Normalizator\copy;
 use function Normalizator\md5_file;
@@ -46,11 +48,18 @@ class SelfUpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        $remoteFilename = 'https://github.com/petk/normalizator/releases/latest/download/normalizator.phar';
-        $localFilename = $_SERVER['argv'][0];
-        $tempFilename = basename($localFilename, '.phar') . '-temp.phar';
+        if (is_array($_SERVER['argv']) && is_string($_SERVER['argv'][0])) {
+            $localFilename = $_SERVER['argv'][0];
+        } else {
+            $output->writeln('<error>Could not get filename from the arguments passed to script.');
+
+            return Command::FAILURE;
+        }
 
         try {
+            $tempFilename = basename($localFilename, '.phar') . '-temp.phar';
+
+            $remoteFilename = 'https://github.com/petk/normalizator/releases/latest/download/normalizator.phar';
             copy($remoteFilename, $tempFilename);
 
             if (md5_file($localFilename) === md5_file($tempFilename)) {

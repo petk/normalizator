@@ -68,6 +68,7 @@ class EolDiscovery
         $key = static::class . ':' . $path;
 
         if ($this->cache->has($key) && is_array($this->cache->get($key))) {
+            /** @var array<int,string> */
             return $this->cache->get($key);
         }
 
@@ -84,6 +85,7 @@ class EolDiscovery
             return preg_match('/^i\/crlf.*[ ]+w\/.*attr\/.*eol=crlf.*$/', $item);
         });
 
+        /** @var array<int,string> */
         $crlfFiles = preg_filter('/^i\/.*w\/.*attr\/.*[ \t]+/', '', $files);
 
         $this->cache->set($key, $crlfFiles);
