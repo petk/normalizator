@@ -11,11 +11,8 @@ indent_size              = 4
 tab_width                = 4
 charset                  = utf-8
 
-[*.{md,sh,yaml,yml}]
+[{Makefile,*.{md,sh,yaml,yml}}]
 indent_size              = 2
-
-[Makefile]
-indent_style             = tab
 
 [*.patch]
 trim_trailing_whitespace = false

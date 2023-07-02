@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace Normalizator\CLI;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Normalizator\Console\Command\BuildCommand;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
@@ -20,27 +18,31 @@ use function sprintf;
 
 use const STDERR;
 
-// Instal without development dependencies.
-exec('composer install -q --no-dev', $output, $result);
+(function () {
+    try {
+        // Autoload dependencies.
+        require __DIR__ . '/../vendor/autoload.php';
 
-if (0 !== $result) {
-    echo 'Could not remove development dependencies, make sure exec is allowed and php can be found in your PATH.';
+        // Instal without development dependencies.
+        exec('composer install -q --no-dev', $output, $result);
 
-    exit(1);
-}
+        if (0 !== $result) {
+            echo 'Could not remove development dependencies, make sure exec is allowed and php can be found in your PATH.';
 
-try {
-    $finder = new Finder();
-    $pharBuilder = new PharBuilder($finder);
+            exit(1);
+        }
 
-    $command = new BuildCommand($pharBuilder);
+        // Create normalizator.phar file.
+        $finder = new Finder();
+        $pharBuilder = new PharBuilder($finder);
+        $command = new BuildCommand($pharBuilder);
+        $application = new Application('Normalizator Builder', Normalizator::VERSION);
+        $application->add($command);
+        $application->setDefaultCommand($command->getName());
+        $application->run();
+    } catch (Throwable $e) {
+        fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
 
-    $application = new Application('Normalizator Builder', Normalizator::VERSION);
-    $application->add($command);
-    $application->setDefaultCommand($command->getName());
-    $application->run();
-} catch (Throwable $e) {
-    fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
-
-    exit(1);
-}
+        exit(1);
+    }
+})();

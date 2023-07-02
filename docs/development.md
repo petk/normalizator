@@ -18,7 +18,7 @@ composer install
 To build a `normalizator.phar` file:
 
 ```sh
-./bin/build
+make phar
 ```
 
 ## Tests

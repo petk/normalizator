@@ -88,7 +88,7 @@ released by the following release process:
   created GitHub release:
 
   ```sh
-  ./bin/build
+  make phar
   ```
 
 * **6. Docker image**

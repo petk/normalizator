@@ -39,7 +39,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Normalizator\\": "src/"
+            "Normalizator\\": "src/",
+            "Normalizator\\CLI\\": "bin/"
         },
         "files": ["src/functions.php"]
     },

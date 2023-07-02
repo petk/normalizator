@@ -22,59 +22,66 @@ use function sprintf;
 use const PHP_VERSION_ID;
 use const STDERR;
 
-// Check PHP version.
-if (PHP_VERSION_ID < 80100) {
-    fwrite(STDERR, "Error: Normalizator requires PHP 8.1 or greater. Please update your PHP version to run Normalizator.\n");
-
-    exit(1);
-}
-
-// Check required PHP extensions.
-foreach (['fileinfo', 'intl', 'mbstring', 'phar'] as $extension) {
-    if (!extension_loaded($extension)) {
-        fwrite(STDERR, sprintf("Error: PHP extension ext-%s is required to run Normalizator.\n", $extension));
+// Check requirements.
+(function () {
+    if (PHP_VERSION_ID < 80100) {
+        fwrite(STDERR, "Error: Normalizator requires PHP 8.1 or greater. Please update your PHP version to run Normalizator.\n");
 
         exit(1);
     }
-}
+
+    // Check required PHP extensions.
+    foreach (['fileinfo', 'intl', 'mbstring', 'phar'] as $extension) {
+        if (!extension_loaded($extension)) {
+            fwrite(STDERR, sprintf("Error: PHP extension ext-%s is required to run Normalizator.\n", $extension));
+
+            exit(1);
+        }
+    }
+})();
 
 // Find autoloader file.
-$files = [
-    // When in a standalone Git repository.
-    __DIR__ . '/../vendor/autoload.php',
-    // When in vendor/petk/normalizator.
-    __DIR__ . '/../../../autoload.php',
-];
+(function () {
+    $files = [
+        // When in a standalone Git repository.
+        __DIR__ . '/../vendor/autoload.php',
+        // When in vendor/petk/normalizator.
+        __DIR__ . '/../../../autoload.php',
+    ];
 
-foreach ($files as $file) {
-    if (file_exists($file)) {
-        $autoloader = $file;
+    foreach ($files as $file) {
+        if (file_exists($file)) {
+            $autoloader = $file;
 
-        break;
+            break;
+        }
     }
-}
 
-if (!isset($autoloader)) {
-    throw new RuntimeException('Autoloader autoload.php not found.');
-}
+    if (!isset($autoloader)) {
+        throw new RuntimeException('Autoloader autoload.php not found.');
+    }
 
-require $autoloader;
+    require $autoloader;
+})();
 
-try {
-    $container = require_once __DIR__ . '/../config/container.php';
+// Run normalizator application.
+(function () {
+    try {
+        $container = require_once __DIR__ . '/../config/container.php';
 
-    // Start script execution timer.
-    $container->get(Timer::class)->start();
+        // Start script execution timer.
+        $container->get(Timer::class)->start();
 
-    $application = new Application('Normalizator', Normalizator::VERSION);
+        $application = new Application('Normalizator', Normalizator::VERSION);
 
-    $application->add($container->get(CheckCommand::class));
-    $application->add($container->get(FixCommand::class));
-    $application->add($container->get(SelfUpdateCommand::class));
+        $application->add($container->get(CheckCommand::class));
+        $application->add($container->get(FixCommand::class));
+        $application->add($container->get(SelfUpdateCommand::class));
 
-    $application->run();
-} catch (Throwable $e) {
-    fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
+        $application->run();
+    } catch (Throwable $e) {
+        fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
 
-    exit(1);
-}
+        exit(1);
+    }
+})();
