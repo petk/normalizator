@@ -7,6 +7,14 @@ namespace Normalizator\Configuration;
 use Normalizator\Normalization\IndentationNormalization;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 
+use function filter_var;
+use function in_array;
+use function is_string;
+use function str_replace;
+use function strtolower;
+
+use const FILTER_VALIDATE_INT;
+
 /**
  * Validates given options and returns resolved configuration values.
  */
@@ -53,7 +61,7 @@ class ConfigurationResolver
         // Check if no options are passed, which means to enable all.
         $all = true;
         foreach ($options as $key => $option) {
-            if (\in_array($key, $this->options, true) && false !== $option) {
+            if (in_array($key, $this->options, true) && false !== $option) {
                 $all = false;
             }
         }
@@ -92,7 +100,7 @@ class ConfigurationResolver
 
         // Convert dashes to underscores for configuration parameters usage.
         foreach ($options as $key => $value) {
-            if (\in_array($key, $this->options, true)) {
+            if (in_array($key, $this->options, true)) {
                 $configuration[str_replace('-', '_', $key)] = $value;
             }
         }
@@ -119,7 +127,7 @@ class ConfigurationResolver
             return 'lf';
         }
 
-        if (!\is_string($eol) || !\in_array(strtolower($eol), ['lf', 'crlf'], true)) {
+        if (!is_string($eol) || !in_array(strtolower($eol), ['lf', 'crlf'], true)) {
             throw new InvalidOptionException('--eol can be either lf or crlf.');
         }
 
@@ -198,8 +206,8 @@ class ConfigurationResolver
         }
 
         if (
-            !\is_string($indentation)
-            || !\in_array(strtolower($indentation), ['space', 'tab'], true)
+            !is_string($indentation)
+            || !in_array(strtolower($indentation), ['space', 'tab'], true)
         ) {
             throw new InvalidOptionException('--indentation can be either "space" or "tab".');
         }

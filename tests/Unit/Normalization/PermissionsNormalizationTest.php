@@ -7,6 +7,7 @@ namespace Normalizator\Tests\Unit\Normalization;
 use Normalizator\Enum\Permissions;
 use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
+use Phar;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Normalizator\chmod;
@@ -31,13 +32,13 @@ final class PermissionsNormalizationTest extends NormalizatorTestCase
     public function testPhar(): void
     {
         $pharFile = $this->fixturesRoot . '/generated/initial/permissions/executable.phar';
-        $phar = new \Phar($pharFile);
-        $phar->setSignatureAlgorithm(\Phar::SHA1);
+        $phar = new Phar($pharFile);
+        $phar->setSignatureAlgorithm(Phar::SHA1);
         $phar->startBuffering();
         $phar->setStub("#!/usr/bin/env php\n<?php Phar::mapPhar('executable.phar'); require 'phar://executable.phar/executable'; __HALT_COMPILER();");
         $phar->addFromString('src/Foobar.php', '<?php class Foobar{}');
         $phar->stopBuffering();
-        $phar->compressFiles(\Phar::GZ);
+        $phar->compressFiles(Phar::GZ);
         unset($phar);
         chmod($pharFile, Permissions::EXECUTABLE->get());
 
@@ -48,7 +49,7 @@ final class PermissionsNormalizationTest extends NormalizatorTestCase
         $this->assertSame(Permissions::EXECUTABLE->get(), $file->getNewPermissions());
 
         // Remove generated phar from disk and memory for next tests run.
-        \Phar::unlinkArchive($pharFile);
+        Phar::unlinkArchive($pharFile);
     }
 
     /**

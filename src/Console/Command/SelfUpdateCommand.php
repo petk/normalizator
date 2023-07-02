@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
+use Exception;
+use Phar;
+use PharException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UnexpectedValueException;
 
+use function basename;
 use function Normalizator\chmod;
 use function Normalizator\copy;
 use function Normalizator\md5_file;
 use function Normalizator\rename;
 use function Normalizator\unlink;
+use function umask;
 
 #[AsCommand(
     name: 'self-update',
@@ -29,12 +35,12 @@ class SelfUpdateCommand extends Command
     }
 
     /**
-     * @throws \UnexpectedValueException
-     * @throws \PharException
+     * @throws UnexpectedValueException
+     * @throws PharException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ('' === \Phar::running()) {
+        if ('' === Phar::running()) {
             $output->writeln('<error>The self-update command can be only executed when running normalizator.phar.</error>');
 
             return Command::FAILURE;
@@ -57,7 +63,7 @@ class SelfUpdateCommand extends Command
             chmod($tempFilename, 0777 & ~umask());
 
             // Check if Phar is valid.
-            $phar = new \Phar($tempFilename);
+            $phar = new Phar($tempFilename);
 
             // Free the variable to unlock the file.
             unset($phar);
@@ -67,8 +73,8 @@ class SelfUpdateCommand extends Command
             $output->writeln('<info>normalizator updated.</info>');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
+        } catch (Exception $e) {
+            if (!$e instanceof UnexpectedValueException && !$e instanceof PharException) {
                 throw $e;
             }
 

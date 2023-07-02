@@ -7,12 +7,18 @@ namespace Normalizator\Tests\Integration;
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Tests\NormalizatorTestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 use Symfony\Component\Console\Tester\CommandTester;
 
+use function escapeshellarg;
+use function is_dir;
 use function Normalizator\exec;
 use function Normalizator\file_put_contents;
 use function Normalizator\mkdir;
 use function Normalizator\rmdir;
+use function sprintf;
 
 /**
  * @internal
@@ -30,10 +36,10 @@ final class CrlfFilesTest extends NormalizatorTestCase
 
         // Clean any previous Git repo.
         if (is_dir($repo)) {
-            /** @var iterable<string,\SplFileInfo> */
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($repo, \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::CHILD_FIRST
+            /** @var iterable<string,SplFileInfo> */
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($repo, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
             );
 
             foreach ($files as $fileinfo) {

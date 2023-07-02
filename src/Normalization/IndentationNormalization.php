@@ -10,8 +10,15 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
+use function implode;
+use function in_array;
+use function is_array;
+use function is_int;
 use function Normalizator\preg_match_all;
 use function Normalizator\preg_replace_callback;
+use function str_repeat;
+use function str_replace;
+use function substr_count;
 
 /**
  * Normalization that trims trailing whitespace characters.
@@ -45,7 +52,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
     {
         if (
             isset($options['indentation'])
-            && \in_array($options['indentation'], [' ', "\t"], true)
+            && in_array($options['indentation'], [' ', "\t"], true)
         ) {
             $this->indentation = $options['indentation'];
         } else {
@@ -54,7 +61,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
 
         if (
             isset($options['indentation_size'])
-            && \is_int($options['indentation_size'])
+            && is_int($options['indentation_size'])
         ) {
             $this->indentationSize = $options['indentation_size'];
         } else {
@@ -105,7 +112,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
             }, $content);
         }
 
-        if (!\is_array($newContent) && $newContent !== $content) {
+        if (!is_array($newContent) && $newContent !== $content) {
             $file->setNewContent($newContent);
         }
 

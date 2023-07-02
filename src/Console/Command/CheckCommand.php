@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
+use Exception;
+use Iterator;
 use Normalizator\Configuration\Configurator;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
@@ -18,6 +20,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function count;
+use function implode;
+use function iterator_count;
+use function memory_get_peak_usage;
+use function round;
+use function sprintf;
 
 #[AsCommand(
     name: 'check',
@@ -92,7 +101,7 @@ class CheckCommand extends Command
     {
         try {
             $exitCode = $this->doExecute($input, $output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $exitCode = Command::FAILURE;
 
             $output->writeln('<error>' . $e::class . ': ' . $e->getMessage() . '</error>');
@@ -137,11 +146,11 @@ class CheckCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (0 < \count($this->logger->getAllLogs()) + \count($this->logger->getAllErrors())) {
+        if (0 < count($this->logger->getAllLogs()) + count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d of %d %s should be fixed.',
-                    \count($this->logger->getAllLogs()) + \count($this->logger->getAllErrors()),
+                    count($this->logger->getAllLogs()) + count($this->logger->getAllErrors()),
                     $count,
                     (1 === $count) ? 'file' : 'files',
                 )],
@@ -159,7 +168,7 @@ class CheckCommand extends Command
         }
 
         // Print debug messages.
-        if (0 < \count($this->logger->getDebugMessages())) {
+        if (0 < count($this->logger->getDebugMessages())) {
             if ($output->isDebug()) {
                 $output->writeln([
                     '',
@@ -172,8 +181,8 @@ class CheckCommand extends Command
         }
 
         if (
-            0 < \count($this->logger->getAllErrors())
-            || 0 < \count($this->logger->getAllLogs())
+            0 < count($this->logger->getAllErrors())
+            || 0 < count($this->logger->getAllLogs())
         ) {
             $exitCode = Command::FAILURE;
         }
@@ -187,7 +196,7 @@ class CheckCommand extends Command
     /**
      * Run normalizator on given path and send output.
      */
-    private function normalize(string $path, OutputInterface $output): \Iterator
+    private function normalize(string $path, OutputInterface $output): Iterator
     {
         $iterator = $this->finder->getTree($path);
 

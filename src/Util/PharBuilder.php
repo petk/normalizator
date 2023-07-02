@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Normalizator\Util;
 
+use BadMethodCallException;
 use Normalizator\Enum\Permissions;
 use Normalizator\Finder\File;
 use Normalizator\Finder\Finder;
+use Phar;
+use RecursiveIteratorIterator;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function file_exists;
+use function in_array;
+use function is_array;
 use function Normalizator\chmod;
 use function Normalizator\preg_replace;
 use function Normalizator\unlink;
@@ -23,7 +29,7 @@ class PharBuilder
     }
 
     /**
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function build(string $pharFile = 'normalizator.phar', ?OutputInterface $output = null): void
     {
@@ -31,9 +37,9 @@ class PharBuilder
             unlink($pharFile);
         }
 
-        $phar = new \Phar($pharFile);
+        $phar = new Phar($pharFile);
 
-        $phar->setSignatureAlgorithm(\Phar::SHA1);
+        $phar->setSignatureAlgorithm(Phar::SHA1);
 
         $phar->startBuffering();
 
@@ -47,12 +53,12 @@ class PharBuilder
 
         // Add src files
         $files = $this->finder->getTree(__DIR__ . '/../../src/', function (File $file) {
-            if (\in_array($file->getFilename(), ['BuildCommand.php', 'PharBuilder.php'], true)) {
+            if (in_array($file->getFilename(), ['BuildCommand.php', 'PharBuilder.php'], true)) {
                 return false;
             }
 
             return true;
-        }, \RecursiveIteratorIterator::LEAVES_ONLY);
+        }, RecursiveIteratorIterator::LEAVES_ONLY);
 
         foreach ($files as $file) {
             $path = 'src/' . $file->getSubPathname();
@@ -66,12 +72,12 @@ class PharBuilder
 
         // Add vendor files
         $vendor = $this->finder->getTree(__DIR__ . '/../../vendor/', function (File $file) {
-            if ($file->isDir() || \in_array($file->getExtension(), ['php', 'bash', 'fish', 'zsh'], true)) {
+            if ($file->isDir() || in_array($file->getExtension(), ['php', 'bash', 'fish', 'zsh'], true)) {
                 return true;
             }
 
             return false;
-        }, \RecursiveIteratorIterator::LEAVES_ONLY);
+        }, RecursiveIteratorIterator::LEAVES_ONLY);
 
         foreach ($vendor as $file) {
             $path = 'vendor/' . $file->getSubPathname();
@@ -85,7 +91,7 @@ class PharBuilder
 
         $phar->stopBuffering();
 
-        $phar->compressFiles(\Phar::GZ);
+        $phar->compressFiles(Phar::GZ);
 
         unset($phar);
         chmod($pharFile, Permissions::EXECUTABLE->get());
@@ -94,13 +100,13 @@ class PharBuilder
     /**
      * Remove the shebang from the file before add it to the PHAR file.
      */
-    protected function addNormalizator(\Phar $phar): void
+    protected function addNormalizator(Phar $phar): void
     {
         $file = new File(__DIR__ . '/../../bin/normalizator');
 
         $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $file->getContent());
 
-        if (!\is_array($content)) {
+        if (!is_array($content)) {
             $phar->addFromString('normalizator', $content);
         }
     }
@@ -108,7 +114,7 @@ class PharBuilder
     /**
      * Add dependency injection container configuration file.
      */
-    protected function addContainer(\Phar $phar): void
+    protected function addContainer(Phar $phar): void
     {
         // Add container configuration.
         $containerFile = new File(__DIR__ . '/../../config/container.php');

@@ -6,6 +6,8 @@ namespace Normalizator\Util;
 
 use Normalizator\Finder\File;
 
+use function array_unique;
+
 /**
  * Logger utility that holds messages from normalizations and file changes.
  */

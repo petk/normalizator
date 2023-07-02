@@ -10,6 +10,12 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
+use function array_reverse;
+use function count;
+use function ltrim;
+use function sprintf;
+use function substr;
+
 /**
  * The leading newlines trimming utility.
  */
@@ -51,8 +57,8 @@ class LeadingEolNormalization implements NormalizationInterface
                 $file,
                 sprintf(
                     '%d leading EOL%s',
-                    \count($this->getLeadingEols($content)),
-                    (1 === \count($this->getLeadingEols($content))) ? '' : 's'
+                    count($this->getLeadingEols($content)),
+                    (1 === count($this->getLeadingEols($content))) ? '' : 's'
                 )
             ));
         }

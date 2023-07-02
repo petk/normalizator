@@ -8,6 +8,8 @@ use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 
+use function implode;
+
 /**
  * Overridden console application for normalizator.
  */

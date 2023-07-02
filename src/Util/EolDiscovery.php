@@ -9,8 +9,17 @@ use Normalizator\EventDispatcher\Event\DebugEvent;
 use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 
+use function array_filter;
+use function escapeshellarg;
+use function explode;
+use function implode;
+use function in_array;
+use function is_array;
 use function Normalizator\exec;
 use function Normalizator\preg_match;
+use function preg_filter;
+use function sprintf;
+use function trim;
 
 /**
  * EOL discovery utility.
@@ -39,7 +48,7 @@ class EolDiscovery
         // File has eol=crlf Git attribute.
         if (
             $this->gitDiscovery->hasGit($file->getRootPath())
-            && \in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)
+            && in_array($file->getSubPathname(), $this->getCrlfFiles($file->getRootPath()), true)
         ) {
             return "\r\n";
         }
@@ -58,7 +67,7 @@ class EolDiscovery
     {
         $key = static::class . ':' . $path;
 
-        if ($this->cache->has($key) && \is_array($this->cache->get($key))) {
+        if ($this->cache->has($key) && is_array($this->cache->get($key))) {
             return $this->cache->get($key);
         }
 

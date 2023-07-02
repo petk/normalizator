@@ -9,6 +9,12 @@ use Normalizator\Exception\ContainerEntryNotFoundException;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalization\ConfigurableNormalizationInterface;
 use Normalizator\Normalization\NormalizationInterface;
+use ReflectionClass;
+use ReflectionNamedType;
+use RuntimeException;
+
+use function str_replace;
+use function substr;
 
 /**
  * A simple factory that registers and creates all normalizations.
@@ -65,7 +71,7 @@ class NormalizationFactory
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     private function registerNormalizations(): void
     {
@@ -86,12 +92,12 @@ class NormalizationFactory
             $class = 'Normalizator\\Normalization\\' . $class;
 
             // Resolve normalization attributes.
-            $reflection = new \ReflectionClass($class);
+            $reflection = new ReflectionClass($class);
             foreach ($reflection->getAttributes() as $attribute) {
                 if (Normalization::class === $attribute->getName()) {
                     $arguments = $attribute->getArguments();
                     if (!isset($arguments['name'])) {
-                        throw new \RuntimeException('The name attribute is required for ' . $class);
+                        throw new RuntimeException('The name attribute is required for ' . $class);
                     }
 
                     $name = (string) $arguments['name'];
@@ -115,7 +121,7 @@ class NormalizationFactory
     {
         $dependencies = [];
 
-        $ref = new \ReflectionClass($class);
+        $ref = new ReflectionClass($class);
         $constructor = $ref->getConstructor();
 
         if (null === $constructor) {
@@ -124,7 +130,7 @@ class NormalizationFactory
 
         foreach ($constructor->getParameters() as $parameter) {
             $type = $parameter->getType();
-            if (null !== $type && $type instanceof \ReflectionNamedType) {
+            if (null !== $type && $type instanceof ReflectionNamedType) {
                 try {
                     $dependencies[] = $this->container->get($type->getName());
                 } catch (ContainerEntryNotFoundException $e) {

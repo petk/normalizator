@@ -6,6 +6,8 @@ namespace Normalizator\EventDispatcher\Event;
 
 use Normalizator\Finder\File;
 
+use function strtolower;
+
 /**
  * Generic debugging event for handling errors and debug messages.
  */

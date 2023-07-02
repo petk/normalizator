@@ -11,7 +11,19 @@ use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\EolDiscovery;
 
+use function array_count_values;
+use function array_reverse;
+use function arsort;
+use function count;
+use function in_array;
+use function is_array;
+use function is_int;
+use function is_string;
+use function key;
 use function Normalizator\preg_match_all;
+use function rtrim;
+use function sprintf;
+use function substr;
 
 /**
  * Normalizes final newlines.
@@ -49,14 +61,14 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['eol']) && \is_string($options['eol'])) {
+        if (isset($options['eol']) && is_string($options['eol'])) {
             $map = ['lf' => "\n", 'crlf' => "\r\n"];
             $this->eol = $map[$options['eol']] ?? EolDiscovery::DEFAULT_EOL;
         } else {
             $this->eol = EolDiscovery::DEFAULT_EOL;
         }
 
-        if (isset($options['max_extra_final_eols']) && \is_int($options['max_extra_final_eols'])) {
+        if (isset($options['max_extra_final_eols']) && is_int($options['max_extra_final_eols'])) {
             $this->maxExtraFinalEols = $options['max_extra_final_eols'];
         } else {
             $this->maxExtraFinalEols = self::MAX_EXTRA_FINAL_EOLS;
@@ -96,7 +108,7 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
         // Then insert one missing final EOL if not present yet.
         if (
             '' !== $trimmed
-            && !\in_array(substr($trimmed, -1), ["\n", "\r"], true)
+            && !in_array(substr($trimmed, -1), ["\n", "\r"], true)
             && 0 < $max
         ) {
             $trimmed .= $this->getPrevailingEol($content, $file);
@@ -106,7 +118,7 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
             $file->setNewContent($trimmed);
             $this->eventDispatcher->dispatch(new NormalizationEvent(
                 $file,
-                sprintf('%d final EOL%s', \count($newlines), (1 === \count($newlines)) ? '' : 's')
+                sprintf('%d final EOL%s', count($newlines), (1 === count($newlines)) ? '' : 's')
             ));
         }
 
@@ -158,7 +170,7 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
         // Match all LF, CRLF and CR EOL characters
         preg_match_all('/(*BSR_ANYCRLF)\R/', $content, $matches);
 
-        if (\is_array($matches[0]) && [] !== $matches[0]) {
+        if (is_array($matches[0]) && [] !== $matches[0]) {
             $counts = array_count_values($matches[0]);
             arsort($counts);
 

@@ -6,6 +6,8 @@ namespace Normalizator\EventDispatcher;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+use function array_key_exists;
+
 /**
  * Listener provider.
  */
@@ -23,7 +25,7 @@ class ListenerProvider implements ListenerProviderInterface
     {
         $eventType = $event::class;
 
-        if (\array_key_exists($eventType, $this->listeners)) {
+        if (array_key_exists($eventType, $this->listeners)) {
             return $this->listeners[$eventType];
         }
 
@@ -39,7 +41,7 @@ class ListenerProvider implements ListenerProviderInterface
 
     public function clearListeners(string $eventType): void
     {
-        if (\array_key_exists($eventType, $this->listeners)) {
+        if (array_key_exists($eventType, $this->listeners)) {
             unset($this->listeners[$eventType]);
         }
     }

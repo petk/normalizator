@@ -4,12 +4,25 @@ declare(strict_types=1);
 
 namespace Normalizator\Finder;
 
+use RuntimeException;
+use SplFileInfo;
+
+use function array_map;
+use function explode;
+use function file_exists;
+use function implode;
+use function is_file;
 use function Normalizator\chmod;
 use function Normalizator\file_get_contents;
 use function Normalizator\file_put_contents;
 use function Normalizator\fileperms;
 use function Normalizator\mime_content_type;
 use function Normalizator\rename;
+use function pathinfo;
+use function str_replace;
+use function substr;
+
+use const PATHINFO_EXTENSION;
 
 /**
  * File wrapper which extends from the \SplFileInfo.
@@ -17,7 +30,7 @@ use function Normalizator\rename;
  * It adds some more functionality on top of \SplFileInfo and creates a
  * simple repository for some file values and their manipulation.
  */
-class File extends \SplFileInfo
+class File extends SplFileInfo
 {
     /**
      * The relative path of the file based on the directory passed to finder.
@@ -128,7 +141,7 @@ class File extends \SplFileInfo
     /**
      * Save file with new content, new permissions and new filename on disk.
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function save(): void
     {
@@ -145,7 +158,7 @@ class File extends \SplFileInfo
 
             // Safety when renaming a file to existing one so it doesn't overwrite it.
             if (file_exists($newFile)) {
-                throw new \RuntimeException('Attempting to rename ' . $this->getPathname() . ' to ' . $newFile . ' which already exists on disk.');
+                throw new RuntimeException('Attempting to rename ' . $this->getPathname() . ' to ' . $newFile . ' which already exists on disk.');
             }
 
             rename($this->getEncodedPathname(), $newFile);

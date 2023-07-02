@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Normalizator\Normalization;
 
+use Exception;
 use Normalizator\Attribute\Normalization;
 use Normalizator\Enum\Permissions;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
@@ -11,8 +12,11 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\GitDiscovery;
+use Phar;
 
+use function decoct;
 use function Normalizator\preg_match;
+use function trim;
 
 /**
  * Utility that checks and sets permissions according to a predefined sets.
@@ -161,8 +165,8 @@ class PermissionsNormalization implements NormalizationInterface
             && 1 === preg_match('/^#![ \t]*\/usr\/bin\/env[ \t]?/', $file->getContent())
         ) {
             try {
-                new \Phar($file->getPathname());
-            } catch (\Exception $e) {
+                new Phar($file->getPathname());
+            } catch (Exception $e) {
                 return false;
             }
 

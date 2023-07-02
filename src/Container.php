@@ -9,6 +9,10 @@ use Normalizator\Exception\ContainerEntryNotFoundException;
 use Normalizator\Exception\ContainerInvalidEntryException;
 use Psr\Container\ContainerInterface;
 
+use function class_exists;
+use function is_callable;
+use function sprintf;
+
 /**
  * PSR-11 compatible dependency injection container.
  */
@@ -53,7 +57,7 @@ class Container implements ContainerInterface
     public function set(string $id, mixed $entry): void
     {
         // Invalid entry.
-        if (class_exists($id) && !\is_callable($entry)) {
+        if (class_exists($id) && !is_callable($entry)) {
             throw new ContainerInvalidEntryException(
                 sprintf('Entry %s must be callable.', $id)
             );
@@ -97,7 +101,7 @@ class Container implements ContainerInterface
         $entry = &$this->entries[$id];
 
         // Entry is a configuration parameter.
-        if (!class_exists($id) && !\is_callable($entry)) {
+        if (!class_exists($id) && !is_callable($entry)) {
             return $entry;
         }
 

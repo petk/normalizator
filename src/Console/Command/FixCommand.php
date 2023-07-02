@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Console\Command;
 
+use Exception;
+use Iterator;
 use Normalizator\Configuration\Configuration;
 use Normalizator\Configuration\Configurator;
 use Normalizator\Finder\File;
@@ -22,6 +24,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+
+use function count;
+use function implode;
+use function iterator_count;
+use function memory_get_peak_usage;
+use function round;
+use function sprintf;
 
 #[AsCommand(
     name: 'fix',
@@ -104,7 +113,7 @@ class FixCommand extends Command
     {
         try {
             $exitCode = $this->doExecute($input, $output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $exitCode = Command::FAILURE;
 
             $output->writeln('<error>' . $e::class . ': ' . $e->getMessage() . '</error>');
@@ -161,23 +170,23 @@ class FixCommand extends Command
             round(memory_get_peak_usage() / 1024 / 1024, 3),
         )]);
 
-        if (0 < \count($this->logger->getAllLogs())) {
+        if (0 < count($this->logger->getAllLogs())) {
             $output->writeln(['', sprintf(
                 '<info>%d %s been fixed; Checked %d %s.</info>',
-                \count($this->logger->getAllLogs()),
-                (1 === \count($this->logger->getAllLogs())) ? 'file has' : 'files have',
+                count($this->logger->getAllLogs()),
+                (1 === count($this->logger->getAllLogs())) ? 'file has' : 'files have',
                 $count,
                 (1 === $count) ? 'file' : 'files',
             )]);
         }
 
         // Print info about files that should be fixed manually.
-        if (0 < \count($this->logger->getAllErrors())) {
+        if (0 < count($this->logger->getAllErrors())) {
             $formattedBlock = $formatter->formatBlock(
                 [sprintf(
                     '%d %s should be fixed manually.',
-                    \count($this->logger->getAllErrors()),
-                    (1 === \count($this->logger->getAllErrors())) ? 'file' : 'files',
+                    count($this->logger->getAllErrors()),
+                    (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
                 )],
                 'error',
                 true
@@ -190,7 +199,7 @@ class FixCommand extends Command
 
         // Print debug messages.
         if (
-            0 < \count($this->logger->getDebugMessages())
+            0 < count($this->logger->getDebugMessages())
             && $output->isDebug()
         ) {
             $output->writeln([
@@ -228,7 +237,7 @@ class FixCommand extends Command
         return true;
     }
 
-    private function normalize(string $path, OutputInterface $output): \Iterator
+    private function normalize(string $path, OutputInterface $output): Iterator
     {
         $iterator = $this->finder->getTree($path);
 

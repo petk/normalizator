@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Normalizator\Attribute;
 
+use Attribute;
+
 /**
  * Normalization attribute that sets the normalization name and its filters.
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_CLASS)]
 class Normalization
 {
     /**

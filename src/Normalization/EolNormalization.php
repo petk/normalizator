@@ -11,6 +11,9 @@ use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\EolDiscovery;
 
+use function is_array;
+use function is_bool;
+use function is_string;
 use function Normalizator\preg_match_all;
 use function Normalizator\preg_replace;
 
@@ -48,14 +51,14 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['eol']) && \is_string($options['eol'])) {
+        if (isset($options['eol']) && is_string($options['eol'])) {
             $map = ['lf' => "\n", 'crlf' => "\r\n"];
             $this->eol = $map[$options['eol']] ?? EolDiscovery::DEFAULT_EOL;
         } else {
             $this->eol = EolDiscovery::DEFAULT_EOL;
         }
 
-        if (isset($options['skip_cr']) && \is_bool($options['skip_cr'])) {
+        if (isset($options['skip_cr']) && is_bool($options['skip_cr'])) {
             $this->skipCr = $options['skip_cr'];
         } else {
             $this->skipCr = self::SKIP_CR;
@@ -82,7 +85,7 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
         $content = $file->getNewContent();
         $newContent = preg_replace($regex, $defaultEol, $content);
 
-        if (!\is_array($newContent) && $content !== $newContent) {
+        if (!is_array($newContent) && $content !== $newContent) {
             $file->setNewContent($newContent);
             // Report EOLs from the original content.
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, $this->getEols($file->getContent()) . 'line terminators'));

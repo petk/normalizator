@@ -6,6 +6,10 @@ namespace Normalizator\Util;
 
 use Normalizator\Finder\File;
 
+use function file_exists;
+use function strrpos;
+use function substr;
+
 /**
  * Utility that checks if file can be renamed without overwriting any existing
  * files and returns non-existing name instead.

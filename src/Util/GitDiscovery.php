@@ -7,6 +7,10 @@ namespace Normalizator\Util;
 use Normalizator\Cache\Cache;
 use Normalizator\Finder\File;
 
+use function file_exists;
+use function is_bool;
+use function is_dir;
+use function is_file;
 use function Normalizator\exec;
 use function Normalizator\preg_match;
 
@@ -27,7 +31,7 @@ class GitDiscovery
     {
         $key = static::class . ':' . $path;
 
-        if ($this->cache->has($key) && \is_bool($this->cache->get($key))) {
+        if ($this->cache->has($key) && is_bool($this->cache->get($key))) {
             return $this->cache->get($key);
         }
 

@@ -11,6 +11,9 @@ use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 use Normalizator\Util\Slugify;
 
+use function strrpos;
+use function substr;
+
 /**
  * Normalizator to check and fix names of files and directories.
  *

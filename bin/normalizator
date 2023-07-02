@@ -3,8 +3,27 @@
 
 declare(strict_types=1);
 
+namespace Normalizator\CLI;
+
+use Normalizator\Console\Application;
+use Normalizator\Console\Command\CheckCommand;
+use Normalizator\Console\Command\FixCommand;
+use Normalizator\Console\Command\SelfUpdateCommand;
+use Normalizator\Normalizator;
+use Normalizator\Util\Timer;
+use RuntimeException;
+use Throwable;
+
+use function extension_loaded;
+use function file_exists;
+use function fwrite;
+use function sprintf;
+
+use const PHP_VERSION_ID;
+use const STDERR;
+
 // Check PHP version.
-if (\PHP_VERSION_ID < 80100) {
+if (PHP_VERSION_ID < 80100) {
     fwrite(STDERR, "Error: Normalizator requires PHP 8.1 or greater. Please update your PHP version to run Normalizator.\n");
 
     exit(1);
@@ -36,17 +55,10 @@ foreach ($files as $file) {
 }
 
 if (!isset($autoloader)) {
-    throw new \RuntimeException('Autoloader autoload.php not found.');
+    throw new RuntimeException('Autoloader autoload.php not found.');
 }
 
 require $autoloader;
-
-use Normalizator\Console\Application;
-use Normalizator\Console\Command\CheckCommand;
-use Normalizator\Console\Command\FixCommand;
-use Normalizator\Console\Command\SelfUpdateCommand;
-use Normalizator\Normalizator;
-use Normalizator\Util\Timer;
 
 try {
     $container = require_once __DIR__ . '/../config/container.php';
@@ -61,7 +73,7 @@ try {
     $application->add($container->get(SelfUpdateCommand::class));
 
     $application->run();
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
 
     exit(1);

@@ -10,6 +10,9 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Finder\File;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\Logger;
+use RuntimeException;
+
+use function array_merge;
 
 /**
  * Normalizes content of given file.
@@ -42,7 +45,7 @@ class Normalizator implements NormalizatorInterface
 
         try {
             $path->save();
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->eventDispatcher->dispatch(new NormalizationEvent($path, 'file ' . $path->getNewFilename() . ' could not be saved. ' . $e->getMessage(), 'error'));
         }
     }

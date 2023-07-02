@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Normalizator\Tests;
 
 use Normalizator\Enum\Permissions;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
+use function is_dir;
 use function Normalizator\chmod;
 use function Normalizator\file_put_contents;
 use function Normalizator\mkdir;
@@ -51,11 +55,11 @@ class Generator
         }
 
         /**
-         * @var iterable<string,\SplFileInfo>
+         * @var iterable<string,SplFileInfo>
          */
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($files as $fileinfo) {

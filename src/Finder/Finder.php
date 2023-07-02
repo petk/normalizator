@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace Normalizator\Finder;
 
+use ArrayIterator;
+use Iterator;
+use RecursiveCallbackFilterIterator;
+use RecursiveIteratorIterator;
+
+use function is_file;
+
 /**
  * The Finder utility to get files.
  */
 class Finder
 {
     /**
-     * @return \Iterator<string,File>
+     * @return Iterator<string,File>
      */
-    public function getTree(string $path, ?callable $filter = null, int $flags = \RecursiveIteratorIterator::CHILD_FIRST): \Iterator
+    public function getTree(string $path, ?callable $filter = null, int $flags = RecursiveIteratorIterator::CHILD_FIRST): Iterator
     {
         $path = new File($path);
 
@@ -24,7 +31,7 @@ class Finder
         if (is_file($path)) {
             $info = new File($path);
 
-            return new \ArrayIterator([$info->getPathname() => $info]);
+            return new ArrayIterator([$info->getPathname() => $info]);
         }
 
         $innerIterator = new RecursiveDirectoryIterator(
@@ -39,8 +46,8 @@ class Finder
             return true;
         };
 
-        return new \RecursiveIteratorIterator(
-            new \RecursiveCallbackFilterIterator($innerIterator, $filter),
+        return new RecursiveIteratorIterator(
+            new RecursiveCallbackFilterIterator($innerIterator, $filter),
             $flags
         );
     }

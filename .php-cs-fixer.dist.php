@@ -20,7 +20,7 @@ return $config->setRules([
         // Override PhpCsFixer rules.
         'native_function_invocation' => [
             'include' => [
-                '@compiler_optimized',
+                '@internal',
                 'chmod',
                 'copy',
                 'exec',
@@ -44,6 +44,21 @@ return $config->setRules([
             ],
             'strict' => true,
             'scope' => 'namespaced',
+        ],
+        'native_constant_invocation' => [
+            'fix_built_in' => true,
+            'include' => [],
+            'scope' => 'namespaced',
+            'strict' => true,
+        ],
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => true,
+            'import_functions' => true,
+        ],
+        'ordered_imports' => [
+            'imports_order' => ['class', 'function', 'const'],
+            'sort_algorithm' => 'alpha'
         ],
         'concat_space' => ['spacing' => 'one'],
         'phpdoc_to_comment' => ['ignored_tags' => ['var']],

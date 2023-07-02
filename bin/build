@@ -3,6 +3,8 @@
 
 declare(strict_types=1);
 
+namespace Normalizator\CLI;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 use Normalizator\Console\Command\BuildCommand;
@@ -10,8 +12,13 @@ use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
 use Normalizator\Util\PharBuilder;
 use Symfony\Component\Console\Application;
+use Throwable;
 
+use function fwrite;
 use function Normalizator\exec;
+use function sprintf;
+
+use const STDERR;
 
 // Instal without development dependencies.
 exec('composer install -q --no-dev', $output, $result);
@@ -32,7 +39,7 @@ try {
     $application->add($command);
     $application->setDefaultCommand($command->getName());
     $application->run();
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     fwrite(STDERR, sprintf("Error: %s\n", $e->getMessage()));
 
     exit(1);

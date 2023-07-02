@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Normalization;
 
+use Closure;
+use finfo;
 use Normalizator\Attribute\Normalization;
 use Normalizator\EventDispatcher\Event\AskForEncodingEvent;
 use Normalizator\EventDispatcher\Event\NormalizationEvent;
@@ -11,7 +13,15 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
+use function in_array;
+use function is_array;
+use function mb_detect_encoding;
+use function mb_list_encodings;
 use function Normalizator\mb_convert_encoding;
+use function str_starts_with;
+use function strtolower;
+
+use const FILEINFO_MIME_ENCODING;
 
 /**
  * Normalization that converts file to UTF-8 or ASCII encoding if possible.
@@ -39,7 +49,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         'windows-1252',
     ];
 
-    private ?\Closure $encodingCallback = null;
+    private ?Closure $encodingCallback = null;
 
     public function __construct(
         private FilterManager $filterManager,
@@ -49,7 +59,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['encoding_callback']) && $options['encoding_callback'] instanceof \Closure) {
+        if (isset($options['encoding_callback']) && $options['encoding_callback'] instanceof Closure) {
             $this->encodingCallback = $options['encoding_callback'];
         } else {
             $this->encodingCallback = null;
@@ -68,7 +78,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         $encoding = $this->getFileEncoding($file);
 
         // Encoding is ok.
-        if (\in_array($encoding, ['ascii', 'us-ascii', 'utf-8'], true)) {
+        if (in_array($encoding, ['ascii', 'us-ascii', 'utf-8'], true)) {
             return $file;
         }
 
@@ -76,7 +86,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         // encoding conversions. Try asking user for encoding if encoding
         // cannot be automatically converted.
         if (
-            !\in_array($encoding, $this->supportedEncodings, true)
+            !in_array($encoding, $this->supportedEncodings, true)
             && null !== $this->encodingCallback
         ) {
             /** @var AskForEncodingEvent */
@@ -99,7 +109,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         // Encoding is not valid.
         if (
             !$valid
-            || (!\in_array($encoding, $this->supportedEncodings, true) && null === $this->encodingCallback)
+            || (!in_array($encoding, $this->supportedEncodings, true) && null === $this->encodingCallback)
         ) {
             $this->eventDispatcher->dispatch(new NormalizationEvent($file, 'encoding ' . $encoding, 'error'));
 
@@ -115,7 +125,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
     {
         $content = mb_convert_encoding($file->getNewContent(), $to, $from);
 
-        if (!\is_array($content)) {
+        if (!is_array($content)) {
             $file->setNewContent($content);
         }
 
@@ -133,7 +143,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
     {
         // First resort is the file extension which might give us proper
         // encoding.
-        $finfo = new \finfo(FILEINFO_MIME_ENCODING);
+        $finfo = new finfo(FILEINFO_MIME_ENCODING);
         $encoding = $finfo->file($file->getPathname());
 
         if (false !== $encoding && !str_starts_with($encoding, 'unknown')) {
@@ -145,7 +155,7 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
         $encoding = mb_detect_encoding($file->getNewContent(), mb_list_encodings(), true);
 
         // UTF-8 or normal ASCII text file.
-        if (\in_array($encoding, ['UTF-8', 'ASCII'], true)) {
+        if (in_array($encoding, ['UTF-8', 'ASCII'], true)) {
             return strtolower($encoding);
         }
 

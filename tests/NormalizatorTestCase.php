@@ -13,6 +13,8 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
+use function array_merge_recursive;
+
 abstract class NormalizatorTestCase extends TestCase
 {
     protected Container $container;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Normalizator\Util;
 
+use function microtime;
+use function round;
+
 /**
  * Utility that tracks script execution time.
  *

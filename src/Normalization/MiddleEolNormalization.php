@@ -10,8 +10,14 @@ use Normalizator\EventDispatcher\EventDispatcher;
 use Normalizator\Filter\FilterManager;
 use Normalizator\Finder\File;
 
+use function is_int;
 use function Normalizator\preg_match;
 use function Normalizator\preg_split;
+use function sprintf;
+use function trim;
+
+use const PREG_SPLIT_DELIM_CAPTURE;
+use const PREG_SPLIT_NO_EMPTY;
 
 /**
  * The middle newlines trimming utility.
@@ -44,7 +50,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
 
     public function configure(mixed ...$options): void
     {
-        if (isset($options['max_extra_middle_eols']) && \is_int($options['max_extra_middle_eols'])) {
+        if (isset($options['max_extra_middle_eols']) && is_int($options['max_extra_middle_eols'])) {
             $this->maxExtraMiddleEols = $options['max_extra_middle_eols'];
         } else {
             $this->maxExtraMiddleEols = self::MAX_EXTRA_MIDDLE_EOLS;

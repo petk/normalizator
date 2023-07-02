@@ -8,6 +8,7 @@ use Normalizator\Attribute\Normalization;
 use Normalizator\FilterFactory;
 use Normalizator\Finder\File;
 use Normalizator\Normalization\NormalizationInterface;
+use ReflectionClass;
 
 /**
  * Checks if given normalization should be done on given file.
@@ -49,7 +50,7 @@ class FilterManager
         }
 
         $filters = [];
-        $reflection = new \ReflectionClass($normalization::class);
+        $reflection = new ReflectionClass($normalization::class);
         foreach ($reflection->getAttributes() as $attribute) {
             if (Normalization::class === $attribute->getName()) {
                 $arguments = $attribute->getArguments();

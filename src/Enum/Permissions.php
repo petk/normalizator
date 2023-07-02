@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Normalizator\Enum;
 
+use function umask;
+
 /**
  * Default permissions enumerator.
  */

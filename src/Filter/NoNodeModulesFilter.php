@@ -8,6 +8,7 @@ use Normalizator\Attribute\Filter;
 use Normalizator\Cache\Cache;
 use Normalizator\Finder\File;
 
+use function file_exists;
 use function Normalizator\preg_match;
 
 /**

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Normalizator\Cache;
 
+use DateInterval;
 use Normalizator\Exception\CacheInvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
+use Traversable;
 
 /**
  * PSR-16 compatible simple cache utility.
@@ -18,7 +20,7 @@ class Cache implements CacheInterface
     private array $values = [];
 
     /**
-     * @var array<string,null|\DateInterval|int>
+     * @var array<string,null|DateInterval|int>
      */
     private array $ttl = [];
 
@@ -31,7 +33,7 @@ class Cache implements CacheInterface
         return $this->values[$key] ?? $default;
     }
 
-    public function set(string $key, mixed $value, null|\DateInterval|int $ttl = null): bool
+    public function set(string $key, mixed $value, null|DateInterval|int $ttl = null): bool
     {
         if ('' === $key) {
             throw new CacheInvalidArgumentException('Key must not be empty string');
@@ -87,9 +89,9 @@ class Cache implements CacheInterface
     }
 
     /**
-     * @param \Traversable<string,mixed> $values
+     * @param Traversable<string,mixed> $values
      */
-    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             if ('' === $key) {

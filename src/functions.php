@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Normalizator;
 
+use RuntimeException;
+use Transliterator;
+
+use function preg_last_error_msg;
+use function restore_error_handler;
+use function set_error_handler;
+
 /**
  * Here some of the default PHP functions are overwritten so they throw proper
  * exceptions instead of returning false or null in case of failure.
@@ -13,7 +20,7 @@ namespace Normalizator;
  * Overridden \file_get_contents() function that throws exception in case of
  * failure instead of default false.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function file_get_contents(string $file): string
 {
@@ -31,7 +38,7 @@ function file_get_contents(string $file): string
     }
 
     if (false === $content) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $content;
@@ -43,7 +50,7 @@ function file_get_contents(string $file): string
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function rename(string $from, string $to, $context = null): bool
 {
@@ -61,7 +68,7 @@ function rename(string $from, string $to, $context = null): bool
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -73,7 +80,7 @@ function rename(string $from, string $to, $context = null): bool
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function file_put_contents(string $filename, mixed $data, int $flags = 0, $context = null): int
 {
@@ -91,7 +98,7 @@ function file_put_contents(string $filename, mixed $data, int $flags = 0, $conte
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -101,7 +108,7 @@ function file_put_contents(string $filename, mixed $data, int $flags = 0, $conte
  * Overridden \chmod() function that throws exception in case of a failure
  * instead of a default false.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function chmod(string $filename, int $permissions): bool
 {
@@ -119,7 +126,7 @@ function chmod(string $filename, int $permissions): bool
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -135,7 +142,7 @@ function chmod(string $filename, int $permissions): bool
  *
  * @return array<int,string>|string
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function preg_replace(array|string $pattern, array|string $replacement, array|string $subject, int $limit = -1, int &$count = null): array|string
 {
@@ -153,7 +160,7 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
     }
 
     if (null === $result) {
-        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+        throw new RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -168,7 +175,7 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
  *
  * @return array<int,string>|string
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function preg_replace_callback(array|string $pattern, callable $callback, array|string $subject, int $limit = -1, int &$count = null, int $flags = 0): array|string
 {
@@ -186,7 +193,7 @@ function preg_replace_callback(array|string $pattern, callable $callback, array|
     }
 
     if (null === $result) {
-        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+        throw new RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -199,7 +206,7 @@ function preg_replace_callback(array|string $pattern, callable $callback, array|
  * @param array<int,string> $matches
  * @param 0|256|512|768     $flags
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function preg_match(string $pattern, string $subject, array &$matches = null, int $flags = 0, int $offset = 0): int
 {
@@ -217,7 +224,7 @@ function preg_match(string $pattern, string $subject, array &$matches = null, in
     }
 
     if (false === $result) {
-        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+        throw new RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -229,7 +236,7 @@ function preg_match(string $pattern, string $subject, array &$matches = null, in
  *
  * @param array<int,mixed> $matches
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function preg_match_all(string $pattern, string $subject, array &$matches = null, int $flags = 0, int $offset = 0): int
 {
@@ -247,7 +254,7 @@ function preg_match_all(string $pattern, string $subject, array &$matches = null
     }
 
     if (false === $result) {
-        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+        throw new RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -259,7 +266,7 @@ function preg_match_all(string $pattern, string $subject, array &$matches = null
  *
  * @return array<int,string>
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function preg_split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array
 {
@@ -277,7 +284,7 @@ function preg_split(string $pattern, string $subject, int $limit = -1, int $flag
     }
 
     if (false === $result) {
-        throw new \RuntimeException(preg_last_error_msg() . ' ' . $error);
+        throw new RuntimeException(preg_last_error_msg() . ' ' . $error);
     }
 
     return $result;
@@ -287,9 +294,9 @@ function preg_split(string $pattern, string $subject, int $limit = -1, int $flag
  * Overridden \transliterator_transliterate() function which throws exception
  * instead of returning false in case of a failure.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
-function transliterator_transliterate(\Transliterator|string $transliterator, string $string, int $start = 0, int $end = -1): string
+function transliterator_transliterate(Transliterator|string $transliterator, string $string, int $start = 0, int $end = -1): string
 {
     $error = '';
     set_error_handler(function (int $type, string $message) use (&$error): bool {
@@ -305,7 +312,7 @@ function transliterator_transliterate(\Transliterator|string $transliterator, st
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -315,7 +322,7 @@ function transliterator_transliterate(\Transliterator|string $transliterator, st
  * Overridden \mime_content_type() function that throws exception instead of
  * default false in case of failure.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function mime_content_type(string $filename): string
 {
@@ -333,7 +340,7 @@ function mime_content_type(string $filename): string
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -348,7 +355,7 @@ function mime_content_type(string $filename): string
  *
  * @return array<int,string>|string
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function mb_convert_encoding(array|string $string, string $to, null|array|string $from = null): array|string
 {
@@ -370,7 +377,7 @@ function mb_convert_encoding(array|string $string, string $to, null|array|string
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -382,7 +389,7 @@ function mb_convert_encoding(array|string $string, string $to, null|array|string
  *
  * @param array<int,string> $output
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function exec(string $command, ?array &$output = null, ?int &$resultCode = null): string
 {
@@ -400,7 +407,7 @@ function exec(string $command, ?array &$output = null, ?int &$resultCode = null)
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -412,7 +419,7 @@ function exec(string $command, ?array &$output = null, ?int &$resultCode = null)
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function unlink(string $filename, $context = null): bool
 {
@@ -430,7 +437,7 @@ function unlink(string $filename, $context = null): bool
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -442,7 +449,7 @@ function unlink(string $filename, $context = null): bool
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function copy(string $from, string $to, $context = null): bool
 {
@@ -460,7 +467,7 @@ function copy(string $from, string $to, $context = null): bool
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -470,7 +477,7 @@ function copy(string $from, string $to, $context = null): bool
  * Overridden \md5_file() function that throws exception in case of failure
  * instead of default false.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function md5_file(string $filename, bool $binary = false): string
 {
@@ -488,7 +495,7 @@ function md5_file(string $filename, bool $binary = false): string
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -500,7 +507,7 @@ function md5_file(string $filename, bool $binary = false): string
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function rmdir(string $directory, $context = null): bool
 {
@@ -518,7 +525,7 @@ function rmdir(string $directory, $context = null): bool
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -530,7 +537,7 @@ function rmdir(string $directory, $context = null): bool
  *
  * @param resource $context
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function mkdir(string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool
 {
@@ -548,7 +555,7 @@ function mkdir(string $directory, int $permissions = 0777, bool $recursive = fal
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
@@ -558,7 +565,7 @@ function mkdir(string $directory, int $permissions = 0777, bool $recursive = fal
  * Overridden \fileperms() function that throws exception in case of failure
  * instead of default false.
  *
- * @throws \RuntimeException
+ * @throws RuntimeException
  */
 function fileperms(string $filename): int
 {
@@ -576,7 +583,7 @@ function fileperms(string $filename): int
     }
 
     if (false === $result) {
-        throw new \RuntimeException($error);
+        throw new RuntimeException($error);
     }
 
     return $result;
