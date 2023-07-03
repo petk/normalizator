@@ -25,6 +25,7 @@ use function umask;
 
 #[AsCommand(
     name: 'self-update',
+    aliases: ['selfupdate'],
     description: 'Update normalizator to the latest version.',
 )]
 class SelfUpdateCommand extends Command
