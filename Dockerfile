@@ -1,9 +1,5 @@
 FROM alpine
 
-ENV \
-    # Normalizator version.
-    NORMALIZATOR_VERSION=0.0.1
-
 COPY . /opt/normalizator
 
 RUN apk add --no-cache \
