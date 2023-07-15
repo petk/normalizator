@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Normalizator\Console\Command;
 
 use Exception;
+use Normalizator\Util\ApiClient;
 use Phar;
 use PharException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -16,12 +17,15 @@ use UnexpectedValueException;
 use function basename;
 use function is_array;
 use function is_string;
+use function ltrim;
 use function Normalizator\chmod;
 use function Normalizator\copy;
 use function Normalizator\md5_file;
 use function Normalizator\rename;
 use function Normalizator\unlink;
+use function sprintf;
 use function umask;
+use function version_compare;
 
 #[AsCommand(
     name: 'self-update',
@@ -30,6 +34,11 @@ use function umask;
 )]
 class SelfUpdateCommand extends Command
 {
+    public function __construct(private ApiClient $apiClient)
+    {
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -58,6 +67,26 @@ class SelfUpdateCommand extends Command
         }
 
         try {
+            $currentVersion = $this->getApplication()->getVersion();
+
+            $latestVersion = $this->apiClient->fetch();
+
+            if (!is_string($latestVersion)) {
+                $output->writeln('<error>Could not fetch the latest version.</error>');
+
+                return Command::FAILURE;
+            }
+
+            // Strip the "v" prefix from the version string.
+            $current = ltrim($currentVersion, 'v');
+            $latest = ltrim($latestVersion, 'v');
+
+            if (version_compare($latest, $current, 'le')) {
+                $output->writeln(sprintf('<info>normalizator is already at the newest version</info> <comment>%s</comment>', $currentVersion));
+
+                return Command::SUCCESS;
+            }
+
             $tempFilename = basename($localFilename, '.phar') . '-temp.phar';
 
             $remoteFilename = 'https://github.com/petk/normalizator/releases/latest/download/normalizator.phar';
@@ -80,7 +109,7 @@ class SelfUpdateCommand extends Command
 
             rename($tempFilename, $localFilename);
 
-            $output->writeln('<info>normalizator updated.</info>');
+            $output->writeln(sprintf('<info>normalizator updated from</info> <comment>%s</comment> to <comment>%s</comment>', $currentVersion, $latestVersion));
 
             return Command::SUCCESS;
         } catch (Exception $e) {

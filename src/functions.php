@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Here some of the default PHP functions are overwritten so they throw proper
+ * exceptions instead of returning false or null in case of failure.
+ */
+
 declare(strict_types=1);
 
 namespace Normalizator;
@@ -12,17 +17,15 @@ use function restore_error_handler;
 use function set_error_handler;
 
 /**
- * Here some of the default PHP functions are overwritten so they throw proper
- * exceptions instead of returning false or null in case of failure.
- */
-
-/**
  * Overridden \file_get_contents() function that throws exception in case of
  * failure instead of default false.
  *
+ * @param null|resource    $context
+ * @param null|int<0, max> $length
+ *
  * @throws RuntimeException
  */
-function file_get_contents(string $file): string
+function file_get_contents(string $file, bool $useIncludePath = false, $context = null, int $offset = 0, ?int $length = null): string
 {
     $error = '';
     set_error_handler(function (int $type, string $message) use (&$error): bool {
@@ -32,7 +35,7 @@ function file_get_contents(string $file): string
     });
 
     try {
-        $content = \file_get_contents($file);
+        $content = \file_get_contents($file, $useIncludePath, $context, $offset, $length);
     } finally {
         restore_error_handler();
     }

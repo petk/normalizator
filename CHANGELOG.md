@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Self update command version checking improvements.
 - The `selfupdate` alias for the self update command.
 
 ## [0.0.4] - 2023-07-03

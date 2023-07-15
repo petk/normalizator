@@ -22,6 +22,7 @@ use Normalizator\FilterFactory;
 use Normalizator\Finder\Finder;
 use Normalizator\NormalizationFactory;
 use Normalizator\Normalizator;
+use Normalizator\Util\ApiClient;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
@@ -170,8 +171,12 @@ $container->set(FixCommand::class, function ($c) {
     );
 });
 
+$container->set(ApiClient::class, function ($c) {
+    return new ApiClient();
+});
+
 $container->set(SelfUpdateCommand::class, function ($c) {
-    return new SelfUpdateCommand();
+    return new SelfUpdateCommand($c->get(ApiClient::class));
 });
 
 return $container;
