@@ -28,7 +28,6 @@
     },
     "require-dev": {
         "ext-dom": "*",
-        "ext-json": "*",
         "ext-libxml": "*",
         "ext-xml": "*",
         "ext-xmlwriter": "*",
