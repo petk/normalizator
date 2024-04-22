@@ -16,8 +16,6 @@ RUN apk add --no-cache \
         php82-tokenizer \
         php82-xmlwriter \
         php82-zip \
-    # Link latest PHP version to executable.
-    && ln -s /usr/bin/php82 /usr/bin/php \
     # Install Composer.
     && curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/bin --filename=composer \
