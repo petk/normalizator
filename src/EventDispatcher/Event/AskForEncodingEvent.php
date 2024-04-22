@@ -15,9 +15,7 @@ class AskForEncodingEvent
 {
     private string $encoding;
 
-    public function __construct(private File $file, private string $defaultEncoding = '')
-    {
-    }
+    public function __construct(private File $file, private string $defaultEncoding = '') {}
 
     public function getFile(): File
     {

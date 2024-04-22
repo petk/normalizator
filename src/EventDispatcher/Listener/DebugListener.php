@@ -13,9 +13,7 @@ use Normalizator\Util\Logger;
  */
 class DebugListener
 {
-    public function __construct(private Logger $logger)
-    {
-    }
+    public function __construct(private Logger $logger) {}
 
     public function __invoke(object $event): void
     {

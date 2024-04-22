@@ -49,7 +49,7 @@ class File extends SplFileInfo
     private ?string $extension = null;
     private int $newPermissions;
 
-    public function __construct(string $pathname, string $subPathname = null, string $rootPath = null)
+    public function __construct(string $pathname, ?string $subPathname = null, ?string $rootPath = null)
     {
         parent::__construct($pathname);
 

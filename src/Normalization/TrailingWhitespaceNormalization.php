@@ -26,7 +26,7 @@ use function Normalizator\preg_replace;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class TrailingWhitespaceNormalization implements NormalizationInterface
 {
@@ -83,9 +83,8 @@ class TrailingWhitespaceNormalization implements NormalizationInterface
 
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     /**
      * Trim trailing whitespace characters from each line.

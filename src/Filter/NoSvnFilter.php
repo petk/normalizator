@@ -14,13 +14,11 @@ use function Normalizator\preg_match;
  * Filter which doesn't pass the SVN directory.
  */
 #[Filter(
-    name: 'no_svn'
+    name: 'no_svn',
 )]
 class NoSvnFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

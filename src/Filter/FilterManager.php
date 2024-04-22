@@ -21,9 +21,8 @@ class FilterManager
     protected array $filters = [];
 
     public function __construct(
-        private FilterFactory $filterFactory
-    ) {
-    }
+        private FilterFactory $filterFactory,
+    ) {}
 
     public function filter(NormalizationInterface $normalization, File $file): bool
     {

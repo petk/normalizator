@@ -16,7 +16,7 @@ return $config->setRules([
         'no_alias_functions' => true,
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
-        '@PER' => true,
+        '@PER-CS' => true,
         // Override PhpCsFixer rules.
         'native_function_invocation' => [
             'include' => [
@@ -63,6 +63,8 @@ return $config->setRules([
         'concat_space' => ['spacing' => 'one'],
         'phpdoc_to_comment' => ['ignored_tags' => ['var']],
         'phpdoc_annotation_without_dot' => false,
+        'php_unit_attributes' => true,
+        'php_unit_test_class_requires_covers' => false,
         'php_unit_test_case_static_method_calls' => [
             'call_type' => 'this',
         ],

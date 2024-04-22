@@ -7,6 +7,7 @@ namespace Normalizator\Tests\Integration;
 use Normalizator\Console\Application;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -22,9 +23,8 @@ use function sprintf;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing()]
 final class CrlfFilesTest extends NormalizatorTestCase
 {
     /**
@@ -39,7 +39,7 @@ final class CrlfFilesTest extends NormalizatorTestCase
             /** @var iterable<string,SplFileInfo> */
             $files = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($repo, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::CHILD_FIRST
+                RecursiveIteratorIterator::CHILD_FIRST,
             );
 
             foreach ($files as $fileinfo) {

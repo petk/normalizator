@@ -24,9 +24,7 @@ use function Normalizator\unlink;
  */
 class PharBuilder
 {
-    public function __construct(private Finder $finder)
-    {
-    }
+    public function __construct(private Finder $finder) {}
 
     /**
      * @throws BadMethodCallException
@@ -52,7 +50,7 @@ class PharBuilder
         // CLI Component files.
 
         // Add src files
-        $files = $this->finder->getTree(__DIR__ . '/../../src/', function (File $file) {
+        $files = $this->finder->getTree(__DIR__ . '/../../src/', static function (File $file) {
             if (in_array($file->getFilename(), ['BuildCommand.php', 'PharBuilder.php'], true)) {
                 return false;
             }
@@ -71,7 +69,7 @@ class PharBuilder
         }
 
         // Add vendor files
-        $vendor = $this->finder->getTree(__DIR__ . '/../../vendor/', function (File $file) {
+        $vendor = $this->finder->getTree(__DIR__ . '/../../vendor/', static function (File $file) {
             if ($file->isDir() || in_array($file->getExtension(), ['php', 'bash', 'fish', 'zsh'], true)) {
                 return true;
             }

@@ -91,7 +91,7 @@ class Cache implements CacheInterface
     /**
      * @param Traversable<string,mixed> $values
      */
-    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, null|DateInterval|int $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             if ('' === $key) {

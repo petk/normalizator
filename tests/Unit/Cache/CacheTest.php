@@ -7,13 +7,13 @@ namespace Normalizator\Tests\Unit\Cache;
 use Normalizator\Cache\Cache;
 use Normalizator\Exception\CacheInvalidArgumentException;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class CacheTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]

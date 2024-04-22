@@ -59,7 +59,7 @@ class Container implements ContainerInterface
         // Invalid entry.
         if (class_exists($id) && !is_callable($entry)) {
             throw new ContainerInvalidEntryException(
-                sprintf('Entry %s must be callable.', $id)
+                sprintf('Entry %s must be callable.', $id),
             );
         }
 

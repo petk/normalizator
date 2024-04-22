@@ -14,6 +14,7 @@ use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputArgument;
@@ -122,13 +123,13 @@ class CheckCommand extends Command
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
-        /** @var \Symfony\Component\Console\Helper\FormatterHelper */
+        /** @var FormatterHelper */
         $formatter = $this->getHelper('formatter');
 
         $formattedBlock = $formatter->formatBlock(
             ['CHECKING', ...$paths],
             'header',
-            true
+            true,
         );
 
         $output->writeln([$formattedBlock, '']);
@@ -155,7 +156,7 @@ class CheckCommand extends Command
                     (1 === $count) ? 'file' : 'files',
                 )],
                 'error',
-                true
+                true,
             );
 
             $output->writeln(['', $formattedBlock]);

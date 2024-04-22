@@ -15,13 +15,11 @@ use Normalizator\Finder\File;
  * do that here. So we just filter links out on certain normalizations.
  */
 #[Filter(
-    name: 'no_links'
+    name: 'no_links',
 )]
 class NoLinksFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

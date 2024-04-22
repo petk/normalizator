@@ -7,6 +7,4 @@ namespace Normalizator\Exception;
 use InvalidArgumentException;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ContainerEntryNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface
-{
-}
+class ContainerEntryNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {}

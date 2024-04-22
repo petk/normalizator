@@ -17,13 +17,11 @@ use function Normalizator\preg_match;
  * Composer.
  */
 #[Filter(
-    name: 'no_vendor'
+    name: 'no_vendor',
 )]
 class NoVendorFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

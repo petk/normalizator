@@ -14,13 +14,11 @@ use function Normalizator\preg_match;
  * Must be plain-text file.
  */
 #[Filter(
-    name: 'plain_text'
+    name: 'plain_text',
 )]
 class PlainTextFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

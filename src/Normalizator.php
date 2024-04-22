@@ -27,8 +27,7 @@ class Normalizator implements NormalizatorInterface
         private FilenameResolver $filenameResolver,
         private EventDispatcher $eventDispatcher,
         private Logger $logger,
-    ) {
-    }
+    ) {}
 
     public function normalize(File $path): void
     {
@@ -54,7 +53,7 @@ class Normalizator implements NormalizatorInterface
     {
         return [] !== array_merge(
             $this->logger->getLogs($file),
-            $this->logger->getErrors($file)
+            $this->logger->getErrors($file),
         );
     }
 

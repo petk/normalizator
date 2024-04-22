@@ -14,8 +14,7 @@ class NormalizationListener
     public function __construct(
         private Logger $logger,
         private Configuration $configuration,
-    ) {
-    }
+    ) {}
 
     public function __invoke(object $event): void
     {

@@ -35,8 +35,7 @@ class EolDiscovery
         private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery,
         private Cache $cache,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the default EOL character by checking a value of command line option
@@ -81,7 +80,7 @@ class EolDiscovery
         }
 
         $files = explode("\0", trim($output ?: ''));
-        $files = array_filter($files, function ($item) {
+        $files = array_filter($files, static function ($item) {
             return preg_match('/^i\/crlf.*[ ]+w\/.*attr\/.*eol=crlf.*$/', $item);
         });
 

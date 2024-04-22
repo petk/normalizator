@@ -16,13 +16,11 @@ use function Normalizator\preg_match;
  * Composer.
  */
 #[Filter(
-    name: 'no_node_modules'
+    name: 'no_node_modules',
 )]
 class NoNodeModulesFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

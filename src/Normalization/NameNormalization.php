@@ -26,7 +26,7 @@ use function substr;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class NameNormalization implements NormalizationInterface
 {
@@ -34,8 +34,7 @@ class NameNormalization implements NormalizationInterface
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private Slugify $slugify,
-    ) {
-    }
+    ) {}
 
     /**
      * Normalizes name of the given path.

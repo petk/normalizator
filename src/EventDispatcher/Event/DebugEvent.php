@@ -9,9 +9,7 @@ namespace Normalizator\EventDispatcher\Event;
  */
 class DebugEvent
 {
-    public function __construct(private string $message)
-    {
-    }
+    public function __construct(private string $message) {}
 
     public function getMessage(): string
     {

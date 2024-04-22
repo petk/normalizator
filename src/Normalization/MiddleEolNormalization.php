@@ -31,7 +31,7 @@ use const PREG_SPLIT_NO_EMPTY;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class MiddleEolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
@@ -44,9 +44,8 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
 
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     public function configure(mixed ...$options): void
     {
@@ -103,7 +102,7 @@ class MiddleEolNormalization implements NormalizationInterface, ConfigurableNorm
             $file->setNewContent($newContent);
             $this->eventDispatcher->dispatch(new NormalizationEvent(
                 $file,
-                sprintf('%d redundant middle EOL%s', $count, (1 === $count) ? '' : 's')
+                sprintf('%d redundant middle EOL%s', $count, (1 === $count) ? '' : 's'),
             ));
         }
 

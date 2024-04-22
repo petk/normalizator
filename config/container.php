@@ -32,30 +32,30 @@ use Normalizator\Util\Timer;
 
 $container = new Container();
 
-$container->set(Timer::class, function ($c) {
+$container->set(Timer::class, static function ($c) {
     return new Timer();
 });
 
-$container->set(Logger::class, function ($c) {
+$container->set(Logger::class, static function ($c) {
     return new Logger();
 });
 
-$container->set(Configuration::class, function ($c) {
+$container->set(Configuration::class, static function ($c) {
     return new Configuration();
 });
 
-$container->set(NormalizationListener::class, function ($c) {
+$container->set(NormalizationListener::class, static function ($c) {
     return new NormalizationListener(
         $c->get(Logger::class),
         $c->get(Configuration::class),
     );
 });
 
-$container->set(DebugListener::class, function ($c) {
+$container->set(DebugListener::class, static function ($c) {
     return new DebugListener($c->get(Logger::class));
 });
 
-$container->set(ListenerProvider::class, function ($c) {
+$container->set(ListenerProvider::class, static function ($c) {
     $provider = new ListenerProvider();
 
     $provider->addListener(
@@ -76,21 +76,21 @@ $container->set(ListenerProvider::class, function ($c) {
     return $provider;
 });
 
-$container->set(EventDispatcher::class, function ($c) {
+$container->set(EventDispatcher::class, static function ($c) {
     return new EventDispatcher($c->get(ListenerProvider::class));
 });
 
-$container->set(Cache::class, function ($c) {
+$container->set(Cache::class, static function ($c) {
     return new Cache();
 });
 
-$container->set(GitDiscovery::class, function ($c) {
+$container->set(GitDiscovery::class, static function ($c) {
     return new GitDiscovery(
         $c->get(Cache::class),
     );
 });
 
-$container->set(EolDiscovery::class, function ($c) {
+$container->set(EolDiscovery::class, static function ($c) {
     return new EolDiscovery(
         $c->get(EventDispatcher::class),
         $c->get(GitDiscovery::class),
@@ -98,11 +98,11 @@ $container->set(EolDiscovery::class, function ($c) {
     );
 });
 
-$container->set(Finder::class, function ($c) {
+$container->set(Finder::class, static function ($c) {
     return new Finder();
 });
 
-$container->set(FilterFactory::class, function ($c) {
+$container->set(FilterFactory::class, static function ($c) {
     return new FilterFactory(
         $c->get(Finder::class),
         $c->get(Cache::class),
@@ -110,26 +110,26 @@ $container->set(FilterFactory::class, function ($c) {
     );
 });
 
-$container->set(Slugify::class, function ($c) {
+$container->set(Slugify::class, static function ($c) {
     return new Slugify();
 });
 
-$container->set(FilterManager::class, function ($c) {
+$container->set(FilterManager::class, static function ($c) {
     return new FilterManager($c->get(FilterFactory::class));
 });
 
-$container->set(NormalizationFactory::class, function ($c) {
+$container->set(NormalizationFactory::class, static function ($c) {
     return new NormalizationFactory(
         $c->get(Finder::class),
         $c,
     );
 });
 
-$container->set(FilenameResolver::class, function ($c) {
+$container->set(FilenameResolver::class, static function ($c) {
     return new FilenameResolver();
 });
 
-$container->set(Normalizator::class, function ($c) {
+$container->set(Normalizator::class, static function ($c) {
     return new Normalizator(
         $c->get(Configuration::class),
         $c->get(NormalizationFactory::class),
@@ -139,18 +139,18 @@ $container->set(Normalizator::class, function ($c) {
     );
 });
 
-$container->set(ConfigurationResolver::class, function ($c) {
+$container->set(ConfigurationResolver::class, static function ($c) {
     return new ConfigurationResolver();
 });
 
-$container->set(Configurator::class, function ($c) {
+$container->set(Configurator::class, static function ($c) {
     return new Configurator(
         $c->get(Configuration::class),
         $c->get(ConfigurationResolver::class),
     );
 });
 
-$container->set(CheckCommand::class, function ($c) {
+$container->set(CheckCommand::class, static function ($c) {
     return new CheckCommand(
         $c->get(Configurator::class),
         $c->get(Finder::class),
@@ -160,7 +160,7 @@ $container->set(CheckCommand::class, function ($c) {
     );
 });
 
-$container->set(FixCommand::class, function ($c) {
+$container->set(FixCommand::class, static function ($c) {
     return new FixCommand(
         $c->get(Configurator::class),
         $c->get(Configuration::class),
@@ -171,11 +171,11 @@ $container->set(FixCommand::class, function ($c) {
     );
 });
 
-$container->set(ApiClient::class, function ($c) {
+$container->set(ApiClient::class, static function ($c) {
     return new ApiClient();
 });
 
-$container->set(SelfUpdateCommand::class, function ($c) {
+$container->set(SelfUpdateCommand::class, static function ($c) {
     return new SelfUpdateCommand($c->get(ApiClient::class));
 });
 

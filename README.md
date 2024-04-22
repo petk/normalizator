@@ -316,10 +316,11 @@ or special characters that might cause issues in certain occassions.
 
 ## Requirements
 
-To use normalizator, system needs to have PHP 8.1 or greater installed with the
+To use normalizator, system needs to have PHP 8.2 or greater installed with the
 following core PHP extensions:
 
 * fileinfo
+* filter
 * intl
 * mbstring
 * phar

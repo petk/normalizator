@@ -8,15 +8,15 @@ use Normalizator\Enum\Permissions;
 use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
 use Phar;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Normalizator\chmod;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class PermissionsNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('filesProvider')]

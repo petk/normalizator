@@ -10,12 +10,12 @@ use Normalizator\Finder\File;
 use Normalizator\Normalizator;
 use Normalizator\NormalizatorInterface;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class NameNormalizationTest extends NormalizatorTestCase
 {
     /**

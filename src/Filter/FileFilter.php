@@ -12,13 +12,11 @@ use Normalizator\Finder\File;
  * Must be file.
  */
 #[Filter(
-    name: 'file'
+    name: 'file',
 )]
 class FileFilter implements NormalizationFilterInterface
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     public function filter(File $file): bool
     {

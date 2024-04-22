@@ -11,9 +11,7 @@ use Normalizator\Finder\File;
  */
 class NormalizationEvent
 {
-    public function __construct(private File $file, private string $message, private string $type = 'log')
-    {
-    }
+    public function __construct(private File $file, private string $message, private string $type = 'log') {}
 
     public function getMessage(): string
     {

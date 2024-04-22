@@ -20,9 +20,7 @@ use function Normalizator\preg_match;
  */
 class GitDiscovery
 {
-    public function __construct(private Cache $cache)
-    {
-    }
+    public function __construct(private Cache $cache) {}
 
     /**
      * Determine if the given path is Git repository.

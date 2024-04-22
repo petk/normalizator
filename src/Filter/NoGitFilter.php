@@ -13,15 +13,14 @@ use Normalizator\Util\GitDiscovery;
  * Filter which doesn't pass Git directory or bare Git directory.
  */
 #[Filter(
-    name: 'no_git'
+    name: 'no_git',
 )]
 class NoGitFilter implements NormalizationFilterInterface
 {
     public function __construct(
         private Cache $cache,
-        private GitDiscovery $gitDiscovery
-    ) {
-    }
+        private GitDiscovery $gitDiscovery,
+    ) {}
 
     public function filter(File $file): bool
     {

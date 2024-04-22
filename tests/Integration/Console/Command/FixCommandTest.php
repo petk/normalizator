@@ -8,13 +8,13 @@ use Normalizator\Console\Application;
 use Normalizator\Console\Command\FixCommand;
 use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing()]
 final class FixCommandTest extends NormalizatorTestCase
 {
     public function testExecute(): void

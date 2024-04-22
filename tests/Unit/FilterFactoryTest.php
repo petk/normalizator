@@ -13,13 +13,13 @@ use Normalizator\Filter\NoVendorFilter;
 use Normalizator\Filter\PlainTextFilter;
 use Normalizator\FilterFactory;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class FilterFactoryTest extends NormalizatorTestCase
 {
     /**

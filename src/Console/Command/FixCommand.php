@@ -16,6 +16,8 @@ use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputArgument;
@@ -72,18 +74,18 @@ class FixCommand extends Command
         File $file,
         InputInterface $input,
         OutputInterface $output,
-        string $defaultEncoding = ''
+        string $defaultEncoding = '',
     ): string {
-        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
+        /** @var QuestionHelper */
         $helper = $this->getHelper('question');
 
         $question = new Question(
             sprintf(
                 'Please enter valid encoding for <info>%s</info> <comment>%s</comment> ',
                 $file->getPathname(),
-                '' !== $defaultEncoding ? '(' . $defaultEncoding . '?)' : ''
+                '' !== $defaultEncoding ? '(' . $defaultEncoding . '?)' : '',
             ),
-            $defaultEncoding
+            $defaultEncoding,
         );
 
         /** @var string */
@@ -137,7 +139,7 @@ class FixCommand extends Command
         $outputStyle = new OutputFormatterStyle('white', 'blue');
         $output->getFormatter()->setStyle('header', $outputStyle);
 
-        /** @var \Symfony\Component\Console\Helper\FormatterHelper */
+        /** @var FormatterHelper */
         $formatter = $this->getHelper('formatter');
 
         /** @var array<int,string> */
@@ -146,7 +148,7 @@ class FixCommand extends Command
         $formattedBlock = $formatter->formatBlock(
             ['FIXING', ...$paths],
             'header',
-            true
+            true,
         );
 
         $output->writeln([$formattedBlock, '']);
@@ -189,7 +191,7 @@ class FixCommand extends Command
                     (1 === count($this->logger->getAllErrors())) ? 'file' : 'files',
                 )],
                 'error',
-                true
+                true,
             );
 
             $output->writeln(['', $formattedBlock]);
@@ -222,7 +224,7 @@ class FixCommand extends Command
      */
     private function askForConfirmation(InputInterface $input, OutputInterface $output): bool
     {
-        /** @var \Symfony\Component\Console\Helper\QuestionHelper */
+        /** @var QuestionHelper */
         $helper = $this->getHelper('question');
 
         $noInteraction = (true === $input->getOption('no-interaction')) ? true : false;

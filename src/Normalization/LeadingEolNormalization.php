@@ -28,15 +28,14 @@ use function substr;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class LeadingEolNormalization implements NormalizationInterface
 {
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     /**
      * Trim all newlines from the beginning of the file.
@@ -58,8 +57,8 @@ class LeadingEolNormalization implements NormalizationInterface
                 sprintf(
                     '%d leading EOL%s',
                     count($this->getLeadingEols($content)),
-                    (1 === count($this->getLeadingEols($content))) ? '' : 's'
-                )
+                    (1 === count($this->getLeadingEols($content))) ? '' : 's',
+                ),
             ));
         }
 

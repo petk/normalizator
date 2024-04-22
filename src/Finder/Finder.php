@@ -36,19 +36,19 @@ class Finder
 
         $innerIterator = new RecursiveDirectoryIterator(
             $path,
-            RecursiveDirectoryIterator::SKIP_DOTS
+            RecursiveDirectoryIterator::SKIP_DOTS,
         );
 
         // Set custom \SplFileInfo class.
         $innerIterator->setInfoClass(File::class);
 
-        $filter ??= function () {
+        $filter ??= static function () {
             return true;
         };
 
         return new RecursiveIteratorIterator(
             new RecursiveCallbackFilterIterator($innerIterator, $filter),
-            $flags
+            $flags,
         );
     }
 }

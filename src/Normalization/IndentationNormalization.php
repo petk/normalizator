@@ -32,7 +32,7 @@ use function substr_count;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class IndentationNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
@@ -44,9 +44,8 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
 
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     public function configure(mixed ...$options): void
     {
@@ -107,7 +106,7 @@ class IndentationNormalization implements NormalizationInterface, ConfigurableNo
                 return str_replace(
                     "\t",
                     str_repeat(' ', $this->indentationSize),
-                    $matches[1]
+                    $matches[1],
                 ) . $matches[2] . $matches[3];
             }, $content);
         }

@@ -26,7 +26,7 @@ use function trim;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class ExtensionNormalization implements NormalizationInterface
 {
@@ -49,9 +49,8 @@ class ExtensionNormalization implements NormalizationInterface
 
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     public function normalize(File $file): File
     {

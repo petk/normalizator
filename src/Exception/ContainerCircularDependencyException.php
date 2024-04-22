@@ -7,6 +7,4 @@ namespace Normalizator\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use RuntimeException;
 
-class ContainerCircularDependencyException extends RuntimeException implements ContainerExceptionInterface
-{
-}
+class ContainerCircularDependencyException extends RuntimeException implements ContainerExceptionInterface {}

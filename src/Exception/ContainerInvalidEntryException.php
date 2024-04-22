@@ -10,6 +10,4 @@ use Psr\Container\ContainerExceptionInterface;
 /**
  * Generic exception in a container.
  */
-class ContainerInvalidEntryException extends InvalidArgumentException implements ContainerExceptionInterface
-{
-}
+class ContainerInvalidEntryException extends InvalidArgumentException implements ContainerExceptionInterface {}

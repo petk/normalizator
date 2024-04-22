@@ -25,7 +25,7 @@ use function trim;
     name: 'permissions',
     filters: [
         'no_links',
-    ]
+    ],
 )]
 class PermissionsNormalization implements NormalizationInterface
 {
@@ -33,8 +33,7 @@ class PermissionsNormalization implements NormalizationInterface
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
         private GitDiscovery $gitDiscovery,
-    ) {
-    }
+    ) {}
 
     /**
      * Normalizes permissions for a given path.

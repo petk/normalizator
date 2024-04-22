@@ -28,7 +28,7 @@ use function set_error_handler;
 function file_get_contents(string $file, bool $useIncludePath = false, $context = null, int $offset = 0, ?int $length = null): string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -58,7 +58,7 @@ function file_get_contents(string $file, bool $useIncludePath = false, $context 
 function rename(string $from, string $to, $context = null): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -88,7 +88,7 @@ function rename(string $from, string $to, $context = null): bool
 function file_put_contents(string $filename, mixed $data, int $flags = 0, $context = null): int
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -116,7 +116,7 @@ function file_put_contents(string $filename, mixed $data, int $flags = 0, $conte
 function chmod(string $filename, int $permissions): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -147,10 +147,10 @@ function chmod(string $filename, int $permissions): bool
  *
  * @throws RuntimeException
  */
-function preg_replace(array|string $pattern, array|string $replacement, array|string $subject, int $limit = -1, int &$count = null): array|string
+function preg_replace(array|string $pattern, array|string $replacement, array|string $subject, int $limit = -1, ?int &$count = null): array|string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -180,10 +180,10 @@ function preg_replace(array|string $pattern, array|string $replacement, array|st
  *
  * @throws RuntimeException
  */
-function preg_replace_callback(array|string $pattern, callable $callback, array|string $subject, int $limit = -1, int &$count = null, int $flags = 0): array|string
+function preg_replace_callback(array|string $pattern, callable $callback, array|string $subject, int $limit = -1, ?int &$count = null, int $flags = 0): array|string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -211,10 +211,10 @@ function preg_replace_callback(array|string $pattern, callable $callback, array|
  *
  * @throws RuntimeException
  */
-function preg_match(string $pattern, string $subject, array &$matches = null, int $flags = 0, int $offset = 0): int
+function preg_match(string $pattern, string $subject, ?array &$matches = null, int $flags = 0, int $offset = 0): int
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -241,10 +241,10 @@ function preg_match(string $pattern, string $subject, array &$matches = null, in
  *
  * @throws RuntimeException
  */
-function preg_match_all(string $pattern, string $subject, array &$matches = null, int $flags = 0, int $offset = 0): int
+function preg_match_all(string $pattern, string $subject, ?array &$matches = null, int $flags = 0, int $offset = 0): int
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -274,7 +274,7 @@ function preg_match_all(string $pattern, string $subject, array &$matches = null
 function preg_split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -299,10 +299,10 @@ function preg_split(string $pattern, string $subject, int $limit = -1, int $flag
  *
  * @throws RuntimeException
  */
-function transliterator_transliterate(Transliterator|string $transliterator, string $string, int $start = 0, int $end = -1): string
+function transliterator_transliterate(string|Transliterator $transliterator, string $string, int $start = 0, int $end = -1): string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -330,7 +330,7 @@ function transliterator_transliterate(Transliterator|string $transliterator, str
 function mime_content_type(string $filename): string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -363,7 +363,7 @@ function mime_content_type(string $filename): string
 function mb_convert_encoding(array|string $string, string $to, null|array|string $from = null): array|string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -397,7 +397,7 @@ function mb_convert_encoding(array|string $string, string $to, null|array|string
 function exec(string $command, ?array &$output = null, ?int &$resultCode = null): string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -427,7 +427,7 @@ function exec(string $command, ?array &$output = null, ?int &$resultCode = null)
 function unlink(string $filename, $context = null): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -457,7 +457,7 @@ function unlink(string $filename, $context = null): bool
 function copy(string $from, string $to, $context = null): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -485,7 +485,7 @@ function copy(string $from, string $to, $context = null): bool
 function md5_file(string $filename, bool $binary = false): string
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -515,7 +515,7 @@ function md5_file(string $filename, bool $binary = false): string
 function rmdir(string $directory, $context = null): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -545,7 +545,7 @@ function rmdir(string $directory, $context = null): bool
 function mkdir(string $directory, int $permissions = 0777, bool $recursive = false, $context = null): bool
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;
@@ -573,7 +573,7 @@ function mkdir(string $directory, int $permissions = 0777, bool $recursive = fal
 function fileperms(string $filename): int
 {
     $error = '';
-    set_error_handler(function (int $type, string $message) use (&$error): bool {
+    set_error_handler(static function (int $type, string $message) use (&$error): bool {
         $error = $message;
 
         return true;

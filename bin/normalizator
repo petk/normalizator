@@ -23,15 +23,15 @@ use const PHP_VERSION_ID;
 use const STDERR;
 
 // Check requirements.
-(function () {
-    if (PHP_VERSION_ID < 80100) {
-        fwrite(STDERR, "Error: Normalizator requires PHP 8.1 or greater. Please update your PHP version to run Normalizator.\n");
+(static function () {
+    if (PHP_VERSION_ID < 80200) {
+        fwrite(STDERR, "Error: Normalizator requires PHP 8.2 or greater. Please update your PHP version to run Normalizator.\n");
 
         exit(1);
     }
 
     // Check required PHP extensions.
-    foreach (['fileinfo', 'intl', 'mbstring', 'phar'] as $extension) {
+    foreach (['fileinfo', 'filter', 'intl', 'mbstring', 'phar'] as $extension) {
         if (!extension_loaded($extension)) {
             fwrite(STDERR, sprintf("Error: PHP extension ext-%s is required to run Normalizator.\n", $extension));
 

@@ -29,7 +29,7 @@ use function Normalizator\preg_replace;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class EolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
@@ -45,9 +45,8 @@ class EolNormalization implements NormalizationInterface, ConfigurableNormalizat
     public function __construct(
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
-        private EolDiscovery $eolDiscovery
-    ) {
-    }
+        private EolDiscovery $eolDiscovery,
+    ) {}
 
     public function configure(mixed ...$options): void
     {

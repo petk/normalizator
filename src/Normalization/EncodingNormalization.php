@@ -35,7 +35,7 @@ use const FILEINFO_MIME_ENCODING;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class EncodingNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
@@ -53,9 +53,8 @@ class EncodingNormalization implements NormalizationInterface, ConfigurableNorma
 
     public function __construct(
         private FilterManager $filterManager,
-        private EventDispatcher $eventDispatcher
-    ) {
-    }
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     public function configure(mixed ...$options): void
     {

@@ -7,12 +7,12 @@ namespace Normalizator\Tests\Unit\Filter;
 use Normalizator\Finder\Finder;
 use Normalizator\Tests\NormalizatorTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class NoVendorFilterTest extends NormalizatorTestCase
 {
     public function testFilter(): void

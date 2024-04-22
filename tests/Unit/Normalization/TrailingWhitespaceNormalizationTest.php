@@ -6,13 +6,13 @@ namespace Normalizator\Tests\Unit\Normalization;
 
 use Normalizator\Finder\File;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
 {
     #[DataProvider('dataProvider')]

@@ -16,15 +16,16 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-fileinfo": "*",
+        "ext-filter": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-phar": "*",
         "psr/container": "^2.0",
         "psr/event-dispatcher": "^1.0",
         "psr/simple-cache": "^3.0",
-        "symfony/console": "^6.3"
+        "symfony/console": "^7.0"
     },
     "require-dev": {
         "ext-dom": "*",
@@ -33,7 +34,7 @@
         "ext-xmlwriter": "*",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^10.1",
+        "phpunit/phpunit": "^11.1",
         "thecodingmachine/phpstan-safe-rule": "^1.2"
     },
     "autoload": {

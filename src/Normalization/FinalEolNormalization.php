@@ -37,7 +37,7 @@ use function substr;
         'no_node_modules',
         'no_svn',
         'no_vendor',
-    ]
+    ],
 )]
 class FinalEolNormalization implements NormalizationInterface, ConfigurableNormalizationInterface
 {
@@ -55,9 +55,8 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
     public function __construct(
         private FilterManager $filterManager,
         private EventDispatcher $eventDispatcher,
-        private EolDiscovery $eolDiscovery
-    ) {
-    }
+        private EolDiscovery $eolDiscovery,
+    ) {}
 
     public function configure(mixed ...$options): void
     {
@@ -118,7 +117,7 @@ class FinalEolNormalization implements NormalizationInterface, ConfigurableNorma
             $file->setNewContent($trimmed);
             $this->eventDispatcher->dispatch(new NormalizationEvent(
                 $file,
-                sprintf('%d final EOL%s', count($newlines), (1 === count($newlines)) ? '' : 's')
+                sprintf('%d final EOL%s', count($newlines), (1 === count($newlines)) ? '' : 's'),
             ));
         }
 

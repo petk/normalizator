@@ -12,8 +12,7 @@ class Configurator
     public function __construct(
         private Configuration $configuration,
         private ConfigurationResolver $configurationResolver,
-    ) {
-    }
+    ) {}
 
     /**
      * Set all configuration from given resources.

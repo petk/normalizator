@@ -17,13 +17,13 @@ use Normalizator\Normalization\SpaceBeforeTabNormalization;
 use Normalizator\Normalization\TrailingWhitespaceNormalization;
 use Normalizator\NormalizationFactory;
 use Normalizator\Tests\NormalizatorTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[CoversNothing]
 final class NormalizationFactoryTest extends NormalizatorTestCase
 {
     /**

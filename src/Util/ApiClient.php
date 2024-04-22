@@ -22,7 +22,7 @@ class ApiClient
     /**
      * Get latest release from GitHub API.
      */
-    public function fetch(): null|string
+    public function fetch(): ?string
     {
         try {
             $context = stream_context_create([
