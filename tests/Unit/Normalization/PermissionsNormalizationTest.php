@@ -64,6 +64,10 @@ final class PermissionsNormalizationTest extends NormalizatorTestCase
             ['shell-script', Permissions::EXECUTABLE->get()],
             ['shell-script_2', Permissions::EXECUTABLE->get()],
             ['shell-script_3', Permissions::EXECUTABLE->get()],
+            ['shell-script_4', Permissions::EXECUTABLE->get()],
+            ['shell-script_5', Permissions::EXECUTABLE->get()],
+            ['shell-script_6', Permissions::EXECUTABLE->get()],
+            ['shell-script_7', Permissions::FILE->get()],
         ];
     }
 }

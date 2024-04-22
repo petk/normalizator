@@ -178,9 +178,10 @@ class PermissionsNormalization implements NormalizationInterface
         }
 
         $shebangs = [
-            '/^#![ \t]*\/bin\/sh[ \t]?/',
-            '/^#![ \t]*\/bin\/bash[ \t]?/',
             '/^#![ \t]*\/usr\/bin\/env[ \t]?/',
+            '/^#![ \t]*\/bin\/[^ \t]+[ \t]?/',
+            '/^#![ \t]*\/usr\/bin\/[^ \t]+[ \t]?/',
+            '/^#![ \t]*\/usr\/local\/bin\/[^ \t]+[ \t]?/',
         ];
 
         $content = trim($file->getContent());

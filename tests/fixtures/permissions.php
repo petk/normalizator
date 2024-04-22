@@ -59,4 +59,28 @@ $structure['initial']['permissions']['shell-script_3'] = <<<EOL
 echo 'foobar';
 EOL;
 
+$structure['initial']['permissions']['shell-script_4'] = <<<EOL
+#! \t \t/usr/bin/bash\t
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script_5'] = <<<EOL
+#! \t \t/usr/local/bin/foobar\t
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script_6'] = <<<EOL
+#! \t \t/usr/bin/env \t -S cmake -P
+
+echo 'foobar';
+EOL;
+
+$structure['initial']['permissions']['shell-script_7'] = <<<EOL
+#! \t \t/etc/
+
+echo 'foobar';
+EOL;
+
 return $structure;
