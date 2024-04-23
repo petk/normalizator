@@ -19,11 +19,11 @@ final class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('trailing_whitespace');
-        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/trailing-whitespace/' . $filename)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://virtual/fixed/trailing-whitespace/' . $filename, $file->getPathname());
+        $this->assertFileEquals('vfs://virtual/fixed/' . $filename, $file->getPathname());
     }
 
     /**
@@ -32,29 +32,30 @@ final class TrailingWhitespaceNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['fileWithTrailingWhitespace.php'],
-            ['no-break-space.txt'],
-            ['mongolian-vowel-separator.txt'],
-            ['en-quad.txt'],
-            ['em-quad.txt'],
-            ['en-space.txt'],
-            ['em-space.txt'],
-            ['three-per-em-space.txt'],
-            ['four-per-em-space.txt'],
-            ['six-per-em-space.txt'],
-            ['figure-space.txt'],
-            ['punctuation-space.txt'],
-            ['thin-space.txt'],
-            ['hair-space.txt'],
-            ['narrow-no-break-space.txt'],
-            ['medium-mathematical-space.txt'],
-            ['ideographic-space.txt'],
-            ['zero-width-space.txt'],
-            ['zero-width-no-break-space.txt'],
-            ['various.txt'],
-            ['various-crlf.txt'],
-            ['various-cr.txt'],
-            ['various-mixed-eol.txt'],
+            ['trailing-whitespace/fileWithTrailingWhitespace.php'],
+            ['trailing-whitespace/no-break-space.txt'],
+            ['trailing-whitespace/mongolian-vowel-separator.txt'],
+            ['trailing-whitespace/en-quad.txt'],
+            ['trailing-whitespace/em-quad.txt'],
+            ['trailing-whitespace/en-space.txt'],
+            ['trailing-whitespace/em-space.txt'],
+            ['trailing-whitespace/three-per-em-space.txt'],
+            ['trailing-whitespace/four-per-em-space.txt'],
+            ['trailing-whitespace/six-per-em-space.txt'],
+            ['trailing-whitespace/figure-space.txt'],
+            ['trailing-whitespace/punctuation-space.txt'],
+            ['trailing-whitespace/thin-space.txt'],
+            ['trailing-whitespace/hair-space.txt'],
+            ['trailing-whitespace/narrow-no-break-space.txt'],
+            ['trailing-whitespace/medium-mathematical-space.txt'],
+            ['trailing-whitespace/ideographic-space.txt'],
+            ['trailing-whitespace/zero-width-space.txt'],
+            ['trailing-whitespace/zero-width-no-break-space.txt'],
+            ['trailing-whitespace/various.txt'],
+            ['trailing-whitespace/various-crlf.txt'],
+            ['trailing-whitespace/various-cr.txt'],
+            ['trailing-whitespace/various-mixed-eol.txt'],
+            ['miscellaneous/file_1.patch'],
         ];
     }
 }

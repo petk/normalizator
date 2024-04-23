@@ -20,7 +20,7 @@ trim_trailing_whitespace = false
 [COMMIT_EDITMSG]
 max_line_length          = 80
 
-[tests/fixtures/generated/**]
+[tests/fixtures/{generated/**,miscellaneous.php}]
 trim_trailing_whitespace = false
 insert_final_newline     = false
 indent_style             = false

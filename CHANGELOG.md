@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHP 8.2 minimum required.
 - Project dependencies updated.
 - Permissions normalization checks shebang with more patterns.
+- Patch files are now ignored in certain normalizations.
 
 ## [0.0.4] - 2023-07-03
 

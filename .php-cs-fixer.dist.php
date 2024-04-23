@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('tests/fixtures/generated')
+    ->notPath('tests/fixtures/miscellaneous.php')
     ->in(__DIR__)
     ->name(['*.php', 'normalizator', 'build'])
 ;

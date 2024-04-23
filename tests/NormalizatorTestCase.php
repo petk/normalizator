@@ -46,6 +46,7 @@ abstract class NormalizatorTestCase extends TestCase
             'indentation.php',
             'leadingEol.php',
             'middleEol.php',
+            'miscellaneous.php',
             'name.php',
             'permissions.php',
             'spaceBeforeTab.php',

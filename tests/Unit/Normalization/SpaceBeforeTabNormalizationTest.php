@@ -19,11 +19,11 @@ final class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('space_before_tab');
-        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/space-before-tab/' . $filename)->path());
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/' . $filename)->path());
         $file = $normalization->normalize($file);
         $file->save();
 
-        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/space-before-tab/' . $filename)->path(), $file->getPathname());
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/' . $filename)->path(), $file->getPathname());
     }
 
     /**
@@ -32,7 +32,8 @@ final class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
     public static function dataProvider(): array
     {
         return [
-            ['spaceBeforeTab.php'],
+            ['space-before-tab/spaceBeforeTab.php'],
+            ['miscellaneous/file_1.patch'],
         ];
     }
 }

@@ -24,6 +24,7 @@ use function Normalizator\preg_replace;
         'plain_text',
         'no_git',
         'no_node_modules',
+        'no_patch_files',
         'no_svn',
         'no_vendor',
     ],

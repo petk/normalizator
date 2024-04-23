@@ -8,6 +8,7 @@ use Normalizator\Filter\FileFilter;
 use Normalizator\Filter\NoGitFilter;
 use Normalizator\Filter\NoLinksFilter;
 use Normalizator\Filter\NoNodeModulesFilter;
+use Normalizator\Filter\NoPatchFilesFilter;
 use Normalizator\Filter\NoSvnFilter;
 use Normalizator\Filter\NoVendorFilter;
 use Normalizator\Filter\PlainTextFilter;
@@ -44,6 +45,7 @@ final class FilterFactoryTest extends NormalizatorTestCase
             ['no_git', NoGitFilter::class],
             ['no_links', NoLinksFilter::class],
             ['no_node_modules', NoNodeModulesFilter::class],
+            ['no_patch_files', NoPatchFilesFilter::class],
             ['no_svn', NoSvnFilter::class],
             ['no_vendor', NoVendorFilter::class],
             ['plain_text', PlainTextFilter::class],
