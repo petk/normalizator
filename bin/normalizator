@@ -17,6 +17,7 @@ use Throwable;
 use function extension_loaded;
 use function file_exists;
 use function fwrite;
+use function implode;
 use function sprintf;
 
 use const PHP_VERSION_ID;
@@ -25,18 +26,34 @@ use const STDERR;
 // Check requirements.
 (static function () {
     if (PHP_VERSION_ID < 80200) {
-        fwrite(STDERR, "Error: Normalizator requires PHP 8.2 or greater. Please update your PHP version to run Normalizator.\n");
+        fwrite(
+            STDERR,
+            'Error: Normalizator requires PHP 8.2 or greater. Please update '
+            . "your PHP version to run Normalizator.\n",
+        );
 
         exit(1);
     }
 
     // Check required PHP extensions.
+    $missingExtensions = [];
+
     foreach (['fileinfo', 'filter', 'intl', 'mbstring', 'phar'] as $extension) {
         if (!extension_loaded($extension)) {
-            fwrite(STDERR, sprintf("Error: PHP extension ext-%s is required to run Normalizator.\n", $extension));
-
-            exit(1);
+            $missingExtensions[] = $extension;
         }
+    }
+
+    if ([] !== $missingExtensions) {
+        fwrite(
+            STDERR,
+            sprintf(
+                "Error: Missing PHP extensions: %s.\n",
+                implode(', ', $missingExtensions),
+            ),
+        );
+
+        exit(1);
     }
 })();
 
