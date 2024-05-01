@@ -19,7 +19,7 @@ use function array_merge;
  */
 class Normalizator implements NormalizatorInterface
 {
-    public const VERSION = '0.0.5';
+    public const VERSION = '0.0.6-dev';
 
     public function __construct(
         private Configuration $configuration,
