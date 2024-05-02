@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- ...
+
+### Added
+
+- ...
+
+## [0.0.6] - 2024-05-02
+
+### Fixed
+
 - Number of files in the log
 
 ### Added
