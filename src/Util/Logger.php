@@ -7,6 +7,7 @@ namespace Normalizator\Util;
 use Normalizator\Finder\File;
 
 use function array_unique;
+use function count;
 
 /**
  * Logger utility that holds messages from normalizations and file changes.
@@ -35,10 +36,17 @@ class Logger
     private array $debug = [];
 
     /**
+     * Array of unique files in the log.
+     */
+    private array $counter = [];
+
+    /**
      * Add new message in the logs array for given file.
      */
     public function add(File $file, string $message, string $type = 'log'): void
     {
+        $this->counter[$file->getPathname()] = $file->getPathname();
+
         if ('error' === $type) {
             $this->errors[$file->getPathname()] ??= [];
             $this->errors[$file->getPathname()][] = $message;
@@ -109,10 +117,19 @@ class Logger
     }
 
     /**
+     * Get number of unique logged files.
+     */
+    public function getCounter(): int
+    {
+        return count($this->counter);
+    }
+
+    /**
      * Clear all logs.
      */
     public function clear(): void
     {
+        $this->counter = [];
         $this->logs = [];
         $this->errors = [];
         $this->debug = [];

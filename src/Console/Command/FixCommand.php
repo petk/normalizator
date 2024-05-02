@@ -27,7 +27,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
+use function array_unique;
 use function count;
+use function file_exists;
 use function implode;
 use function iterator_count;
 use function memory_get_peak_usage;
@@ -105,6 +107,7 @@ class FixCommand extends Command
             new InputOption('leading-eol', 'l', InputOption::VALUE_NONE, 'Trim redundant leading newlines.'),
             new InputOption('middle-eol', 'm', InputOption::VALUE_OPTIONAL, 'Trim redundant middle empty newlines.', false),
             new InputOption('name', 'a', InputOption::VALUE_NONE, 'Fix file and directory names.'),
+            new InputOption('not', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Skip given path(s)', []),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
             new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
@@ -143,7 +146,23 @@ class FixCommand extends Command
         $formatter = $this->getHelper('formatter');
 
         /** @var array<int,string> */
-        $paths = $input->getArgument('paths');
+        $paths = [];
+        foreach ($input->getArgument('paths') as $path) {
+            if (file_exists($path)) {
+                $pathInfo = new File($path);
+                $paths[] = $pathInfo->getRealPath();
+            } else {
+                $formattedBlock = $formatter->formatBlock(
+                    ['Error:', sprintf('%s: No such file or directory', $path)],
+                    'error',
+                    true,
+                );
+
+                $output->writeln(['', $formattedBlock]);
+
+                return Command::FAILURE;
+            }
+        }
 
         $formattedBlock = $formatter->formatBlock(
             ['FIXING', ...$paths],
@@ -159,9 +178,30 @@ class FixCommand extends Command
 
         $output->writeln(['', 'Fixing files in progress.']);
 
+        // Set excluded paths.
+        $excludes = [];
+        foreach ($paths as $path) {
+            foreach ($input->getOption('not') as $exclude) {
+                if (file_exists($path . '/' . $exclude)) {
+                    $excludeInfo = new File($path . '/' . $exclude);
+                } elseif (file_exists($exclude)) {
+                    $excludeInfo = new File($exclude);
+                } else {
+                    continue;
+                }
+
+                $excludes[] = $excludeInfo->getRealPath();
+            }
+        }
+        $excludes = array_unique($excludes);
+
         $count = 0;
         foreach ($paths as $path) {
-            $iterator = $this->normalize($path, $output);
+            $iterator = $this->normalize(
+                $path,
+                $excludes,
+                $output,
+            );
             $count += iterator_count($iterator);
         }
 
@@ -239,9 +279,23 @@ class FixCommand extends Command
         return true;
     }
 
-    private function normalize(string $path, OutputInterface $output): Iterator
-    {
-        $iterator = $this->finder->getTree($path);
+    /**
+     * Run normalizator on given path and send output.
+     */
+    private function normalize(
+        string $path,
+        array $excludes,
+        OutputInterface $output,
+    ): Iterator {
+        $iterator = $this->finder->getTree($path, static function (File $file) use ($excludes) {
+            foreach ($excludes as $exclude) {
+                if ($file->getRealPath() === $exclude) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
 
         foreach ($iterator as $file) {
             $this->normalizator->normalize($file);

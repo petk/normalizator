@@ -75,6 +75,46 @@ final class FixCommandTest extends NormalizatorTestCase
         }
     }
 
+    public function testNotOption(): void
+    {
+        $application = $this->createApplication();
+
+        $command = $application->find('fix');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([
+            'paths' => [
+                'vfs://' . $this->virtualRoot->getChild('initial')->path(),
+            ],
+            '--not' => [
+                'permissions',
+                'vfs://' . $this->virtualRoot->getChild('initial/trailing-whitespace')->path(),
+                'name',
+                'middle-eol',
+                'non-existing-for-checking-bypass',
+                'middle-eol-2',
+                'leading-eol',
+                'indentation-2',
+                'indentation',
+                'final-eol',
+                'final-eol-2',
+                'extension',
+                'eol',
+                'miscellaneous',
+                'space-before-tab',
+                'extension-duplicates',
+                'final-eol-crlf',
+                'extension-duplicates-after-rename',
+            ],
+        ]);
+
+        $this->assertSame(0, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('FIXING', $output);
+        $this->assertStringNotContainsString('virtual/initial/extension-duplicates-after-rename', $output);
+    }
+
     private function createApplication(): Application
     {
         $application = new Application();

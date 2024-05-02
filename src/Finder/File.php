@@ -7,7 +7,9 @@ namespace Normalizator\Finder;
 use RuntimeException;
 use SplFileInfo;
 
+use function array_filter;
 use function array_map;
+use function array_pop;
 use function explode;
 use function file_exists;
 use function implode;
@@ -22,6 +24,7 @@ use function pathinfo;
 use function str_replace;
 use function substr;
 
+use const DIRECTORY_SEPARATOR;
 use const PATHINFO_EXTENSION;
 
 /**
@@ -253,5 +256,40 @@ class File extends SplFileInfo
         }
 
         return $pathname;
+    }
+
+    /**
+     * Gets absolute path to file.
+     *
+     * Overridden getRealPath() method for cases when using virtual file system,
+     * where realpath() and getRealPath() don't work.
+     */
+    public function getRealPath(): false|string
+    {
+        $pathname = $this->getPathname();
+
+        if ('vfs://' === substr($pathname, 0, 6)) {
+            $url = substr($pathname, 6);
+            $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $url);
+            $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+            $absolutes = [];
+            foreach ($parts as $part) {
+                if ('.' === $part) {
+                    continue;
+                }
+
+                if ('..' === $part) {
+                    array_pop($absolutes);
+                } else {
+                    $absolutes[] = $part;
+                }
+            }
+            $path = implode(DIRECTORY_SEPARATOR, $absolutes);
+            $path = 'vfs://' . $path;
+
+            return file_exists($path) ? $path : false;
+        }
+
+        return parent::getRealPath();
     }
 }

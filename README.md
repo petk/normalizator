@@ -27,13 +27,11 @@ and similar in given files.
 Normalizator is a simple Phar executable file that can be downloaded from
 GitHub:
 
-Using curl:
-
 ```sh
 curl -OL https://github.com/petk/normalizator/releases/latest/download/normalizator.phar
 ```
 
-Using wget:
+Or:
 
 ```sh
 wget https://github.com/petk/normalizator/releases/latest/download/normalizator.phar
@@ -48,10 +46,10 @@ mv normalizator.phar /usr/local/bin/normalizator
 
 ## Update
 
-To update normalizator to its latest version:
+Update normalizator to the latest version:
 
 ```sh
-normalizator self-update
+sudo normalizator self-update
 ```
 
 ## About
@@ -86,18 +84,48 @@ available to run the tool inside a container:
 docker run -it -v path/to/your/files/to/check:/opt/app:rw petk/normalizator:latest check .
 ```
 
+## Requirements
+
+To use normalizator, system needs to have PHP 8.2 or greater installed with the
+following PHP extensions:
+
+* fileinfo
+* filter
+* intl
+* mbstring
+* phar
+
 ## Usage
 
-To check files (dry run) without modyfing any file:
+Check files (dry run) without modifying any file:
 
 ```sh
-normalizator check [OPTION...] [--] files...
+normalizator check [OPTION...] [--] <path(s)>...
 ```
 
-The `fix` command fixes and overwrites files:
+Fix and overwrite files:
 
 ```sh
-normalizator fix [OPTION...] [--] files...
+normalizator fix [OPTION...] [--] <path(s)>...
+```
+
+### Passing paths
+
+Paths or files can be passed as a space separated arguments:
+
+```sh
+normalizator check [OPTION...] [--] ~/dir/foo ~/dir/bar ~/dir/file.php ...
+```
+
+The `--not` option skips given paths or files:
+
+```sh
+normalizator check [OPTION...] \
+  --not <path-to-skip> \
+  --not <path-to-skip> \
+  ...
+  [OPTION...] \
+  [--] <path>...
 ```
 
 ### File encoding
@@ -313,17 +341,6 @@ normalizator check -a -- ~/projects/path/to/files/
 
 This fixes names of files and directories so that they don't contain whitespaces
 or special characters that might cause issues in certain occassions.
-
-## Requirements
-
-To use normalizator, system needs to have PHP 8.2 or greater installed with the
-following core PHP extensions:
-
-* fileinfo
-* filter
-* intl
-* mbstring
-* phar
 
 ## Documentation
 

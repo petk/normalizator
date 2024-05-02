@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- ...
+- Number of files in the log
 
 ### Added
 
-- ...
+- The `--not` option for skipping paths
 
 ## [0.0.5] - 2024-05-01
 

@@ -59,6 +59,46 @@ final class CheckCommandTest extends NormalizatorTestCase
         $this->assertStringContainsString('trailing whitespace', $output);
     }
 
+    public function testNotOption(): void
+    {
+        $application = $this->createApplication();
+
+        $command = $application->find('check');
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([
+            'paths' => [
+                'vfs://' . $this->virtualRoot->getChild('initial')->path(),
+            ],
+            '--not' => [
+                'permissions',
+                'vfs://' . $this->virtualRoot->getChild('initial/trailing-whitespace')->path(),
+                'name',
+                'middle-eol',
+                'non-existing-for-checking-bypass',
+                'middle-eol-2',
+                'leading-eol',
+                'indentation-2',
+                'indentation',
+                'final-eol',
+                'final-eol-2',
+                'extension',
+                'eol',
+                'miscellaneous',
+                'space-before-tab',
+                'extension-duplicates',
+                'final-eol-crlf',
+                'extension-duplicates-after-rename',
+            ],
+        ]);
+
+        $this->assertSame(1, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('CHECKING', $output);
+        $this->assertStringNotContainsString('virtual/initial/extension-duplicates-after-rename', $output);
+    }
+
     public function testLeadingEol(): void
     {
         $application = $this->createApplication();
