@@ -46,6 +46,13 @@ $structure['fixed']['extension']['noextension'] = '';
 $structure['initial']['extension']['this.is.some-script'] = '';
 $structure['fixed']['extension']['this.is.some-script'] = '';
 
+$structure['initial']['extension']['assembly.S'] = '';
+$structure['fixed']['extension']['assembly.S'] = '';
+$structure['initial']['extension']['assembly. S'] = '';
+$structure['fixed']['extension']['assembly.S'] = '';
+$structure['initial']['extension']['assembly.S '] = '';
+$structure['fixed']['extension']['assembly.S'] = '';
+
 // Files with duplicates after rename, so file checker needs to create suffixed name.
 $structure['initial']['extension-duplicates']['foo bar.txt'] = '';
 $structure['fixed']['extension-duplicates'][''] = '';

@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- ...
+- Extension normalization: A predefined list of known extensions is now ignored.
 
 ## [0.0.6] - 2024-05-02
 

@@ -40,6 +40,9 @@ final class ExtensionNormalizationTest extends NormalizatorTestCase
             ['foobar.jpeg-', 'foobar.jpg'],
             ['this.is.some-script', 'this.is.some-script'],
             ['extension-has-space.txt ', 'extension-has-space.txt'],
+            ['assembly.S', 'assembly.S'],
+            ['assembly. S', 'assembly.S'],
+            ['assembly.S ', 'assembly.S'],
         ];
     }
 
