@@ -10,6 +10,7 @@ use Normalizator\Configuration\Configurator;
 use Normalizator\Finder\File;
 use Normalizator\Finder\Finder;
 use Normalizator\Normalizator;
+use Normalizator\Util\Glob;
 use Normalizator\Util\Logger;
 use Normalizator\Util\Timer;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,6 +30,7 @@ use function file_exists;
 use function implode;
 use function iterator_count;
 use function memory_get_peak_usage;
+use function preg_match;
 use function round;
 use function sprintf;
 
@@ -44,6 +46,7 @@ class CheckCommand extends Command
         private Normalizator $normalizator,
         private Timer $timer,
         private Logger $logger,
+        private Glob $glob,
     ) {
         parent::__construct();
     }
@@ -75,7 +78,7 @@ class CheckCommand extends Command
 
             The <comment>--middle-eol[=NUM], -m [NUM]</comment> option trims redundant newlines in the middle of the content. The value presents the maximum allowed middle final newlines. Default number of middle newlines is 1.
 
-            The <comment>--not</comment> option(s) will skip given paths for normalizations.
+            The <comment>--not</comment> option(s) will skip given paths for normalizations. Also, glob patterns can be passed. For example, <comment>--not "*.txt"</comment>, will skip all .txt files.
 
             The <comment>--trailing-whitespace, -w</comment> option trims all trailing whitespace characters in text files (spaces, tabs, no-break spaces, Mongolian vowel separators, en quads, em quads, en spaces, em spaces, three-per-em spaces, four-per-em spaces, six-per-em spaces, figure spaces, punctuation spaces, thin spaces, hair spaces, narrow no-break spaces, medium mathematical spaces, ideographic spaces, zero width spaces, and zero width no-break spaces).
 
@@ -97,7 +100,7 @@ class CheckCommand extends Command
             new InputOption('leading-eol', 'l', InputOption::VALUE_NONE, 'Trim redundant leading newlines.'),
             new InputOption('middle-eol', 'm', InputOption::VALUE_OPTIONAL, 'Trim redundant middle empty newlines.', false),
             new InputOption('name', 'a', InputOption::VALUE_NONE, 'Fix file and directory names.'),
-            new InputOption('not', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Skip given path(s)', []),
+            new InputOption('not', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Skip given paths', []),
             new InputOption('permissions', 'u', InputOption::VALUE_NONE, 'Fix file and directory permissions.'),
             new InputOption('space-before-tab', 's', InputOption::VALUE_NONE, 'Clean spaces before tabs in the initial part of the line.'),
             new InputOption('trailing-whitespace', 'w', InputOption::VALUE_NONE, 'Trim trailing whitespace characters.'),
@@ -158,6 +161,7 @@ class CheckCommand extends Command
 
         // Set excluded paths.
         $excludes = [];
+        $regexExcludes = [];
         foreach ($paths as $path) {
             foreach ($input->getOption('not') as $exclude) {
                 if (file_exists($path . '/' . $exclude)) {
@@ -165,6 +169,10 @@ class CheckCommand extends Command
                 } elseif (file_exists($exclude)) {
                     $excludeInfo = new File($exclude);
                 } else {
+                    if ($this->glob->isGlob($exclude)) {
+                        $regexExcludes[] = $this->glob->convertToRegex($exclude);
+                    }
+
                     continue;
                 }
 
@@ -172,13 +180,15 @@ class CheckCommand extends Command
             }
         }
         $excludes = array_unique($excludes);
+        $regexExcludes = array_unique($regexExcludes);
 
         $count = 0;
         foreach ($paths as $path) {
             $iterator = $this->normalize(
                 $path,
-                $excludes,
                 $output,
+                $excludes,
+                $regexExcludes,
             );
             $count += iterator_count($iterator);
         }
@@ -239,12 +249,19 @@ class CheckCommand extends Command
      */
     private function normalize(
         string $path,
-        array $excludes,
         OutputInterface $output,
+        array $excludes,
+        array $regexExcludes,
     ): Iterator {
-        $iterator = $this->finder->getTree($path, static function (File $file) use ($excludes) {
+        $iterator = $this->finder->getTree($path, static function (File $file) use ($excludes, $regexExcludes) {
             foreach ($excludes as $exclude) {
                 if ($file->getRealPath() === $exclude) {
+                    return false;
+                }
+            }
+
+            foreach ($regexExcludes as $exclude) {
+                if (1 === preg_match($exclude, $file->getRealPath() ?: '')) {
                     return false;
                 }
             }

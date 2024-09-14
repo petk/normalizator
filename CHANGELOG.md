@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extension normalization: A predefined list of known extensions is now ignored.
+- The `--not` option now supports also glob patterns.
 
 ## [0.0.6] - 2024-05-02
 

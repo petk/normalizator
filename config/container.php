@@ -26,6 +26,7 @@ use Normalizator\Util\ApiClient;
 use Normalizator\Util\EolDiscovery;
 use Normalizator\Util\FilenameResolver;
 use Normalizator\Util\GitDiscovery;
+use Normalizator\Util\Glob;
 use Normalizator\Util\Logger;
 use Normalizator\Util\Slugify;
 use Normalizator\Util\Timer;
@@ -157,6 +158,7 @@ $container->set(CheckCommand::class, static function ($c) {
         $c->get(Normalizator::class),
         $c->get(Timer::class),
         $c->get(Logger::class),
+        $c->get(Glob::class),
     );
 });
 
@@ -168,6 +170,7 @@ $container->set(FixCommand::class, static function ($c) {
         $c->get(Normalizator::class),
         $c->get(Timer::class),
         $c->get(Logger::class),
+        $c->get(Glob::class),
     );
 });
 
@@ -177,6 +180,10 @@ $container->set(ApiClient::class, static function ($c) {
 
 $container->set(SelfUpdateCommand::class, static function ($c) {
     return new SelfUpdateCommand($c->get(ApiClient::class));
+});
+
+$container->set(Glob::class, static function ($c) {
+    return new Glob();
 });
 
 return $container;

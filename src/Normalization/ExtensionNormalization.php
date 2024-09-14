@@ -90,6 +90,7 @@ class ExtensionNormalization implements NormalizationInterface
         // If the extension after trimming is known, leave it as it is.
         if (in_array($newExtension, $this->knownExtensions, true)) {
             $this->setFile($file, $extension, $newExtension);
+
             return $file;
         }
 
@@ -104,14 +105,15 @@ class ExtensionNormalization implements NormalizationInterface
         return $file;
     }
 
-    private function setFile(File $file, string $previousExtension, string $newExtension) {
+    private function setFile(File $file, string $previousExtension, string $newExtension)
+    {
         $basename = rtrim($file->getNewFilename(), $previousExtension) . $newExtension;
 
         if ($basename !== $file->getNewFilename()) {
             $file->setNewFilename($basename);
             $this->eventDispatcher->dispatch(new NormalizationEvent(
                 $file,
-                'file extension: ' . $previousExtension . ' -> ' . $newExtension
+                'file extension: ' . $previousExtension . ' -> ' . $newExtension,
             ));
         }
     }

@@ -82,13 +82,13 @@ final class CheckCommandTest extends NormalizatorTestCase
                 'indentation',
                 'final-eol',
                 'final-eol-2',
-                'extension',
                 'eol',
                 'miscellaneous',
                 'space-before-tab',
                 'extension-duplicates',
                 'final-eol-crlf',
                 'extension-duplicates-after-rename',
+                '*assembly*',
             ],
         ]);
 
@@ -97,6 +97,7 @@ final class CheckCommandTest extends NormalizatorTestCase
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('CHECKING', $output);
         $this->assertStringNotContainsString('virtual/initial/extension-duplicates-after-rename', $output);
+        $this->assertStringNotContainsString('assembly', $output);
     }
 
     public function testLeadingEol(): void
