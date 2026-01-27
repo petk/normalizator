@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class NameNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('filesProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $initialFile, string $fixedFile): void
     {
         $normalization = $this->createNormalization('name');
@@ -28,7 +28,7 @@ final class NameNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function filesProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['update.sample', 'update.sample'],

@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class EolNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('lfDataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'lf']);
@@ -26,7 +26,19 @@ final class EolNormalizationTest extends NormalizatorTestCase
         $this->assertFileEquals('vfs://virtual/fixed/eol/lf/' . $filename, $file->getPathname());
     }
 
-    #[DataProvider('crlfDataProvider')]
+    /**
+     * @return array<int,array<int,string>>
+     */
+    public static function provideNormalizeCases(): iterable
+    {
+        return [
+            ['file_1.txt'],
+            ['file_2.txt'],
+            ['file_3.txt'],
+        ];
+    }
+
+    #[DataProvider('provideNormalizeCrlfCases')]
     public function testNormalizeCrlf(string $filename): void
     {
         $normalization = $this->createNormalization('eol', ['eol' => 'crlf']);
@@ -40,19 +52,7 @@ final class EolNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function lfDataProvider(): array
-    {
-        return [
-            ['file_1.txt'],
-            ['file_2.txt'],
-            ['file_3.txt'],
-        ];
-    }
-
-    /**
-     * @return array<int,array<int,string>>
-     */
-    public static function crlfDataProvider(): array
+    public static function provideNormalizeCrlfCases(): iterable
     {
         return [
             ['file_1.txt'],

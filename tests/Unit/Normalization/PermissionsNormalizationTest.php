@@ -19,7 +19,7 @@ use function Normalizator\chmod;
 #[CoversNothing]
 final class PermissionsNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('filesProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $initialFile, int $validPermissions): void
     {
         $normalization = $this->createNormalization('permissions');
@@ -27,6 +27,25 @@ final class PermissionsNormalizationTest extends NormalizatorTestCase
         $file = $normalization->normalize($file);
 
         $this->assertSame($validPermissions, $file->getNewPermissions());
+    }
+
+    /**
+     * @return array<int, array<int, mixed>>
+     */
+    public static function provideNormalizeCases(): iterable
+    {
+        return [
+            ['not-a-script.sh', Permissions::FILE->get()],
+            ['php-script', Permissions::EXECUTABLE->get()],
+            ['Rakefile', Permissions::FILE->get()],
+            ['shell-script', Permissions::EXECUTABLE->get()],
+            ['shell-script_2', Permissions::EXECUTABLE->get()],
+            ['shell-script_3', Permissions::EXECUTABLE->get()],
+            ['shell-script_4', Permissions::EXECUTABLE->get()],
+            ['shell-script_5', Permissions::EXECUTABLE->get()],
+            ['shell-script_6', Permissions::EXECUTABLE->get()],
+            ['shell-script_7', Permissions::FILE->get()],
+        ];
     }
 
     public function testPhar(): void
@@ -50,24 +69,5 @@ final class PermissionsNormalizationTest extends NormalizatorTestCase
 
         // Remove generated phar from disk and memory for next tests run.
         Phar::unlinkArchive($pharFile);
-    }
-
-    /**
-     * @return array<int, array<int, mixed>>
-     */
-    public static function filesProvider(): array
-    {
-        return [
-            ['not-a-script.sh', Permissions::FILE->get()],
-            ['php-script', Permissions::EXECUTABLE->get()],
-            ['Rakefile', Permissions::FILE->get()],
-            ['shell-script', Permissions::EXECUTABLE->get()],
-            ['shell-script_2', Permissions::EXECUTABLE->get()],
-            ['shell-script_3', Permissions::EXECUTABLE->get()],
-            ['shell-script_4', Permissions::EXECUTABLE->get()],
-            ['shell-script_5', Permissions::EXECUTABLE->get()],
-            ['shell-script_6', Permissions::EXECUTABLE->get()],
-            ['shell-script_7', Permissions::FILE->get()],
-        ];
     }
 }

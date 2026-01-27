@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class CacheTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideSetCases')]
     public function testSet(string $key, bool|int|string $value): void
     {
         /** @var Cache */
@@ -30,7 +30,7 @@ final class CacheTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,bool|int|string>>
      */
-    public static function dataProvider(): array
+    public static function provideSetCases(): iterable
     {
         return [
             ['key_1', 'Lorem ipsum'],

@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('space_before_tab');
@@ -29,7 +29,7 @@ final class SpaceBeforeTabNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['space-before-tab/spaceBeforeTab.php'],

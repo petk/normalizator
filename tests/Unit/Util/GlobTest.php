@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class GlobTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProviderForIsGlob')]
+    #[DataProvider('provideIsGlobCases')]
     public function testIsGlob(string $string, bool $isGlob): void
     {
         $glob = new Glob();
@@ -29,7 +29,7 @@ final class GlobTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,bool|string>>
      */
-    public static function dataProviderForIsGlob(): array
+    public static function provideIsGlobCases(): iterable
     {
         return [
             ['*.txt', true],
@@ -43,7 +43,7 @@ final class GlobTest extends NormalizatorTestCase
         ];
     }
 
-    #[DataProvider('dataProviderForConvertToRegex')]
+    #[DataProvider('provideConvertToRegexCases')]
     public function testConvertToRegex(string $globPattern, string $regex): void
     {
         $glob = new Glob();
@@ -57,7 +57,7 @@ final class GlobTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProviderForConvertToRegex(): array
+    public static function provideConvertToRegexCases(): iterable
     {
         return [
             ['*.txt', '/.*\.txt/'],

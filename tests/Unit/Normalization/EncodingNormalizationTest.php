@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class EncodingNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('encoding');
@@ -33,7 +33,7 @@ final class EncodingNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['windows-1252.txt'],

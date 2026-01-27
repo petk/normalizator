@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class IndentationNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('indentation');
@@ -29,7 +29,7 @@ final class IndentationNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['file_1.txt'],
@@ -43,7 +43,7 @@ final class IndentationNormalizationTest extends NormalizatorTestCase
         ];
     }
 
-    #[DataProvider('dataProvider2')]
+    #[DataProvider('provideNormalize2Cases')]
     public function testNormalize2(string $filename): void
     {
         $normalization = $this->createNormalization('indentation', [
@@ -59,7 +59,7 @@ final class IndentationNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider2(): array
+    public static function provideNormalize2Cases(): iterable
     {
         return [
             ['file_1.txt'],

@@ -89,7 +89,7 @@ class NormalizationFactory
             $class = str_replace('/', '\\', $class);
 
             /** @var class-string<NormalizationInterface> */
-            $class = 'Normalizator\\Normalization\\' . $class;
+            $class = 'Normalizator\Normalization\\' . $class;
 
             // Resolve normalization attributes.
             $reflection = new ReflectionClass($class);

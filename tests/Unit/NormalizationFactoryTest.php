@@ -29,7 +29,7 @@ final class NormalizationFactoryTest extends NormalizatorTestCase
     /**
      * @param class-string<object> $valid
      */
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideMakeCases')]
     public function testMake(string $key, string $valid): void
     {
         /** @var NormalizationFactory */
@@ -41,7 +41,7 @@ final class NormalizationFactoryTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,class-string|string>>
      */
-    public static function dataProvider(): array
+    public static function provideMakeCases(): iterable
     {
         return [
             ['encoding', EncodingNormalization::class],

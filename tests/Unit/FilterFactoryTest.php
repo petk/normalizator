@@ -26,7 +26,7 @@ final class FilterFactoryTest extends NormalizatorTestCase
     /**
      * @param class-string<object> $valid
      */
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideMakeCases')]
     public function testMake(string $key, string $valid): void
     {
         /** @var FilterFactory */
@@ -38,7 +38,7 @@ final class FilterFactoryTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,class-string|string>>
      */
-    public static function dataProvider(): array
+    public static function provideMakeCases(): iterable
     {
         return [
             ['file', FileFilter::class],

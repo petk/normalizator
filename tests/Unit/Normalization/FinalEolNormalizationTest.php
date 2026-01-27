@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class FinalEolNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol');
@@ -29,7 +29,7 @@ final class FinalEolNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['file_1.txt'],
@@ -44,7 +44,7 @@ final class FinalEolNormalizationTest extends NormalizatorTestCase
         ];
     }
 
-    #[DataProvider('dataProvider2')]
+    #[DataProvider('provideNormalizeWithMax2Cases')]
     public function testNormalizeWithMax2(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol', ['max_extra_final_eols' => 2]);
@@ -58,7 +58,7 @@ final class FinalEolNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider2(): array
+    public static function provideNormalizeWithMax2Cases(): iterable
     {
         return [
             ['file_1.txt'],
@@ -74,7 +74,7 @@ final class FinalEolNormalizationTest extends NormalizatorTestCase
         ];
     }
 
-    #[DataProvider('dataProviderCrlf')]
+    #[DataProvider('provideNormalizeWithCrlfCases')]
     public function testNormalizeWithCrlf(string $filename): void
     {
         $normalization = $this->createNormalization('final_eol', [
@@ -91,7 +91,7 @@ final class FinalEolNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProviderCrlf(): array
+    public static function provideNormalizeWithCrlfCases(): iterable
     {
         return [
             ['file_1.txt'],

@@ -360,7 +360,7 @@ function mime_content_type(string $filename): string
  *
  * @throws RuntimeException
  */
-function mb_convert_encoding(array|string $string, string $to, null|array|string $from = null): array|string
+function mb_convert_encoding(array|string $string, string $to, array|string|null $from = null): array|string
 {
     $error = '';
     set_error_handler(static function (int $type, string $message) use (&$error): bool {

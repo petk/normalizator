@@ -74,7 +74,7 @@ class FilterFactory
                 && 'Filter.php' === substr($filter->getFilename(), -10)
             ) {
                 /** @var class-string<NormalizationFilterInterface> */
-                $class = 'Normalizator\\Filter\\' . substr($filter->getFilename(), 0, -4);
+                $class = 'Normalizator\Filter\\' . substr($filter->getFilename(), 0, -4);
 
                 $reflection = new ReflectionClass($class);
                 foreach ($reflection->getAttributes() as $attribute) {

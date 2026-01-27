@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class MiddleEolNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('filesWithMaxOneProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('middle_eol');
@@ -26,21 +26,10 @@ final class MiddleEolNormalizationTest extends NormalizatorTestCase
         $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/middle-eol/' . $filename)->path(), $file->getPathname());
     }
 
-    #[DataProvider('filesWithMaxTwoProvider')]
-    public function testNormalizeWithMaxTwo(string $filename): void
-    {
-        $normalization = $this->createNormalization('middle_eol', ['max_extra_middle_eols' => 2]);
-        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/middle-eol-2/' . $filename)->path());
-        $file = $normalization->normalize($file);
-        $file->save();
-
-        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/middle-eol-2/' . $filename)->path(), $file->getPathname());
-    }
-
     /**
      * @return array<int,array<int,string>>
      */
-    public static function filesWithMaxOneProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['file_1.txt'],
@@ -58,10 +47,21 @@ final class MiddleEolNormalizationTest extends NormalizatorTestCase
         ];
     }
 
+    #[DataProvider('provideNormalizeWithMaxTwoCases')]
+    public function testNormalizeWithMaxTwo(string $filename): void
+    {
+        $normalization = $this->createNormalization('middle_eol', ['max_extra_middle_eols' => 2]);
+        $file = new File('vfs://' . $this->virtualRoot->getChild('initial/middle-eol-2/' . $filename)->path());
+        $file = $normalization->normalize($file);
+        $file->save();
+
+        $this->assertFileEquals('vfs://' . $this->virtualRoot->getChild('fixed/middle-eol-2/' . $filename)->path(), $file->getPathname());
+    }
+
     /**
      * @return array<int,array<int,string>>
      */
-    public static function filesWithMaxTwoProvider(): array
+    public static function provideNormalizeWithMaxTwoCases(): iterable
     {
         return [
             ['file_1.txt'],

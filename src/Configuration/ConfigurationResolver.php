@@ -115,7 +115,7 @@ class ConfigurationResolver
      *
      * @throws InvalidOptionException
      */
-    private function resolveEol(null|array|bool|float|int|string $eol): bool|string
+    private function resolveEol(array|bool|float|int|string|null $eol): bool|string
     {
         // Option has not been set.
         if (false === $eol) {
@@ -141,7 +141,7 @@ class ConfigurationResolver
      *
      * @throws InvalidOptionException
      */
-    private function resolveFinalEol(null|array|bool|float|int|string $finalEol): bool|int
+    private function resolveFinalEol(array|bool|float|int|string|null $finalEol): bool|int
     {
         if (false === $finalEol) {
             return false;
@@ -168,7 +168,7 @@ class ConfigurationResolver
      *
      * @throws InvalidOptionException
      */
-    private function resolveMiddleEol(null|array|bool|float|int|string $middleEol): bool|int
+    private function resolveMiddleEol(array|bool|float|int|string|null $middleEol): bool|int
     {
         if (false === $middleEol) {
             return false;
@@ -195,7 +195,7 @@ class ConfigurationResolver
      *
      * @throws InvalidOptionException
      */
-    private function resolveIndentation(null|array|bool|float|int|string $indentation): bool|string
+    private function resolveIndentation(array|bool|float|int|string|null $indentation): bool|string
     {
         if (false === $indentation) {
             return false;
@@ -226,7 +226,7 @@ class ConfigurationResolver
      *
      * @throws InvalidOptionException
      */
-    private function resolveIndentationSize(null|array|bool|float|int|string $size): int
+    private function resolveIndentationSize(array|bool|float|int|string|null $size): int
     {
         if (false === $size) {
             return IndentationNormalization::INDENTATION_SIZE;

@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class ExtensionNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('pathProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $path, string $valid): void
     {
         $normalization = $this->createNormalization('extension');
@@ -28,7 +28,7 @@ final class ExtensionNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function pathProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['.DS_Store', '.DS_Store'],

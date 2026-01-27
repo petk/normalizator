@@ -33,7 +33,7 @@ class Cache implements CacheInterface
         return $this->values[$key] ?? $default;
     }
 
-    public function set(string $key, mixed $value, null|DateInterval|int $ttl = null): bool
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
         if ('' === $key) {
             throw new CacheInvalidArgumentException('Key must not be empty string');
@@ -91,7 +91,7 @@ class Cache implements CacheInterface
     /**
      * @param Traversable<string,mixed> $values
      */
-    public function setMultiple(iterable $values, null|DateInterval|int $ttl = null): bool
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             if ('' === $key) {

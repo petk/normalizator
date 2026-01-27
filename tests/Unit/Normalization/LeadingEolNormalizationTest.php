@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversNothing]
 final class LeadingEolNormalizationTest extends NormalizatorTestCase
 {
-    #[DataProvider('dataProvider')]
+    #[DataProvider('provideNormalizeCases')]
     public function testNormalize(string $filename): void
     {
         $normalization = $this->createNormalization('leading_eol');
@@ -29,7 +29,7 @@ final class LeadingEolNormalizationTest extends NormalizatorTestCase
     /**
      * @return array<int,array<int,string>>
      */
-    public static function dataProvider(): array
+    public static function provideNormalizeCases(): iterable
     {
         return [
             ['file_1.txt'],
