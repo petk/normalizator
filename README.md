@@ -91,6 +91,7 @@ following PHP extensions:
 
 * fileinfo
 * filter
+* iconv
 * intl
 * mbstring
 * phar

@@ -38,7 +38,7 @@ use const STDERR;
     // Check required PHP extensions.
     $missingExtensions = [];
 
-    foreach (['fileinfo', 'filter', 'intl', 'mbstring', 'phar'] as $extension) {
+    foreach (['fileinfo', 'filter', 'iconv', 'intl', 'mbstring', 'phar'] as $extension) {
         if (!extension_loaded($extension)) {
             $missingExtensions[] = $extension;
         }

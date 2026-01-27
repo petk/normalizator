@@ -7,6 +7,7 @@ RUN apk add --no-cache \
         git \
         php85 \
         php85-fileinfo \
+        php85-iconv \
         php85-intl \
         php85-mbstring \
         php85-phar \
