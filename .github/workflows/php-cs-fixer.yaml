@@ -27,7 +27,7 @@ jobs:
       - name: Setup PHP with Composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.5
           tools: composer, php-cs-fixer
 
       - name: Install dependencies
