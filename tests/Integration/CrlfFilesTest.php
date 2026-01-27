@@ -62,7 +62,7 @@ final class CrlfFilesTest extends NormalizatorTestCase
 
         $application = new Application();
 
-        $application->add($fixCommand);
+        $application->addCommand($fixCommand);
 
         $command = $application->find('fix');
         $commandTester = new CommandTester($command);

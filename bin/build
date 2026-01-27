@@ -27,7 +27,7 @@ use const STDERR;
         exec('composer install -q --no-dev', $output, $result);
 
         if (0 !== $result) {
-            echo 'Could not remove development dependencies, make sure exec is allowed and php can be found in your PATH.';
+            echo 'Could not remove development dependencies, make sure exec is allowed and php can be found in the PATH.';
 
             exit(1);
         }
@@ -37,7 +37,7 @@ use const STDERR;
         $pharBuilder = new PharBuilder($finder);
         $command = new BuildCommand($pharBuilder);
         $application = new Application('Normalizator Builder', Normalizator::VERSION);
-        $application->add($command);
+        $application->addCommand($command);
         $application->setDefaultCommand($command->getName());
         $application->run();
     } catch (Throwable $e) {

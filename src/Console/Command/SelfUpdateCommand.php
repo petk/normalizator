@@ -39,7 +39,7 @@ class SelfUpdateCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setHelp('This updates normalizator PHAR executable to the latest version.')

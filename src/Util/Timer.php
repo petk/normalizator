@@ -10,9 +10,9 @@ use function round;
 /**
  * Utility that tracks script execution time.
  *
- * Timer is automatically started when initializing the Timer object. Otherwise
+ * Timer is automatically started when initializing the Timer object. Otherwise,
  * it can be started manually with the Timer::start() method for cases where
- * you need to measure script execution before initializing the timer as
+ * the script execution needs to be measured before initializing the timer as
  * injected dependency in the container.
  */
 class Timer

@@ -122,7 +122,7 @@ final class FixCommandTest extends NormalizatorTestCase
         /** @var FixCommand */
         $command = $this->container->get(FixCommand::class);
 
-        $application->add($command);
+        $application->addCommand($command);
 
         return $application;
     }

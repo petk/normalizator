@@ -9,12 +9,12 @@ characters, redundant trailing final newlines, file permissions and similar.
 ## Usage
 
 ```sh
-docker run -it -v path/to/your/files/to/check:/opt/app:rw petk/normalizator:latest check .
+docker run -it -v path/to/files:/opt/app:rw petk/normalizator:latest check .
 ```
 
 ## Docker tags
 
-* [`latest` (*Dockerfile*)](https://github.com/petk/normalizator/tree/main/Dockerfile) - Alpine, PHP 8.2, Normalizator
+* [`latest` (*Dockerfile*)](https://github.com/petk/normalizator/tree/main/Dockerfile) - Alpine, PHP 8.5, Normalizator
 
 ## License and contributing
 

@@ -25,11 +25,11 @@ use const STDERR;
 
 // Check requirements.
 (static function () {
-    if (PHP_VERSION_ID < 80200) {
+    if (PHP_VERSION_ID < 80400) {
         fwrite(
             STDERR,
-            'Error: Normalizator requires PHP 8.2 or greater. Please update '
-            . "your PHP version to run Normalizator.\n",
+            'Error: Normalizator requires PHP 8.4 or greater. Please update '
+            . "PHP to run Normalizator.\n",
         );
 
         exit(1);
@@ -91,9 +91,9 @@ use const STDERR;
 
         $application = new Application('Normalizator', Normalizator::VERSION);
 
-        $application->add($container->get(CheckCommand::class));
-        $application->add($container->get(FixCommand::class));
-        $application->add($container->get(SelfUpdateCommand::class));
+        $application->addCommand($container->get(CheckCommand::class));
+        $application->addCommand($container->get(FixCommand::class));
+        $application->addCommand($container->get(SelfUpdateCommand::class));
 
         $application->run();
     } catch (Throwable $e) {

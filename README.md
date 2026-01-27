@@ -37,7 +37,7 @@ Or:
 wget https://github.com/petk/normalizator/releases/latest/download/normalizator.phar
 ```
 
-By moving it to `/usr/local/bin` it can be accessed accross your system:
+By moving it to `/usr/local/bin` it can be accessed accross the system:
 
 ```sh
 chmod +x normalizator.phar
@@ -81,12 +81,12 @@ There is also a [Docker image](https://hub.docker.com/r/petk/normalizator)
 available to run the tool inside a container:
 
 ```sh
-docker run -it -v path/to/your/files/to/check:/opt/app:rw petk/normalizator:latest check .
+docker run -it -v path/to/files:/opt/app:rw petk/normalizator:latest check .
 ```
 
 ## Requirements
 
-To use normalizator, system needs to have PHP 8.2 or greater installed with the
+To use normalizator, system needs to have PHP 8.4 or greater installed with the
 following PHP extensions:
 
 * fileinfo
@@ -247,7 +247,7 @@ normalizator check --final-eol -- ~/projects/path/to/files
 normalizator check -N -- ~/projects/path/to/files
 ```
 
-Optionally, you can set the maximum number of allowed final EOLs by passing a
+Optionally, the maximum number of allowed final EOLs can be set by passing a
 number. In case of a missing final EOL, one will be appended. This will allow up
 to 2 final EOLs:
 

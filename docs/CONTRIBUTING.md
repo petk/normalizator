@@ -4,15 +4,15 @@ Contributions are most welcome. Below is described procedure for contributing to
 this repository.
 
 * Fork this repository over GitHub.
-* Create a separate branch, for instance `patch-1` so you will not need to
-  rebase your fork if your main branch is merged.
+* Create a separate branch, for instance `patch-1` so fork does not need to be
+  rebased if the main branch is merged.
 
   ```sh
   git clone git@github.com:your_username/normalizator
   cd normalizator
   git checkout -b patch-1
   ```
-* Make changes, commit them and push to your fork
+* Make changes, commit them and push to the fork
 
   ```sh
   git add .

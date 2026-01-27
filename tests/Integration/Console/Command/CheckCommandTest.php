@@ -174,7 +174,7 @@ final class CheckCommandTest extends NormalizatorTestCase
         /** @var CheckCommand */
         $command = $this->container->get(CheckCommand::class);
 
-        $application->add($command);
+        $application->addCommand($command);
 
         return $application;
     }
